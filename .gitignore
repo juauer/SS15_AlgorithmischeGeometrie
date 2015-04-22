@@ -1,10 +1,14 @@
 *.class
+*.DS_Store
+*.aux
+*.log
+*.out
+*.gz
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.ear
 
