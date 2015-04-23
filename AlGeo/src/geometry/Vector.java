@@ -20,8 +20,12 @@ public class Vector {
         return m.get(i, 0);
     }
 
+    public Vector add(Vector v) {
+        return new Vector(Mat.add(v.m, m));
+    }
+
     public Vector substract(Vector v) {
-        return new Vector(Mat.subtract(v.m, m));
+        return add(v.multiply(-1.0d));
     }
 
     public double length() {
