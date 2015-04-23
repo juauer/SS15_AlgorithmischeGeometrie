@@ -87,6 +87,25 @@ public class Line {
         this(p1, p2, null, null, null, 0.0d);
     }
 
+    public boolean isParallelTo(Line line) {
+        return 1.0d - Math.abs(u.dotProduct(line.u)) < C.E;
+    }
+
+    public Point getIntersection(Line line) {
+        if(isParallelTo(line))
+            return null;
+
+        double d1 = p2.getX() - p1.getX();
+        double d2 = p2.getY() - p1.getY();
+        double d3 = line.p2.getX() - line.p1.getX();
+        double d4 = line.p2.getY() - line.p1.getY();
+        double d5 = p2.getX() * p1.getY() - p1.getX() * p2.getY();
+        double d6 = line.p2.getX() * line.p1.getY() - line.p1.getX() * line.p2.getY();
+        double d7 = d1 * d4 - d3 * d2;
+        return new Point((d3 * d5 - d1 * d6) / d7,
+                (d5 * d4 - d6 * d2) / d7);
+    }
+
     @Override
     public String toString() {
         return String.format(Locale.US, "Line:%n"
