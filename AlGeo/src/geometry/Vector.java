@@ -36,6 +36,10 @@ public class Vector {
         return new Vector(Mat.multiply(m, s));
     }
 
+    public Vector normalize() {
+        return multiply(1.0d / length());
+    }
+
     @Override
     public String toString() {
         return String.format(Locale.US, "(%.1f, %.1f)", m.get(0, 0), m.get(1, 0));
