@@ -44,6 +44,16 @@ public class Point {
         return toPosition().dotProduct(line.n0) - line.d;
     }
 
+    public boolean isInsideBoundingBox(LineSegment ls) {
+        if(getX() < Math.min(ls.p1.getX(), ls.p2.getX())
+                || getX() > Math.max(ls.p1.getX(), ls.p2.getX())
+                || getY() < Math.min(ls.p1.getY(), ls.p2.getY())
+                || getY() > Math.max(ls.p1.getY(), ls.p2.getY()))
+            return false;
+
+        return true;
+    }
+
     @Override
     public String toString() {
         return String.format(Locale.US, "(%.1f, %.1f)", m.get(0, 0), m.get(0, 1));

@@ -34,7 +34,7 @@ public class Line {
      */
     final public double d;
 
-    private Line(Point p1, Point p2, Vector u, Vector n, Vector n0, double d) {
+    protected Line(Point p1, Point p2, Vector u, Vector n, Vector n0, double d) {
         super();
         this.p1 = p1;
         this.p2 = p2;

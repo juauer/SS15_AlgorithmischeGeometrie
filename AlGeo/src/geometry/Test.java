@@ -2,8 +2,8 @@ package geometry;
 
 public class Test {
     public static void main(String[] args) {
-        Line l1 = new Line(new Point(1, 2), new Point(0, 1));
-        Point p1 = new Point(1, 1);
-        System.out.println(p1.distanceTo(l1));
+        LineSegment l1 = new LineSegment(new Point(0, 0), new Point(1, 1));
+        LineSegment l2 = new LineSegment(new Point(0, 2), new Point(1, 2));
+        System.out.println(l1.getIntersection(l2));
     }
 }
