@@ -9,7 +9,7 @@ public class LineSegment extends Line {
     public Point getIntersection(Line line) {
         Point is = super.getIntersection(line);
 
-        if(!is.isInsideBoundingBox(this)
+        if(is == null || !is.isInsideBoundingBox(this)
                 || (line instanceof LineSegment && !is.isInsideBoundingBox((LineSegment) line)))
             return null;
 
