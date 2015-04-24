@@ -20,7 +20,6 @@
 \usepackage{algorithm}
 \usepackage{algorithmic}
 \usepackage{geometry}
-\usepackage{paralist}
 \geometry{a4paper, top=20mm, left=35mm, right=25mm, bottom=40mm}
 
 \newcounter{tasknbr}
@@ -83,29 +82,14 @@ belowcaptionskip=15pt}
 \end{center}
 \hrule
 
-\begin{task}{Geradendarstellung}
+\begin{task}{Name}
+\item[]
+Aufgabe.
 
 \subtask{a}
-Eine Gerade \(g\) in der Ebene kann man auf verschiedene Art und Weise darstellen:
-
-\begin{compactenum}[(a)]
-	\item Als affine Hülle von zwei Punkten $p$ und $q$:\\
-	$g = {\overrightarrow{p} + \lambda (\overrightarrow{q} - \overrightarrow{p}) | \lambda \in \mathbb{R}}$.
-	\item Als Nullstellenmenge einer linearen Gleichung:\\
-	$g = {\overrightarrow{x}=(x,y)|ax+by+c=0}$.
-	\item In Hessischer Normalform (HNF):\\
-	$g = {\overrightarrow{x}=\overrightarrow{n}\overrightarrow{x}+c=0}$ wobei $\|\overrightarrow{n}\| =1$.
-\end{compactenum}
-
-Geben Sie an, wie man zwischen den verschiedenen Darstellungen umrechnen kann, und beschreiben Sie die arithmetischen Operationen, die dafür benötigt werden.
-
-[TODO]
+Teilaufgabe.
 
 \subtask{b}
-Sei eine Gerade $g$ in HNF gegeben, $g={ \overrightarrow{x}\in\mathbb{R}^2|\overrightarrow{n}\overrightarrow{x}+c=0 }$. Zeigen Sie, dass für jeden Punkt $ p\in\mathbb{R}^2$ der Abstand von $p$ zu $g$, $d(p,g):=\textrm{main}{\|p-q\|,q\in g}$ gegeben ist durch $|\overrightarrow{n}\overrightarrow{p}+c|$.
-
-
-
 Für Quellcode:\\
 \lstset{language=Java}
 \begin{lstlisting}
