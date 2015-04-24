@@ -251,7 +251,40 @@ Da der Normalenvektor vorzeichenbehaftet gespeichert wird, geht links/rechts dir
 \end{task}
 
 \begin{task}{BHD}
-\item[]
+\subtask{a}
+Punkt in Polygon:
+
+Eingabe ist ein Knoten eines Polygons in BHD $n$ und der zu untersuchende Punkt $p$. Jeder Knoten im Baum $n$ hat ein linkes Kind $n.left$, ein rechtes Kind $n.right$ und einen Wert in Form einer Gerade $n.line$. Für eine Gerade $g$ und einen Punkt $p$ sei \emph{dist(g,p)} der Algorithmus, der den vorzeichenbehafteten Abstand von $p$ zu $g$ berechnet, wie in Aufgabe 2 beschrieben. Initial aufgerufen wird der Algorithmus mit der Wurzel des Baumes.
+\begin{algorithm}
+\caption{PointInPolygon(n,p)}
+\begin{algorithmic}
+\IF{$n.left==null\ \AND\ n.right==null$}
+\RETURN{$false$}
+\ENDIF
+\IF{$n.left==null\ \AND\ \NOT\ n.right==null$}
+\RETURN{$PointInPolygon(n.right,p)$}
+\ENDIF
+\IF{$\NOT\ n.left==null\ \AND\ n.right==null$}
+\RETURN{$PointInPolygon(n.left,p)$}
+\ENDIF
+\STATE{$leftOfLeftChild=(dist(n.left.line,p)\ge 0)$}
+\STATE{$leftOfRightChild=(dist(n.right.line,p)\ge 0)$}
+\IF{$leftOfLeftChild\ \AND\ leftOfRightChild$}
+\RETURN{$false$}
+\ENDIF
+\IF{$\NOT\ leftOfLeftChild\ \AND\ \NOT\ leftOfRightChild$}
+\RETURN{$true$}
+\ENDIF
+\IF{$leftOfLeftChild$}
+\RETURN{$PointInPolygon(n.left,p)$}
+\ENDIF
+\RETURN{$PointInPolygon(n.right,p)$}
+\end{algorithmic}
+\end{algorithm}
+
+\subtask{b}
+Schnitt Gerade-Polygon:
+
 TODO
 \end{task}
 \end{document}
