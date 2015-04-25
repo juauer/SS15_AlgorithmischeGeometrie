@@ -166,7 +166,7 @@ Für Geraden ist ein Konstruktor mit eingeschränkter Sichtbarkeit implementiert
 
         if(u == null)
             // u = p1 - p2
-            this.u = p1.toPosition().substract(p2.toPosition()).normalize();
+            this.u = p2.toPosition().substract(p1.toPosition()).normalize();
         else
             this.u = u.normalize();
 
@@ -178,9 +178,9 @@ Für Geraden ist ein Konstruktor mit eingeschränkter Sichtbarkeit implementiert
 
         if(n0 == null) {
             // n0 = n/|n|
-            // d = p1 * n0
+            // d = - p1 * n0
             this.n0 = this.n.normalize();
-            this.d = p1.toPosition().dotProduct(this.n0);
+            this.d = -p1.toPosition().dotProduct(this.n0);
         }
         else {
             this.n0 = n0;
@@ -226,7 +226,7 @@ Da der Normalenvektor vorzeichenbehaftet gespeichert wird, geht links/rechts dir
      * @return distance between this point and line
      */
     public double distanceTo(Line line) {
-        return toPosition().dotProduct(line.n0) - line.d;
+        return toPosition().dotProduct(line.n0) + line.d;
     }
 \end{lstlisting}
 
@@ -275,8 +275,8 @@ Eingabe ist ein Knoten eines Polygons in BHD $n$ und der zu untersuchende Punkt 
 \IF{$\NOT\ n.left==null\ \AND\ n.right==null$}
 \RETURN{$PointInPolygon(n.left,p)$}
 \ENDIF
-\STATE{$leftOfLeftChild=(dist(n.left.line,p)\ge 0)$}
-\STATE{$leftOfRightChild=(dist(n.right.line,p)\ge 0)$}
+\STATE{$leftOfLeftChild=(dist(n.left.line,p)> 0)$}
+\STATE{$leftOfRightChild=(dist(n.right.line,p)> 0)$}
 \IF{$leftOfLeftChild\ \AND\ leftOfRightChild$}
 \RETURN{$false$}
 \ENDIF

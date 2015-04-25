@@ -40,8 +40,8 @@ public class Line {
         this.p2 = p2;
 
         if(u == null)
-            // u = p1 - p2
-            this.u = p1.toPosition().substract(p2.toPosition()).normalize();
+            // u = p2 - p1
+            this.u = p2.toPosition().substract(p1.toPosition()).normalize();
         else
             this.u = u.normalize();
 
@@ -53,9 +53,9 @@ public class Line {
 
         if(n0 == null) {
             // n0 = n/|n|
-            // d = p1 * n0
+            // d = - p1 * n0
             this.n0 = this.n.normalize();
-            this.d = p1.toPosition().dotProduct(this.n0);
+            this.d = -p1.toPosition().dotProduct(this.n0);
         }
         else {
             this.n0 = n0;

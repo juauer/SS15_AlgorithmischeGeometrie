@@ -41,7 +41,7 @@ public class Point {
      * @return distance between point and line
      */
     public double distanceTo(Line line) {
-        return toPosition().dotProduct(line.n0) - line.d;
+        return toPosition().dotProduct(line.n0) + line.d;
     }
 
     public boolean isInsideBoundingBox(LineSegment ls) {
