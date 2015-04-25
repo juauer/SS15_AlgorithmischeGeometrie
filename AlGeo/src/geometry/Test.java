@@ -7,5 +7,8 @@ public class Test {
         System.out.println(p.contains(new Point(4, 8)));
         System.out.println(p.contains(new Point(3, 8)));
         System.out.println(p.contains(new Point(3, 9)));
+        System.out.println(p.intersectionWith(new Line(new Point(4, 2), new Point(10, 7))));
+        System.out.println(p.intersectionWith(new Line(new Point(9.5, 2), new Point(9.5, 8))));
+        System.out.println(p.intersectionWith(new Line(new Point(10, 2), new Point(12, 8))));
     }
 }
