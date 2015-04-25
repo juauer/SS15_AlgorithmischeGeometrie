@@ -1,5 +1,7 @@
 package geometry;
 
+import java.util.Locale;
+
 public class LineSegment extends Line {
     public LineSegment(Point p1, Point p2) {
         super(p1, p2);
@@ -14,5 +16,10 @@ public class LineSegment extends Line {
             return null;
 
         return is;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(Locale.US, "LineSegment: %s -> %s", p1, p2);
     }
 }
