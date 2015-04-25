@@ -102,8 +102,13 @@ public class Line {
         double d5 = p2.getX() * p1.getY() - p1.getX() * p2.getY();
         double d6 = line.p2.getX() * line.p1.getY() - line.p1.getX() * line.p2.getY();
         double d7 = d1 * d4 - d3 * d2;
-        return new Point((d3 * d5 - d1 * d6) / d7,
+        Point is = new Point((d3 * d5 - d1 * d6) / d7,
                 (d5 * d4 - d6 * d2) / d7);
+
+        if(line instanceof LineSegment && !is.isInsideBoundingBox((LineSegment) line))
+            return null;
+
+        return is;
     }
 
     @Override
