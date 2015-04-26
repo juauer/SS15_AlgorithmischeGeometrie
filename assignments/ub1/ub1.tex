@@ -108,16 +108,45 @@ q=&\begin{cases}(1,c)&\text{, falls }n_x=0\\
 \end{align*}
 
 \subtask{b}
-Sei eine Gerade $g$ in HNF gegeben, $g=\{\overrightarrow{x}\in\mathbb{R}^2|\overrightarrow{n}\overrightarrow{x}+c=0\}$. Zeigen Sie, dass für jeden Punkt $ p\in\mathbb{R}^2$ der Abstand von $p$ zu $g$, $d(p,g):=\textrm{min}\{\|p-q\|,q\in g\}$ gegeben ist durch $|\overrightarrow{n}\overrightarrow{p}+c|$.
-
-
-Die parallele Gerade $h$ durch den Punkt $p$ ist gegeben als $h:= \overrightarrow{n}(\overrightarrow{x}-\overrightarrow{p})=0$ (Normalform). Die zu $g$ orthogonale Gerade $i$, welche durch den Koordinatenursprung verläuft ist gegeben als $i:=\overrightarrow{x}=s\overrightarrow{n}$ (Parameterform).
-
-[TODO]\\
-* umrechnen und so, damit man Schnittpunkt leicht ausrechnen kann\\
-* Schnittpunkt von $h$ und $i$ bestimmen\\
-* Abstände rechnen\\
-
+Sei $g'$ die Gerade, die parallel zu $g$ verläuft und den Punkt $p$ beinhaltet. $g'$ kann durch die folgende Normalengleichung eindeutig beschrieben werden:
+\begin{align}
+g'=\{\overrightarrow x\in\mathbb{R}^2|\overrightarrow n\cdot(\overrightarrow x-\overrightarrow p) = 0\}
+\end{align}
+Auf $g'$ liegen folglich alle Punkte $(x,y)$, mit der Eigenschaft:
+\begin{align}
+n_x\cdot (x-p_x)+n_y\cdot (y-p_y)=0
+\end{align}
+Sei $h$ die Gerade, die durch den Ursprung verläuft und senkrecht auf $g$ (und $g'$) steht. Der Normalenvektor $\overrightarrow m$ von $h$ ist dann gegeben durch:
+$$\overrightarrow m=\begin{pmatrix}n_y\\-n_x\end{pmatrix}$$
+Auf $h$ liegen folglich alle Punkte $(x,y)$, mit der Eigenschaft:
+\begin{align}
+\overrightarrow m\cdot (\overrightarrow{(x,y)}-\overrightarrow{(0,0)}&=0\\
+n_y\cdot x-n_x\cdot y&=0\\
+\frac{n_x\cdot y}{n_y}&=x
+\end{align}
+Es kann nun der Schnittpunkt $S=(x,y)$ zwischen $g'$ und $h$ berechnet werden, indem zunächst (5) in (2) eingesetzt wird um die y-Komponente zu bestimmen. Die x-Komponente ergibt sich danach analog.
+\begin{align}
+n_x\cdot\left( \frac{n_x\cdot y}{n_y}-p_x\right) +n_y\cdot (y-p_y)&=0\\
+\frac{n_y\cdot (n_x\cdot p_x+n_y\cdot p_y)}{n_x^2+n_y^2}&=y\\
+\frac{\overrightarrow n\cdot\overrightarrow p\cdot n_y}{n_x^2+n_y^2}&=y
+\end{align}
+Da natürlich aufgrund der Normierung $n_x^2+n_y^2=|\overrightarrow n|=1$ lässt sich dies vereinfachen zu:
+\begin{align}
+\overrightarrow n\cdot\overrightarrow p\cdot n_y=y\\
+\overrightarrow n\cdot\overrightarrow p\cdot n_x=x
+\end{align}
+Die Entfernung von $S$ zum Ursprung $d$ ist nun genau der euklidische Abstand:
+\begin{align}
+d&=((\overrightarrow n\cdot\overrightarrow p)^2\cdot (n_x^2+n_y^2))^\frac{1}{2}\\
+d&=((\overrightarrow n\cdot\overrightarrow p)^2\cdot 1)^\frac{1}{2}\\
+d&=\overrightarrow n\cdot\overrightarrow p
+\end{align}
+Nach Definition ist die Entfernung von $g$ zum Ursprung genau $c$. Die gesuchte Entfernung $c'$ zwischen den parallelen Geraden $g$ und $g'$ - die offensichtlich genau der Entfernung von $p$ zu $g$ entspricht - ist somit gegeben durch:
+\begin{align}
+d&=c+c'\\
+c'&=\overrightarrow n\cdot\overrightarrow p-c
+\end{align}
+\qed
 \end{task}
 
 \begin{task}{Implementierung}
@@ -126,6 +155,7 @@ Grundlage für alle hier verwendeten Klassen ist eine ältere Implementierung vo
 
 \subtask{a}
 Für Geraden ist ein Konstruktor mit eingeschränkter Sichtbarkeit implementiert, der mit unterschiedlichen Geradendarstellungen aufgerufen werden kann, solange zwei Punkte auf der Gerade $p1,p2$ übergeben werden. Für gerichtete Geraden zeigt der Richtungsvektor stets von $p1$ nach $p2$. Werden nur zwei Punkte übergeben, werden alle weiteren Werte aus diesen Punkten berechnet:
+\newpage
 \lstset{language=Java}
 \begin{lstlisting}
     /**
@@ -296,6 +326,7 @@ Schnitt Gerade-Polygon:
 Wenn mein Gedächtnis noch einigermaßen funktioniert wurde das in der Vorlesung nicht behandelt!?
 
 Um Fehlerquellen beim Entwickeln eines zuvor unbekannten Algorithmus zu vermeiden wurde selbiger kurzerhand implementiert: \emph{intersectsWith(Line line)} ist eine Methode von Polygonen. In diesen wird ein BHD-Baum erzeugt, der über das Wurzelelement \emph{bHDRoot} referenziert werden kann. Noch einmal Pseudo-Code zu schreiben erscheint an dieser Stelle redundant, deshalb folgt kommentierter Java-Code:
+\newpage
 \lstset{language=Java}
 \begin{lstlisting}
      /**
