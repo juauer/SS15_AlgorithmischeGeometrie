@@ -386,5 +386,22 @@ Um Fehlerquellen beim Entwickeln eines zuvor unbekannten Algorithmus zu vermeide
         return new LineSegment(acc.getFirst(), acc.size() > 1 ? acc.get(1) : acc.getFirst());
     }
 \end{lstlisting}
+\newpage
+Hier noch die Ausgabe einer kleinen Test-Routine:
+\begin{figure}[htpb]
+\begin{center}
+\includegraphics[width=10cm]{test}
+\end{center}
+\caption{Ein paar Testfälle}
+\end{figure}
+
+\framebox{\parbox{\linewidth}{
+polygon contains (3.0, 7.0) (blue): true\\
+polygon contains (2.0, 7.0) (green): true\\
+polygon contains (2.0, 8.0) (cyan): false\\
+intersection of polygon and line1 (blue): LineSegment: (8.6, 5.7) -> (3.5, 1.5)\\
+intersection of polygon and line2 (green): LineSegment: (8.5, 6.0) -> (8.5, 4.0)\\
+intersection of polygon and line3 (cyan): null
+}}
 \end{task}
 \end{document}
