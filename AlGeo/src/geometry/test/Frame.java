@@ -1,5 +1,6 @@
 package geometry.test;
 
+import geometry.C;
 import geometry.Line;
 import geometry.Point;
 import geometry.Polygon;
@@ -74,6 +75,29 @@ public class Frame extends JFrame {
     }
 
     public void drawLine(Line line, Color color) {
+        Point p1 = null;
+        Point p2 = null;
+
+        for(Line l : new Line[] {
+                new Line(new Point(0.0d, 0.0d), new Point(1.0d, 0.0d)),
+                new Line(new Point(0.0d, 0.0d), new Point(0.0d, 1.0d)),
+                new Line(new Point(0.0d, 10.0d), new Point(10.0d, 10.0d)),
+                new Line(new Point(10.0d, 0.0d), new Point(10.0d, 10.0d)) }) {
+            Point p = line.getIntersection(l);
+
+            if(p != null && p.getX() > -C.E && p.getY() > -C.E && p.getX() < 10.0d + C.E && p.getY() < 10.0d + C.E)
+                if(p1 == null)
+                    p1 = p;
+                else {
+                    p2 = p;
+                    break;
+                }
+        }
+
+        drawLineSegment(new Line(p1, p2), color);
+    }
+
+    public void drawLineSegment(Line line, Color color) {
         Graphics g = image.getGraphics();
         g.setColor(color);
         g.drawLine(xToInt(line.p1.getX()), yToInt(line.p1.getY()), xToInt(line.p2.getX()), yToInt(line.p2.getY()));
