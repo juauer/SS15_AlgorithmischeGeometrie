@@ -1,10 +1,14 @@
 package geometry;
 
+import geometry.test.Drawable;
+
+import java.awt.Color;
+import java.awt.Graphics;
 import java.util.Locale;
 
 import mats.Mat;
 
-public class Point {
+public class Point implements Drawable {
     final public Mat m;
 
     private Point(Mat m) {
@@ -57,5 +61,11 @@ public class Point {
     @Override
     public String toString() {
         return String.format(Locale.US, "(%.1f, %.1f)", m.get(0, 0), m.get(0, 1));
+    }
+
+    @Override
+    public void paint(Graphics g, Color color) {
+        g.setColor(color);
+        g.fillOval(Drawable.xToInt(getX()) - 3, Drawable.yToInt(getY()) - 3, 6, 6);
     }
 }

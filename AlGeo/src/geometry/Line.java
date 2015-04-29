@@ -1,8 +1,12 @@
 package geometry;
 
+import geometry.test.Drawable;
+
+import java.awt.Color;
+import java.awt.Graphics;
 import java.util.Locale;
 
-public class Line {
+public class Line implements Drawable {
     /**
      * Any point on the line
      */
@@ -131,5 +135,29 @@ public class Line {
                 + "at %s, normal %s%n"
                 + "normal %s, distance %.1f",
                 p1, p2, p1, u, p1, n, n0, d);
+    }
+
+    @Override
+    public void paint(Graphics g, Color color) {
+        Point p1 = null;
+        Point p2 = null;
+
+        for(Line l : new Line[] {
+                new Line(new Point(0.0d, 0.0d), new Point(1.0d, 0.0d)),
+                new Line(new Point(0.0d, 0.0d), new Point(0.0d, 1.0d)),
+                new Line(new Point(0.0d, Drawable.RANGE), new Point(Drawable.RANGE, Drawable.RANGE)),
+                new Line(new Point(Drawable.RANGE, 0.0d), new Point(Drawable.RANGE, Drawable.RANGE)) }) {
+            Point p = getIntersection(l);
+
+            if(p != null && p.getX() > -C.E && p.getY() > -C.E && p.getX() < Drawable.RANGE + C.E && p.getY() < Drawable.RANGE + C.E)
+                if(p1 == null)
+                    p1 = p;
+                else {
+                    p2 = p;
+                    break;
+                }
+        }
+
+        new LineSegment(p1, p2).paint(g, color);
     }
 }

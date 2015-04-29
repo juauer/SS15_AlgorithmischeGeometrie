@@ -1,8 +1,12 @@
 package geometry;
 
+import geometry.test.Drawable;
+
+import java.awt.Color;
+import java.awt.Graphics;
 import java.util.LinkedList;
 
-public class Polygon {
+public class Polygon implements Drawable {
     private class BHDNode {
         protected final BHDNode     left;
         protected final BHDNode     right;
@@ -15,18 +19,23 @@ public class Polygon {
         }
     }
 
-    public final Point[]  points;
-    private final BHDNode bHDRoot;
+    public final Point[]       points;
+    public final LineSegment[] lines;
+    private final BHDNode      bHDRoot;
 
     public Polygon(Point... points) {
         this.points = points;
+        lines = new LineSegment[points.length];
         LinkedList<BHDNode> p1 = new LinkedList<BHDNode>();
         LinkedList<BHDNode> p2 = new LinkedList<BHDNode>();
 
-        for(int i = 0; i < points.length - 1; ++i)
-            p1.add(new BHDNode(null, null, new LineSegment(points[i], points[i + 1])));
+        for(int i = 0; i < points.length - 1; ++i) {
+            lines[i] = new LineSegment(points[i], points[i + 1]);
+            p1.add(new BHDNode(null, null, lines[i]));
+        }
 
-        p1.add(new BHDNode(null, null, new LineSegment(points[points.length - 1], points[0])));
+        lines[lines.length - 1] = new LineSegment(points[points.length - 1], points[0]);
+        p1.add(new BHDNode(null, null, lines[lines.length - 1]));
 
         while(p1.size() > 1) {
             while(p1.size() > 1)
@@ -120,5 +129,13 @@ public class Polygon {
         // The line intersects the polygon. If it intersects in only one point
         // p, the line p->p is returned
         return new LineSegment(acc.getFirst(), acc.size() > 1 ? acc.get(1) : acc.getFirst());
+    }
+
+    @Override
+    public void paint(Graphics g, Color color) {
+        for(int i = 0; i < points.length; ++i) {
+            points[i].paint(g, color);
+            lines[i].paint(g, color);
+        }
     }
 }
