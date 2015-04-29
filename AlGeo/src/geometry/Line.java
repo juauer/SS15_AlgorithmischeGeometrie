@@ -111,6 +111,18 @@ public class Line {
         return is;
     }
 
+    /**
+     * Compute the angle between this and another line. Result is positive or
+     * negative just like an atan2 were used.
+     * 
+     * @param line A line with the direction this line would have if rotated
+     *            anticlockwise by the resulting angle
+     * @return Angle, in radians
+     */
+    public double angleTo(Line line) {
+        return Math.atan2(line.u.get(1), line.u.get(0)) - Math.atan2(u.get(1), u.get(0));
+    }
+
     @Override
     public String toString() {
         return String.format(Locale.US, "Line:%n"
