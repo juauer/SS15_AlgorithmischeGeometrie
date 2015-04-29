@@ -8,13 +8,33 @@ import java.awt.Color;
 
 public class Test {
     public static void main(String[] args) {
-        ub1();
+        ub2();
+        // ub1();
+    }
+
+    public static void ub2() {
+        Polygon p = new Polygon(new Point(4, 9), new Point(6, 9), new Point(9, 5), new Point(8, 3),
+                new Point(6, 1), new Point(4, 1), new Point(2, 2), new Point(1, 5), new Point(2, 7));
+        Frame frame = Frame.create();
+        frame.drawPolygon(p, Color.RED);
+
+        Line line1 = new Line(new Point(3, 1), new Point(9, 6));
+        Scene s1 = new Scene(200);
+        s1.add(line1, Color.BLUE);
+        frame.addScene(s1);
+
+        Line line2 = new Line(new Point(9, 1), new Point(10, 7));
+        Scene s2 = new Scene(200);
+        s2.add(line2, Color.GREEN);
+        frame.addScene(s2);
+
+        // frame.writeToFile("./../assignments/ub2/test.png");
     }
 
     public static void ub1() {
         Polygon p = new Polygon(new Point(4, 9), new Point(6, 9), new Point(8, 7), new Point(9, 5), new Point(8, 3),
                 new Point(6, 1), new Point(4, 1), new Point(2, 3), new Point(1, 5), new Point(2, 7));
-        Frame frame = new Frame();
+        Frame frame = Frame.create();
         frame.drawPolygon(p, Color.RED);
 
         Point point1 = new Point(3, 7);
