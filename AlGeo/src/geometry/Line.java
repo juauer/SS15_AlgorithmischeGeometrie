@@ -154,10 +154,10 @@ public class Line implements Drawable {
         Point p2 = null;
 
         for(LineSegment l : new LineSegment[] {
-                new LineSegment(new Point(0.0d, 0.0d), new Point(Drawable.RANGE, 0.0d)),
-                new LineSegment(new Point(0.0d, 0.0d), new Point(0.0d, Drawable.RANGE)),
-                new LineSegment(new Point(0.0d, Drawable.RANGE), new Point(Drawable.RANGE, Drawable.RANGE)),
-                new LineSegment(new Point(Drawable.RANGE, 0.0d), new Point(Drawable.RANGE, Drawable.RANGE)) }) {
+                new LineSegment(new Point(0.0d, 0.0d), new Point(Drawable.RANGE_X, 0.0d)),
+                new LineSegment(new Point(0.0d, 0.0d), new Point(0.0d, Drawable.RANGE_Y)),
+                new LineSegment(new Point(0.0d, Drawable.RANGE_Y), new Point(Drawable.RANGE_X, Drawable.RANGE_Y)),
+                new LineSegment(new Point(Drawable.RANGE_X, 0.0d), new Point(Drawable.RANGE_X, Drawable.RANGE_Y)) }) {
             Point p = getIntersection(l);
 
             if(p != null)

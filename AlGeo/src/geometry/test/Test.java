@@ -14,8 +14,8 @@ public class Test {
     }
 
     public static void ub2() {
-        Polygon p = new Polygon(new Point(4, 9), new Point(6, 9), new Point(9, 5), new Point(8, 3),
-                new Point(6, 1), new Point(4, 1), new Point(2, 2), new Point(1, 5), new Point(2, 7));
+        Polygon p = new Polygon(new Point(8, 13), new Point(11, 13), new Point(15, 7), new Point(14, 5),
+                new Point(11, 2), new Point(8, 2), new Point(5, 4), new Point(4, 7), new Point(5, 10));
         LinkedList<Line[]> antiPodalPoints = p.antipodalPoints();
         Frame frame = Frame.create();
         frame.drawPolygon(p, Color.RED);

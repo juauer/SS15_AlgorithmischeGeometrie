@@ -28,10 +28,11 @@ public class Frame extends JFrame implements Runnable {
         g.fillRect(0, 0, Drawable.WIDTH + 100, Drawable.HEIGHT + 100);
         g.setColor(Color.LIGHT_GRAY);
 
-        for(int i = 0; i <= Drawable.RANGE; ++i) {
-            g.drawLine(Drawable.xToInt(i), Drawable.yToInt(0), Drawable.xToInt(i), Drawable.yToInt(Drawable.RANGE));
-            g.drawLine(Drawable.xToInt(0), Drawable.yToInt(i), Drawable.xToInt(Drawable.RANGE), Drawable.yToInt(i));
-        }
+        for(int i = 0; i <= Drawable.RANGE_X; ++i)
+            g.drawLine(Drawable.xToInt(i), Drawable.yToInt(0), Drawable.xToInt(i), Drawable.yToInt(Drawable.RANGE_Y));
+
+        for(int i = 0; i <= Drawable.RANGE_Y; ++i)
+            g.drawLine(Drawable.xToInt(0), Drawable.yToInt(i), Drawable.xToInt(Drawable.RANGE_X), Drawable.yToInt(i));
 
         setLayout(new BorderLayout());
         setSize(Drawable.WIDTH + 200, Drawable.HEIGHT + 200);
