@@ -163,7 +163,7 @@ public class Line implements Drawable {
             if(p != null)
                 if(p1 == null)
                     p1 = p;
-                else {
+                else if(p1.add(p.toPosition().multiply(-1.0d)).toPosition().length() > C.E) {
                     p2 = p;
                     break;
                 }
