@@ -149,7 +149,6 @@ public class Polygon implements Drawable {
         double rotatedAngle = 0.0d;
 
         while(rotatedAngle < Math.PI) {
-            result.add(new Line[] { caliper1, caliper2 });
             double angle1 = caliper1.angleTo(lines[p1]);
             double angle2 = caliper2.angleTo(lines[p2]);
             angle1 = Math.abs(angle1 > 0 ? 2.0d * Math.PI - angle1 : angle1);
@@ -163,7 +162,12 @@ public class Polygon implements Drawable {
                 p1 = (p1 + 1) % points.length;
             else
                 p2 = (p2 + 1) % points.length;
+
+            result.add(new Line[] { caliper1, caliper2 });
         }
+
+        if(result.getLast()[0].p1 == result.getFirst()[1].p1 && result.getLast()[1].p1 == result.getFirst()[0].p1)
+            result.removeFirst();
 
         return result;
     }
