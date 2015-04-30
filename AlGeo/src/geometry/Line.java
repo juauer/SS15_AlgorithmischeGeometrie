@@ -169,6 +169,9 @@ public class Line implements Drawable {
                 }
         }
 
+        new LineSegment(this.p1, this.p1.add(u.multiply(-1.0d))).rotate(this.p1, Math.PI / 4.0d).paint(g, color);
+        new LineSegment(this.p1, this.p1.add(u.multiply(-1.0d))).rotate(this.p1, Math.PI / -4.0d).paint(g, color);
+
         if(p1 != null && p2 != null)
             new LineSegment(p1, p2).paint(g, color);
     }
