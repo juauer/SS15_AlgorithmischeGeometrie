@@ -8,6 +8,8 @@ import geometry.Polygon;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -18,11 +20,14 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 public class Frame extends JFrame implements Runnable {
-    protected final BufferedImage image_base     = new BufferedImage(Drawable.WIDTH + 100, Drawable.HEIGHT + 100, BufferedImage.TYPE_INT_RGB);
-    protected final BufferedImage image_animated = new BufferedImage(Drawable.WIDTH + 100, Drawable.HEIGHT + 100, BufferedImage.TYPE_INT_RGB);
-    protected ArrayList<Scene>    scenes         = null;
+    protected final BufferedImage image_base         = new BufferedImage(Drawable.WIDTH + 100, Drawable.HEIGHT + 100, BufferedImage.TYPE_INT_RGB);
+    protected final BufferedImage image_animated     = new BufferedImage(Drawable.WIDTH + 100, Drawable.HEIGHT + 100, BufferedImage.TYPE_INT_RGB);
+    protected final String        debugPath;
+    protected ArrayList<Scene>    scenes             = null;
+    protected boolean             keyboardControlled = false;
 
-    private Frame() {
+    private Frame(String debugPath) {
+        this.debugPath = debugPath;
         Graphics g = image_base.getGraphics();
         g.setColor(Color.WHITE);
         g.fillRect(0, 0, Drawable.WIDTH + 100, Drawable.HEIGHT + 100);
@@ -41,8 +46,8 @@ public class Frame extends JFrame implements Runnable {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
-    public static Frame create() {
-        Frame f = new Frame();
+    public static Frame create(String debugPath) {
+        Frame f = new Frame(debugPath);
         SwingUtilities.invokeLater(f);
         return f;
     }
@@ -50,6 +55,44 @@ public class Frame extends JFrame implements Runnable {
     public void addScene(Scene scene) {
         if(scenes == null) {
             scenes = new ArrayList<Scene>(2);
+            addKeyListener(new KeyAdapter() {
+
+                @Override
+                public void keyReleased(KeyEvent e) {
+                    switch(e.getKeyCode()) {
+                        case KeyEvent.VK_T:
+                            keyboardControlled = !keyboardControlled;
+
+                            if(!keyboardControlled) {
+                                synchronized(scenes) {
+                                    scenes.notifyAll();
+                                }
+
+                                System.out.println("keyboard control OFF, animation ON");
+                            }
+                            else
+                                System.out.println("keyboard control ON, animation OFF");
+
+                            break;
+                        case KeyEvent.VK_SPACE:
+                            synchronized(scenes) {
+                                scenes.notifyAll();
+                            }
+                            break;
+                        case KeyEvent.VK_ENTER:
+                            writeToFile();
+                            System.out.println(String.format("image written to %s", debugPath));
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            });
+
+            System.out.println(String.format("Keyboard Controls:%n"
+                    + "\tt\ttoggle keyboard control / animation%n"
+                    + "\tspace\tnext scene%n"
+                    + "\tenter\tsave image to file"));
 
             new Thread(new Runnable() {
                 private int i = 0;
@@ -81,7 +124,7 @@ public class Frame extends JFrame implements Runnable {
                                 i = (i + 1) % scenes.size();
 
                                 try {
-                                    scenes.wait(scene.duration);
+                                    scenes.wait(keyboardControlled ? 0 : scene.duration);
                                 }
                                 catch(InterruptedException e) {
                                     e.printStackTrace();
@@ -108,9 +151,9 @@ public class Frame extends JFrame implements Runnable {
             }
     }
 
-    public void writeToFile(String path) {
+    public void writeToFile() {
         try {
-            ImageIO.write(image_base, "png", new File(path));
+            ImageIO.write(scenes == null ? image_base : image_animated, "png", new File(debugPath));
         }
         catch(IOException e) {
             e.printStackTrace();
