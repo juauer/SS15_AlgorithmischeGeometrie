@@ -153,14 +153,14 @@ public class Line implements Drawable {
         Point p1 = null;
         Point p2 = null;
 
-        for(Line l : new Line[] {
-                new Line(new Point(0.0d, 0.0d), new Point(1.0d, 0.0d)),
-                new Line(new Point(0.0d, 0.0d), new Point(0.0d, 1.0d)),
-                new Line(new Point(0.0d, Drawable.RANGE), new Point(Drawable.RANGE, Drawable.RANGE)),
-                new Line(new Point(Drawable.RANGE, 0.0d), new Point(Drawable.RANGE, Drawable.RANGE)) }) {
+        for(LineSegment l : new LineSegment[] {
+                new LineSegment(new Point(0.0d, 0.0d), new Point(Drawable.RANGE, 0.0d)),
+                new LineSegment(new Point(0.0d, 0.0d), new Point(0.0d, Drawable.RANGE)),
+                new LineSegment(new Point(0.0d, Drawable.RANGE), new Point(Drawable.RANGE, Drawable.RANGE)),
+                new LineSegment(new Point(Drawable.RANGE, 0.0d), new Point(Drawable.RANGE, Drawable.RANGE)) }) {
             Point p = getIntersection(l);
 
-            if(p != null && p.getX() > -C.E && p.getY() > -C.E && p.getX() < Drawable.RANGE + C.E && p.getY() < Drawable.RANGE + C.E)
+            if(p != null)
                 if(p1 == null)
                     p1 = p;
                 else {
@@ -169,6 +169,7 @@ public class Line implements Drawable {
                 }
         }
 
-        new LineSegment(p1, p2).paint(g, color);
+        if(p1 != null && p2 != null)
+            new LineSegment(p1, p2).paint(g, color);
     }
 }

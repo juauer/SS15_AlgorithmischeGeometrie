@@ -58,10 +58,10 @@ public class Frame extends JFrame implements Runnable {
                     Graphics g = image_animated.getGraphics();
                     Scene scene;
 
-                    while(true) {
-                        g.drawImage(image_base, 0, 0, null);
-
+                    while(true)
                         synchronized(scenes) {
+                            g.drawImage(image_base, 0, 0, null);
+
                             if(scenes.isEmpty()) {
                                 try {
                                     scenes.wait();
@@ -87,7 +87,6 @@ public class Frame extends JFrame implements Runnable {
                                 }
                             }
                         }
-                    }
                 }
             }).start();
         }
@@ -103,7 +102,9 @@ public class Frame extends JFrame implements Runnable {
         if(scenes == null)
             g.drawImage(image_base, 50, 50, null);
         else
-            g.drawImage(image_animated, 50, 50, null);
+            synchronized(scenes) {
+                g.drawImage(image_animated, 50, 50, null);
+            }
     }
 
     public void writeToFile(String path) {

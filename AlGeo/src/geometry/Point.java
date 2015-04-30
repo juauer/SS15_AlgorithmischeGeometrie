@@ -50,10 +50,10 @@ public class Point implements Drawable {
     }
 
     public boolean isInsideBoundingBox(LineSegment ls) {
-        if(getX() < Math.min(ls.p1.getX(), ls.p2.getX())
-                || getX() > Math.max(ls.p1.getX(), ls.p2.getX())
-                || getY() < Math.min(ls.p1.getY(), ls.p2.getY())
-                || getY() > Math.max(ls.p1.getY(), ls.p2.getY()))
+        if(getX() < Math.min(ls.p1.getX(), ls.p2.getX()) - C.E
+                || getX() > Math.max(ls.p1.getX(), ls.p2.getX()) + C.E
+                || getY() < Math.min(ls.p1.getY(), ls.p2.getY()) - C.E
+                || getY() > Math.max(ls.p1.getY(), ls.p2.getY()) + C.E)
             return false;
 
         return true;
