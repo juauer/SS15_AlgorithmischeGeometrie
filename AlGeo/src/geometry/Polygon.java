@@ -150,8 +150,10 @@ public class Polygon implements Drawable {
 
         while(rotatedAngle < Math.PI) {
             result.add(new Line[] { caliper1, caliper2 });
-            double angle1 = Math.abs(caliper1.angleTo(lines[p1]));
-            double angle2 = Math.abs(caliper2.angleTo(lines[p2]));
+            double angle1 = caliper1.angleTo(lines[p1]);
+            double angle2 = caliper2.angleTo(lines[p2]);
+            angle1 = Math.abs(angle1 > 0 ? 2.0d * Math.PI - angle1 : angle1);
+            angle2 = Math.abs(angle2 > 0 ? 2.0d * Math.PI - angle2 : angle2);
             double minAngle = Math.min(angle1, angle2);
             caliper1 = new Line(points[p1], caliper1.rotate(points[p1], minAngle).u);
             caliper2 = new Line(points[p2], caliper2.rotate(points[p2], minAngle).u);

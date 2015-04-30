@@ -1,6 +1,7 @@
 package geometry.test;
 
 import geometry.Line;
+import geometry.LineSegment;
 import geometry.Point;
 import geometry.Polygon;
 
@@ -26,6 +27,7 @@ public class Test {
             s.add(l[1].p1, Color.GREEN);
             s.add(l[0], Color.BLUE);
             s.add(l[1], Color.BLUE);
+            s.add(new LineSegment(l[0].p1, l[1].p1), Color.ORANGE);
             frame.addScene(s);
         }
 
