@@ -9,7 +9,7 @@ import java.util.Locale;
 import mats.Mat;
 import mats.Mat2x2;
 
-public class Point implements Drawable {
+public class Point implements Drawable, Comparable<Point> {
     final public Mat m;
 
     private Point(Mat m) {
@@ -72,5 +72,13 @@ public class Point implements Drawable {
     public void paint(Graphics g, Color color) {
         g.setColor(color);
         g.fillOval(Drawable.xToInt(getX()) - 3, Drawable.yToInt(getY()) - 3, 6, 6);
+    }
+
+    @Override
+    public int compareTo(Point p) {
+        if(getX() == p.getX())
+            return getY() < p.getY() ? -1 : getY() == p.getY() ? 0 : 1;
+
+        return getX() < p.getX() ? -1 : 1;
     }
 }

@@ -5,6 +5,7 @@ import geometry.Point;
 import geometry.Polygon;
 
 import java.awt.Color;
+import java.util.LinkedList;
 
 public class Test {
     public static void main(String[] args) {
@@ -15,15 +16,16 @@ public class Test {
     public static void ub2() {
         Polygon p = new Polygon(new Point(4, 9), new Point(6, 9), new Point(9, 5), new Point(8, 3),
                 new Point(6, 1), new Point(4, 1), new Point(2, 2), new Point(1, 5), new Point(2, 7));
-        Line line1 = new Line(new Point(3, 3), new Point(6, 8));
+        LinkedList<Line[]> antiPodalPoints = p.antipodalPoints();
         Frame frame = Frame.create();
         frame.drawPolygon(p, Color.RED);
-        frame.drawLine(line1, Color.BLUE);
 
-        for(int i = 30; i < 360; i += 30) {
-            Line line2 = line1.rotate(new Point(3, 3), Math.toRadians(i));
-            Scene s = new Scene(500);
-            s.add(line2, Color.GREEN);
+        for(Line[] l : antiPodalPoints) {
+            Scene s = new Scene(1000);
+            s.add(l[0].p1, Color.GREEN);
+            s.add(l[1].p1, Color.GREEN);
+            s.add(l[0], Color.BLUE);
+            s.add(l[1], Color.BLUE);
             frame.addScene(s);
         }
 

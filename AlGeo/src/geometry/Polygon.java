@@ -131,6 +131,41 @@ public class Polygon implements Drawable {
         return new LineSegment(acc.getFirst(), acc.size() > 1 ? acc.get(1) : acc.getFirst());
     }
 
+    public LinkedList<Line[]> antipodalPoints() {
+        LinkedList<Line[]> result = new LinkedList<Line[]>();
+        int p1 = 0;
+        int p2 = 0;
+
+        for(int i = 1; i < points.length; i++) {
+            if(points[i].compareTo(points[p1]) < 0)
+                p1 = i;
+
+            if(points[i].compareTo(points[p2]) > 0)
+                p2 = i;
+        }
+
+        Line caliper1 = new Line(points[p1], new Point(points[p1].getX(), points[p1].getY() + 10.0d));
+        Line caliper2 = new Line(points[p2], new Point(points[p2].getX(), points[p2].getY() - 10.0d));
+        double rotatedAngle = 0.0d;
+
+        while(rotatedAngle < Math.PI) {
+            result.add(new Line[] { caliper1, caliper2 });
+            double angle1 = Math.abs(caliper1.angleTo(lines[p1]));
+            double angle2 = Math.abs(caliper2.angleTo(lines[p2]));
+            double minAngle = Math.min(angle1, angle2);
+            caliper1 = new Line(points[p1], caliper1.rotate(points[p1], minAngle).u);
+            caliper2 = new Line(points[p2], caliper2.rotate(points[p2], minAngle).u);
+            rotatedAngle += minAngle;
+
+            if(angle1 < angle2)
+                p1 = (p1 + 1) % points.length;
+            else
+                p2 = (p2 + 1) % points.length;
+        }
+
+        return result;
+    }
+
     @Override
     public void paint(Graphics g, Color color) {
         for(int i = 0; i < points.length; ++i) {
