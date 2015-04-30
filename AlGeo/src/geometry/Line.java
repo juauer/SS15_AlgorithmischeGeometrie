@@ -6,6 +6,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.Locale;
 
+import mats.Mat2x2;
+
 public class Line implements Drawable {
     /**
      * Any point on the line
@@ -125,6 +127,15 @@ public class Line implements Drawable {
      */
     public double angleTo(Line line) {
         return Math.atan2(line.u.get(1), line.u.get(0)) - Math.atan2(u.get(1), u.get(0));
+    }
+
+    public Line rotate(Point point, double angle) {
+        Vector pos = point.toPosition();
+        double cosa = Math.cos(angle);
+        double sina = Math.sin(angle);
+        Mat2x2 mat = new Mat2x2(cosa, -sina, sina, cosa);
+        return new Line(p1.add(pos.multiply(-1)).compose(mat).add(pos),
+                p2.add(pos.multiply(-1)).compose(mat).add(pos));
     }
 
     @Override

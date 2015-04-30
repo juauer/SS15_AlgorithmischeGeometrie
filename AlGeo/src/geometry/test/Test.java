@@ -15,18 +15,17 @@ public class Test {
     public static void ub2() {
         Polygon p = new Polygon(new Point(4, 9), new Point(6, 9), new Point(9, 5), new Point(8, 3),
                 new Point(6, 1), new Point(4, 1), new Point(2, 2), new Point(1, 5), new Point(2, 7));
+        Line line1 = new Line(new Point(3, 3), new Point(6, 8));
         Frame frame = Frame.create();
         frame.drawPolygon(p, Color.RED);
+        frame.drawLine(line1, Color.BLUE);
 
-        Line line1 = new Line(new Point(3, 1), new Point(9, 6));
-        Scene s1 = new Scene(200);
-        s1.add(line1, Color.BLUE);
-        frame.addScene(s1);
-
-        Line line2 = new Line(new Point(9, 1), new Point(10, 7));
-        Scene s2 = new Scene(200);
-        s2.add(line2, Color.GREEN);
-        frame.addScene(s2);
+        for(int i = 30; i < 360; i += 30) {
+            Line line2 = line1.rotate(new Point(3, 3), Math.toRadians(i));
+            Scene s = new Scene(500);
+            s.add(line2, Color.GREEN);
+            frame.addScene(s);
+        }
 
         // frame.writeToFile("./../assignments/ub2/test.png");
     }

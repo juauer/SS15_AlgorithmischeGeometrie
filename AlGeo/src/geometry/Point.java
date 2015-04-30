@@ -7,6 +7,7 @@ import java.awt.Graphics;
 import java.util.Locale;
 
 import mats.Mat;
+import mats.Mat2x2;
 
 public class Point implements Drawable {
     final public Mat m;
@@ -56,6 +57,10 @@ public class Point implements Drawable {
             return false;
 
         return true;
+    }
+
+    public Point compose(Mat2x2 mat) {
+        return new Point(Mat.compose(m, mat));
     }
 
     @Override

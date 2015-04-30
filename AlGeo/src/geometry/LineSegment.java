@@ -22,6 +22,12 @@ public class LineSegment extends Line implements Drawable {
     }
 
     @Override
+    public LineSegment rotate(Point point, double angle) {
+        Line l = super.rotate(point, angle);
+        return new LineSegment(l.p1, l.p2);
+    }
+
+    @Override
     public String toString() {
         return String.format(Locale.US, "LineSegment: %s -> %s", p1, p2);
     }
