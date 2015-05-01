@@ -10,6 +10,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -49,7 +51,18 @@ public class Frame extends JFrame implements Runnable {
         setSize(dimensions.width + 200, dimensions.height + 200);
         setLocationRelativeTo(null);
         setVisible(true);
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                dispose();
+
+                if(scenes != null)
+                    synchronized(scenes) {
+                        scenes.notifyAll();
+                    }
+            }
+        });
     }
 
     public static Frame create(Dimensions dimensions, String debugPath) {
