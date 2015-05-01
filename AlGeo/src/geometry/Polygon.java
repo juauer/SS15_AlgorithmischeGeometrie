@@ -132,8 +132,8 @@ public class Polygon implements Drawable {
         return new LineSegment(acc.getFirst(), acc.size() > 1 ? acc.get(1) : acc.getFirst());
     }
 
-    public LinkedList<Line[]> antipodalPoints() {
-        LinkedList<Line[]> result = new LinkedList<Line[]>();
+    public LinkedList<PodalPoints> antipodalPoints() {
+        LinkedList<PodalPoints> result = new LinkedList<PodalPoints>();
         int p1 = 0;
         int p2 = 0;
 
@@ -164,10 +164,10 @@ public class Polygon implements Drawable {
             else
                 p2 = (p2 + 1) % points.length;
 
-            result.add(new Line[] { caliper1, caliper2 });
+            result.add(new PodalPoints(p1, p2, points[p1], points[p2], caliper1, caliper2));
         }
 
-        if(result.getLast()[0].p1 == result.getFirst()[1].p1 && result.getLast()[1].p1 == result.getFirst()[0].p1)
+        if(result.getLast().point1 == result.getFirst().point2 && result.getLast().point2 == result.getFirst().point1)
             result.removeFirst();
 
         return result;

@@ -2,6 +2,7 @@ package geometry.test;
 
 import geometry.Line;
 import geometry.LineSegment;
+import geometry.PodalPoints;
 import geometry.Point;
 import geometry.Polygon;
 
@@ -17,18 +18,18 @@ public class Test {
     public static void ub2() {
         Polygon p1 = new Polygon(new Point(8, 13), new Point(11, 13), new Point(15, 7), new Point(14, 5),
                 new Point(11, 2), new Point(8, 2), new Point(5, 4), new Point(4, 7), new Point(5, 10));
-        LinkedList<Line[]> antiPodalPoints = p1.antipodalPoints();
-        Frame frame = Frame.create(new Dimensions(30, 20), "./../assignments/ub2/test1.png");
-        frame.drawPolygon(p1, Color.RED);
+        LinkedList<PodalPoints> antiPodalPoints = p1.antipodalPoints();
+        Frame frame1 = Frame.create(new Dimensions(19, 15), "./../assignments/ub2/test1.png");
+        frame1.drawPolygon(p1, Color.RED);
 
-        for(Line[] l : antiPodalPoints) {
+        for(PodalPoints l : antiPodalPoints) {
             Scene s = new Scene(1000);
-            s.add(new LineSegment(l[0].p1, l[1].p1), Color.ORANGE);
-            s.add(l[0], Color.BLUE);
-            s.add(l[1], Color.BLUE);
-            s.add(l[0].p1, Color.GREEN);
-            s.add(l[1].p1, Color.GREEN);
-            frame.addScene(s);
+            s.add(new LineSegment(l.point1, l.point2), Color.ORANGE);
+            s.add(l.line1, Color.BLUE);
+            s.add(l.line2, Color.BLUE);
+            s.add(l.point1, Color.GREEN);
+            s.add(l.point2, Color.GREEN);
+            frame1.addScene(s);
         }
     }
 
