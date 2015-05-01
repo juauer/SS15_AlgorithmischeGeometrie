@@ -205,7 +205,18 @@ public class Polygon implements Drawable {
             else
                 p2 = (p2 + 1) % polygon2.points.length;
 
-            result.add(new PodalPoints(p1, p2, polygon1.points[p1], polygon2.points[p2], caliper1, caliper2));
+            Line support = new Line(polygon1.points[p1], polygon2.points[p2]);
+            double side1 = polygon1.points[p1 == 0 ? polygon1.points.length - 1 : p1 - 1].distanceTo(support);
+            double side2 = polygon1.points[(p1 + 1) % polygon1.points.length].distanceTo(support);
+            double side3 = polygon2.points[p2 == 0 ? polygon2.points.length - 1 : p2 - 1].distanceTo(support);
+            double side4 = polygon2.points[(p2 + 1) % polygon2.points.length].distanceTo(support);
+            boolean isBridge = false;
+
+            if((side1 <= 0 && side2 <= 0 && side3 <= 0 && side4 <= 0)
+                    || (side1 >= 0 && side2 >= 0 && side3 >= 0 && side4 >= 0))
+                isBridge = true;
+
+            result.add(new PodalPoints(p1, p2, polygon1.points[p1], polygon2.points[p2], caliper1, caliper2, isBridge));
         }
 
         if(result.getFirst().point1 == result.getLast().point1 && result.getFirst().point2 == result.getLast().point2)
@@ -213,6 +224,7 @@ public class Polygon implements Drawable {
 
         return result;
     }
+
     @Override
     public void paint(Graphics g, Dimensions dimensions, Color color) {
         for(int i = 0; i < points.length; ++i) {

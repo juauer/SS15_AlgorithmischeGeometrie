@@ -45,6 +45,10 @@ public class Test {
             s.add(l.line2, Color.BLUE);
             s.add(l.point1, Color.GREEN);
             s.add(l.point2, Color.GREEN);
+
+            if(l.isBridge)
+                s.add(new LineSegment(l.point1, l.point2), Color.ORANGE);
+
             frame2.addScene(s);
         }
     }
