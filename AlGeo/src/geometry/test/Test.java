@@ -46,11 +46,13 @@ public class Test {
             s.add(l.point1, Color.GREEN);
             s.add(l.point2, Color.GREEN);
 
-            if(l.isBridge)
+            if(l.isBridge != 0)
                 s.add(new LineSegment(l.point1, l.point2), Color.ORANGE);
 
             frame2.addScene(s);
         }
+
+        Frame.create(new Dimensions(27, 15), null).drawPolygon(Polygon.convexHull(p1, p2), Color.BLACK);
     }
 
     public static void ub1() {

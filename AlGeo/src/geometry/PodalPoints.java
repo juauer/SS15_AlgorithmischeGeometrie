@@ -1,15 +1,15 @@
 package geometry;
 
 public class PodalPoints {
-    public final int     index1;
-    public final int     index2;
-    public final Point   point1;
-    public final Point   point2;
-    public final Line    line1;
-    public final Line    line2;
-    public final boolean isBridge;
+    public final int   index1;
+    public final int   index2;
+    public final Point point1;
+    public final Point point2;
+    public final Line  line1;
+    public final Line  line2;
+    public final int   isBridge;
 
-    public PodalPoints(int index1, int index2, Point point1, Point point2, Line line1, Line line2, boolean isBridge) {
+    public PodalPoints(int index1, int index2, Point point1, Point point2, Line line1, Line line2, int isBridge) {
         this.index1 = index1;
         this.index2 = index2;
         this.point1 = point1;
@@ -20,6 +20,6 @@ public class PodalPoints {
     }
 
     public PodalPoints(int index1, int index2, Point point1, Point point2, Line line1, Line line2) {
-        this(index1, index2, point1, point2, line1, line2, false);
+        this(index1, index2, point1, point2, line1, line2, 0);
     }
 }

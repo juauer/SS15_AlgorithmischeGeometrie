@@ -210,11 +210,12 @@ public class Polygon implements Drawable {
             double side2 = polygon1.points[(p1 + 1) % polygon1.points.length].distanceTo(support);
             double side3 = polygon2.points[p2 == 0 ? polygon2.points.length - 1 : p2 - 1].distanceTo(support);
             double side4 = polygon2.points[(p2 + 1) % polygon2.points.length].distanceTo(support);
-            boolean isBridge = false;
+            int isBridge = 0;
 
-            if((side1 < -C.E && side2 <= 0 && side3 <= 0 && side4 < -C.E)
-                    || (side1 >= 0 && side2 > C.E && side3 > C.E && side4 >= 0))
-                isBridge = true;
+            if(side1 < -C.E && side2 <= 0 && side3 <= 0 && side4 < -C.E)
+                isBridge = -1;
+            else if(side1 >= 0 && side2 > C.E && side3 > C.E && side4 >= 0)
+                isBridge = 1;
 
             result.add(new PodalPoints(p1, p2, polygon1.points[p1], polygon2.points[p2], caliper1, caliper2, isBridge));
         }
@@ -223,6 +224,51 @@ public class Polygon implements Drawable {
             result.removeFirst();
 
         return result;
+    }
+
+    public static Polygon convexHull(Polygon p1, Polygon p2) {
+        LinkedList<PodalPoints> copodalPoints = copodalPoints(p1, p2);
+        LinkedList<Point> result = new LinkedList<Point>();
+
+        for(int i = copodalPoints.size() - 1; i > -1; --i)
+            if(copodalPoints.get(i).isBridge == 0)
+                copodalPoints.remove(i);
+
+        copodalPoints.add(copodalPoints.getFirst());
+        Polygon current = copodalPoints.getFirst().isBridge == 1 ? p1 : p2;
+        int j;
+
+        for(int i = 0; i < copodalPoints.size() - 1; ++i) {
+            PodalPoints pp1 = copodalPoints.get(i);
+            PodalPoints pp2 = copodalPoints.get(i + 1);
+
+            if(current == p1) {
+                j = pp1.index1;
+
+                result.add(p1.points[j]);
+
+                while(j != pp2.index1) {
+                    System.out.println("1: " + j);
+                    result.add(p1.points[j]);
+                    j = (j + 1) % p1.points.length;
+                }
+
+                current = p2;
+            }
+            else {
+                j = pp1.index2;
+                result.add(p2.points[j]);
+
+                while(j != pp2.index2) {
+                    result.add(p2.points[j]);
+                    j = (j + 1) % p2.points.length;
+                }
+
+                current = p1;
+            }
+        }
+
+        return new Polygon(result.toArray(new Point[result.size()]));
     }
 
     @Override
