@@ -212,8 +212,8 @@ public class Polygon implements Drawable {
             double side4 = polygon2.points[(p2 + 1) % polygon2.points.length].distanceTo(support);
             boolean isBridge = false;
 
-            if((side1 <= 0 && side2 <= 0 && side3 <= 0 && side4 <= 0)
-                    || (side1 >= 0 && side2 >= 0 && side3 >= 0 && side4 >= 0))
+            if((side1 < -C.E && side2 <= 0 && side3 <= 0 && side4 < -C.E)
+                    || (side1 >= 0 && side2 > C.E && side3 > C.E && side4 >= 0))
                 isBridge = true;
 
             result.add(new PodalPoints(p1, p2, polygon1.points[p1], polygon2.points[p2], caliper1, caliper2, isBridge));
