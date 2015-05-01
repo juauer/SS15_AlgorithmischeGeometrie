@@ -31,6 +31,22 @@ public class Test {
             s.add(l.point2, Color.GREEN);
             frame1.addScene(s);
         }
+
+        Polygon p2 = new Polygon(new Point(18, 13), new Point(22, 12), new Point(24, 11),
+                new Point(20, 10), new Point(6, 8), new Point(3, 11));
+        LinkedList<PodalPoints> coPodalPoints = Polygon.copodalPoints(p1, p2);
+        Frame frame2 = Frame.create(new Dimensions(27, 15), "./../assignments/ub2/test2.png");
+        frame2.drawPolygon(p1, Color.RED);
+        frame2.drawPolygon(p2, Color.MAGENTA);
+
+        for(PodalPoints l : coPodalPoints) {
+            Scene s = new Scene(1000);
+            s.add(l.line1, Color.BLUE);
+            s.add(l.line2, Color.BLUE);
+            s.add(l.point1, Color.GREEN);
+            s.add(l.point2, Color.GREEN);
+            frame2.addScene(s);
+        }
     }
 
     public static void ub1() {

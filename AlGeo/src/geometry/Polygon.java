@@ -173,6 +173,46 @@ public class Polygon implements Drawable {
         return result;
     }
 
+    public static LinkedList<PodalPoints> copodalPoints(Polygon polygon1, Polygon polygon2) {
+        LinkedList<PodalPoints> result = new LinkedList<PodalPoints>();
+        int p1 = 0;
+        int p2 = 0;
+
+        for(int i = 1; i < polygon1.points.length; i++)
+            if(polygon1.points[i].compareTo(polygon1.points[p1]) < 0)
+                p1 = i;
+
+        for(int i = 1; i < polygon2.points.length; i++)
+            if(polygon2.points[i].compareTo(polygon2.points[p2]) < 0)
+                p2 = i;
+
+        Line caliper1 = new Line(polygon1.points[p1], new Point(polygon1.points[p1].getX(), polygon1.points[p1].getY() + 10.0d));
+        Line caliper2 = new Line(polygon2.points[p2], new Point(polygon2.points[p2].getX(), polygon2.points[p2].getY() + 10.0d));
+        double rotatedAngle = 0.0d;
+
+        while(rotatedAngle < 2.0d * Math.PI) {
+            double angle1 = caliper1.angleTo(polygon1.lines[p1]);
+            double angle2 = caliper2.angleTo(polygon2.lines[p2]);
+            angle1 = Math.abs(angle1 > 0 ? 2.0d * Math.PI - angle1 : angle1);
+            angle2 = Math.abs(angle2 > 0 ? 2.0d * Math.PI - angle2 : angle2);
+            double minAngle = Math.min(angle1, angle2);
+            caliper1 = new Line(polygon1.points[p1], caliper1.rotate(polygon1.points[p1], minAngle).u);
+            caliper2 = new Line(polygon2.points[p2], caliper2.rotate(polygon2.points[p2], minAngle).u);
+            rotatedAngle += minAngle;
+
+            if(angle1 < angle2)
+                p1 = (p1 + 1) % polygon1.points.length;
+            else
+                p2 = (p2 + 1) % polygon2.points.length;
+
+            result.add(new PodalPoints(p1, p2, polygon1.points[p1], polygon2.points[p2], caliper1, caliper2));
+        }
+
+        if(result.getFirst().point1 == result.getLast().point1 && result.getFirst().point2 == result.getLast().point2)
+            result.removeFirst();
+
+        return result;
+    }
     @Override
     public void paint(Graphics g, Dimensions dimensions, Color color) {
         for(int i = 0; i < points.length; ++i) {
