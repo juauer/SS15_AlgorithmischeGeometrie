@@ -20,6 +20,7 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 public class Frame extends JFrame implements Runnable {
+    private static boolean        displayedHelpOnce  = false;
     public final Dimensions       dimensions;
     protected final String        debugPath;
     protected final BufferedImage image_base;
@@ -94,10 +95,13 @@ public class Frame extends JFrame implements Runnable {
                 }
             });
 
-            System.out.println(String.format("Keyboard Controls:%n"
-                    + "\tt\ttoggle keyboard control / animation%n"
-                    + "\tspace\tnext scene%n"
-                    + "\tenter\tsave image to file"));
+            if(!displayedHelpOnce) {
+                displayedHelpOnce = true;
+                System.out.println(String.format("Keyboard Controls:%n"
+                        + "\tt\ttoggle keyboard control / animation%n"
+                        + "\tspace\tnext scene%n"
+                        + "\tenter\tsave image to file"));
+            }
 
             new Thread(new Runnable() {
                 private int i = 0;
