@@ -1,5 +1,6 @@
 package geometry;
 
+import geometry.test.Dimensions;
 import geometry.test.Drawable;
 
 import java.awt.Color;
@@ -69,9 +70,9 @@ public class Point implements Drawable, Comparable<Point> {
     }
 
     @Override
-    public void paint(Graphics g, Color color) {
+    public void paint(Graphics g, Dimensions dimensions, Color color) {
         g.setColor(color);
-        g.fillOval(Drawable.xToInt(getX()) - 3, Drawable.yToInt(getY()) - 3, 6, 6);
+        g.fillOval(dimensions.xToInt(getX()) - 3, dimensions.yToInt(getY()) - 3, 6, 6);
     }
 
     @Override

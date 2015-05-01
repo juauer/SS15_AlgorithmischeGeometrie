@@ -1,5 +1,6 @@
 package geometry;
 
+import geometry.test.Dimensions;
 import geometry.test.Drawable;
 
 import java.awt.Color;
@@ -33,9 +34,9 @@ public class LineSegment extends Line implements Drawable {
     }
 
     @Override
-    public void paint(Graphics g, Color color) {
+    public void paint(Graphics g, Dimensions dimensions, Color color) {
         g.setColor(color);
-        g.drawLine(Drawable.xToInt(p1.getX()), Drawable.yToInt(p1.getY()),
-                Drawable.xToInt(p2.getX()), Drawable.yToInt(p2.getY()));
+        g.drawLine(dimensions.xToInt(p1.getX()), dimensions.yToInt(p1.getY()),
+                dimensions.xToInt(p2.getX()), dimensions.yToInt(p2.getY()));
     }
 }

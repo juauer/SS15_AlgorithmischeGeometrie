@@ -1,5 +1,6 @@
 package geometry;
 
+import geometry.test.Dimensions;
 import geometry.test.Drawable;
 
 import java.awt.Color;
@@ -149,15 +150,15 @@ public class Line implements Drawable {
     }
 
     @Override
-    public void paint(Graphics g, Color color) {
+    public void paint(Graphics g, Dimensions dimensions, Color color) {
         Point p1 = null;
         Point p2 = null;
 
         for(LineSegment l : new LineSegment[] {
-                new LineSegment(new Point(0.0d, 0.0d), new Point(Drawable.RANGE_X, 0.0d)),
-                new LineSegment(new Point(0.0d, 0.0d), new Point(0.0d, Drawable.RANGE_Y)),
-                new LineSegment(new Point(0.0d, Drawable.RANGE_Y), new Point(Drawable.RANGE_X, Drawable.RANGE_Y)),
-                new LineSegment(new Point(Drawable.RANGE_X, 0.0d), new Point(Drawable.RANGE_X, Drawable.RANGE_Y)) }) {
+                new LineSegment(new Point(0.0d, 0.0d), new Point(dimensions.range_x, 0.0d)),
+                new LineSegment(new Point(0.0d, 0.0d), new Point(0.0d, dimensions.range_y)),
+                new LineSegment(new Point(0.0d, dimensions.range_y), new Point(dimensions.range_x, dimensions.range_y)),
+                new LineSegment(new Point(dimensions.range_x, 0.0d), new Point(dimensions.range_x, dimensions.range_y)) }) {
             Point p = getIntersection(l);
 
             if(p != null)
@@ -169,10 +170,10 @@ public class Line implements Drawable {
                 }
         }
 
-        new LineSegment(this.p1, this.p1.add(u.multiply(-1.0d))).rotate(this.p1, Math.PI / 4.0d).paint(g, color);
-        new LineSegment(this.p1, this.p1.add(u.multiply(-1.0d))).rotate(this.p1, Math.PI / -4.0d).paint(g, color);
+        new LineSegment(this.p1, this.p1.add(u.multiply(-1.0d))).rotate(this.p1, Math.PI / 4.0d).paint(g, dimensions, color);
+        new LineSegment(this.p1, this.p1.add(u.multiply(-1.0d))).rotate(this.p1, Math.PI / -4.0d).paint(g, dimensions, color);
 
         if(p1 != null && p2 != null)
-            new LineSegment(p1, p2).paint(g, color);
+            new LineSegment(p1, p2).paint(g, dimensions, color);
     }
 }

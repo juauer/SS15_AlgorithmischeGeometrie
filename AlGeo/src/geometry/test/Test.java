@@ -18,7 +18,7 @@ public class Test {
         Polygon p1 = new Polygon(new Point(8, 13), new Point(11, 13), new Point(15, 7), new Point(14, 5),
                 new Point(11, 2), new Point(8, 2), new Point(5, 4), new Point(4, 7), new Point(5, 10));
         LinkedList<Line[]> antiPodalPoints = p1.antipodalPoints();
-        Frame frame = Frame.create("./../assignments/ub2/test1.png");
+        Frame frame = Frame.create(new Dimensions(30, 20), "./../assignments/ub2/test1.png");
         frame.drawPolygon(p1, Color.RED);
 
         for(Line[] l : antiPodalPoints) {
@@ -35,7 +35,7 @@ public class Test {
     public static void ub1() {
         Polygon p = new Polygon(new Point(4, 9), new Point(6, 9), new Point(8, 7), new Point(9, 5), new Point(8, 3),
                 new Point(6, 1), new Point(4, 1), new Point(2, 3), new Point(1, 5), new Point(2, 7));
-        Frame frame = Frame.create("./../assignments/ub1/test.png");
+        Frame frame = Frame.create(new Dimensions(10, 10), "./../assignments/ub1/test.png");
         frame.drawPolygon(p, Color.RED);
 
         Point point1 = new Point(3, 7);

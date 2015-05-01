@@ -1,5 +1,6 @@
 package geometry;
 
+import geometry.test.Dimensions;
 import geometry.test.Drawable;
 
 import java.awt.Color;
@@ -173,10 +174,10 @@ public class Polygon implements Drawable {
     }
 
     @Override
-    public void paint(Graphics g, Color color) {
+    public void paint(Graphics g, Dimensions dimensions, Color color) {
         for(int i = 0; i < points.length; ++i) {
-            points[i].paint(g, color);
-            lines[i].paint(g, color);
+            points[i].paint(g, dimensions, color);
+            lines[i].paint(g, dimensions, color);
         }
     }
 }

@@ -20,34 +20,39 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 public class Frame extends JFrame implements Runnable {
-    protected final BufferedImage image_base         = new BufferedImage(Drawable.WIDTH + 100, Drawable.HEIGHT + 100, BufferedImage.TYPE_INT_RGB);
-    protected final BufferedImage image_animated     = new BufferedImage(Drawable.WIDTH + 100, Drawable.HEIGHT + 100, BufferedImage.TYPE_INT_RGB);
+    public final Dimensions       dimensions;
     protected final String        debugPath;
+    protected final BufferedImage image_base;
+    protected final BufferedImage image_animated;
     protected ArrayList<Scene>    scenes             = null;
     protected boolean             keyboardControlled = false;
 
-    private Frame(String debugPath) {
+    private Frame(Dimensions dimensions, String debugPath) {
+        this.dimensions = dimensions;
         this.debugPath = debugPath;
+        image_base = new BufferedImage(dimensions.width + 100, dimensions.height + 100, BufferedImage.TYPE_INT_RGB);
+        image_animated = new BufferedImage(dimensions.width + 100, dimensions.height + 100, BufferedImage.TYPE_INT_RGB);
+
         Graphics g = image_base.getGraphics();
         g.setColor(Color.WHITE);
-        g.fillRect(0, 0, Drawable.WIDTH + 100, Drawable.HEIGHT + 100);
+        g.fillRect(0, 0, dimensions.width + 100, dimensions.height + 100);
         g.setColor(Color.LIGHT_GRAY);
 
-        for(int i = 0; i <= Drawable.RANGE_X; ++i)
-            g.drawLine(Drawable.xToInt(i), Drawable.yToInt(0), Drawable.xToInt(i), Drawable.yToInt(Drawable.RANGE_Y));
+        for(int i = 0; i <= dimensions.range_x; ++i)
+            g.drawLine(dimensions.xToInt(i), dimensions.yToInt(0), dimensions.xToInt(i), dimensions.yToInt(dimensions.range_y));
 
-        for(int i = 0; i <= Drawable.RANGE_Y; ++i)
-            g.drawLine(Drawable.xToInt(0), Drawable.yToInt(i), Drawable.xToInt(Drawable.RANGE_X), Drawable.yToInt(i));
+        for(int i = 0; i <= dimensions.range_y; ++i)
+            g.drawLine(dimensions.xToInt(0), dimensions.yToInt(i), dimensions.xToInt(dimensions.range_x), dimensions.yToInt(i));
 
         setLayout(new BorderLayout());
-        setSize(Drawable.WIDTH + 200, Drawable.HEIGHT + 200);
+        setSize(dimensions.width + 200, dimensions.height + 200);
         setLocationRelativeTo(null);
         setVisible(true);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
 
-    public static Frame create(String debugPath) {
-        Frame f = new Frame(debugPath);
+    public static Frame create(Dimensions dimensions, String debugPath) {
+        Frame f = new Frame(dimensions, debugPath);
         SwingUtilities.invokeLater(f);
         return f;
     }
@@ -102,7 +107,7 @@ public class Frame extends JFrame implements Runnable {
                     Graphics g = image_animated.getGraphics();
                     Scene scene;
 
-                    while(true)
+                    while(isVisible())
                         synchronized(scenes) {
                             g.drawImage(image_base, 0, 0, null);
 
@@ -118,7 +123,7 @@ public class Frame extends JFrame implements Runnable {
                                 scene = scenes.get(i);
 
                                 for(int j = 0; j < scene.drawables.size(); ++j)
-                                    scene.drawables.get(j).paint(g, scene.colors.get(j));
+                                    scene.drawables.get(j).paint(g, dimensions, scene.colors.get(j));
 
                                 repaint();
                                 i = (i + 1) % scenes.size();
@@ -162,25 +167,25 @@ public class Frame extends JFrame implements Runnable {
 
     public void drawPolygon(Polygon polygon, Color color) {
         Graphics g = image_base.getGraphics();
-        polygon.paint(g, color);
+        polygon.paint(g, dimensions, color);
         repaint();
     }
 
     public void drawLine(Line line, Color color) {
         Graphics g = image_base.getGraphics();
-        line.paint(g, color);
+        line.paint(g, dimensions, color);
         repaint();
     }
 
     public void drawLineSegment(LineSegment line, Color color) {
         Graphics g = image_base.getGraphics();
-        line.paint(g, color);
+        line.paint(g, dimensions, color);
         repaint();
     }
 
     public void drawPoint(Point point, Color color) {
         Graphics g = image_base.getGraphics();
-        point.paint(g, color);
+        point.paint(g, dimensions, color);
         repaint();
     }
 
