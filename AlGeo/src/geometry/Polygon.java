@@ -248,7 +248,6 @@ public class Polygon implements Drawable {
                 result.add(p1.points[j]);
 
                 while(j != pp2.index1) {
-                    System.out.println("1: " + j);
                     result.add(p1.points[j]);
                     j = (j + 1) % p1.points.length;
                 }
