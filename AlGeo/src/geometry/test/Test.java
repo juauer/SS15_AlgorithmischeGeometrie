@@ -32,7 +32,7 @@ public class Test {
                 + "convex hull of P1 and P2, found by following the polygonal chain across the bridges found in 2A%n"
                 , p1.diameter()));
 
-        Frame frame1 = Frame.create("1A", new Dimensions(19, 15), "./../assignments/ub2/test1.png");
+        Frame frame1 = Frame.create("1A", new Dimensions(19, 15));
         frame1.drawPolygon(p1, Color.RED);
 
         for(PodalPoints l : antiPodalPoints) {
@@ -45,7 +45,7 @@ public class Test {
             frame1.addScene(s);
         }
 
-        Frame frame2 = Frame.create("2A", new Dimensions(27, 15), "./../assignments/ub2/test2.png");
+        Frame frame2 = Frame.create("2A", new Dimensions(27, 15));
         frame2.drawPolygon(p1, Color.RED);
         frame2.drawPolygon(p2, Color.MAGENTA);
 
@@ -62,13 +62,13 @@ public class Test {
             frame2.addScene(s);
         }
 
-        Frame.create("2B", new Dimensions(27, 15), null).drawPolygon(Polygon.convexHull(p1, p2), Color.BLACK);
+        Frame.create("2B", new Dimensions(27, 15)).drawPolygon(Polygon.convexHull(p1, p2), Color.BLACK);
     }
 
     public static void ub1() {
         Polygon p = new Polygon(new Point(4, 9), new Point(6, 9), new Point(8, 7), new Point(9, 5), new Point(8, 3),
                 new Point(6, 1), new Point(4, 1), new Point(2, 3), new Point(1, 5), new Point(2, 7));
-        Frame frame = Frame.create("", new Dimensions(10, 10), "./../assignments/ub1/test.png");
+        Frame frame = Frame.create("", new Dimensions(10, 10));
         frame.drawPolygon(p, Color.RED);
 
         Point point1 = new Point(3, 7);

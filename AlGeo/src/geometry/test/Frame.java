@@ -22,17 +22,17 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 public class Frame extends JFrame implements Runnable {
+    protected static final String PATH_CAPTURES      = "./capture%d.png";
+    protected static int          captured           = 0;
     private static boolean        displayedHelpOnce  = false;
     public final Dimensions       dimensions;
-    protected final String        debugPath;
     protected final BufferedImage image_base;
     protected final BufferedImage image_animated;
     protected ArrayList<Scene>    scenes             = null;
     protected boolean             keyboardControlled = false;
 
-    private Frame(String title, Dimensions dimensions, String debugPath) {
+    private Frame(String title, Dimensions dimensions) {
         this.dimensions = dimensions;
-        this.debugPath = debugPath;
         setTitle(title);
         image_base = new BufferedImage(dimensions.width + 100, dimensions.height + 100, BufferedImage.TYPE_INT_RGB);
         image_animated = new BufferedImage(dimensions.width + 100, dimensions.height + 100, BufferedImage.TYPE_INT_RGB);
@@ -66,8 +66,8 @@ public class Frame extends JFrame implements Runnable {
         });
     }
 
-    public static Frame create(String title, Dimensions dimensions, String debugPath) {
-        Frame f = new Frame(title, dimensions, debugPath);
+    public static Frame create(String title, Dimensions dimensions) {
+        Frame f = new Frame(title, dimensions);
         SwingUtilities.invokeLater(f);
         return f;
     }
@@ -101,7 +101,6 @@ public class Frame extends JFrame implements Runnable {
                             break;
                         case KeyEvent.VK_ENTER:
                             writeToFile();
-                            System.out.println(String.format("image written to %s", debugPath));
                             break;
                         default:
                             break;
@@ -176,7 +175,9 @@ public class Frame extends JFrame implements Runnable {
 
     public void writeToFile() {
         try {
-            ImageIO.write(scenes == null ? image_base : image_animated, "png", new File(debugPath));
+            String path = String.format(PATH_CAPTURES, ++captured);
+            ImageIO.write(scenes == null ? image_base : image_animated, "png", new File(path));
+            System.out.println(String.format("image written to %s", path));
         }
         catch(IOException e) {
             e.printStackTrace();
