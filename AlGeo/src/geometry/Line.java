@@ -120,21 +120,31 @@ public class Line implements Drawable {
 
     /**
      * Compute the angle between this and another line. Result is positive or
-     * negative just like an atan2 were used.
+     * negative just as like an atan2 were used.
      * 
-     * @param line A line with the direction this line would have if rotated
+     * @param line a line with the direction this line would have if rotated
      *            anticlockwise by the resulting angle
-     * @return Angle, in radians
+     * @return angle in radians
      */
     public double angleTo(Line line) {
         return Math.atan2(line.u.get(1), line.u.get(0)) - Math.atan2(u.get(1), u.get(0));
     }
 
+    /**
+     * Rotate this line around a given point
+     * 
+     * @param point centre of rotation
+     * @param angle angle in radians
+     * @return the rotated line
+     */
     public Line rotate(Point point, double angle) {
         Vector pos = point.toPosition();
         double cosa = Math.cos(angle);
         double sina = Math.sin(angle);
         Mat2x2 mat = new Mat2x2(cosa, -sina, sina, cosa);
+
+        // shift the line so that 'point' lies at the coordinates center, rotate
+        // it around the euler-angle, shift it back
         return new Line(p1.add(pos.multiply(-1)).compose(mat).add(pos),
                 p2.add(pos.multiply(-1)).compose(mat).add(pos));
     }

@@ -137,6 +137,8 @@ public class Polygon implements Drawable {
         int p1 = 0;
         int p2 = 0;
 
+        // the first antipodal points are given by the points with the min/max x
+        // coordinate
         for(int i = 1; i < points.length; i++) {
             if(points[i].compareTo(points[p1]) < 0)
                 p1 = i;
@@ -145,20 +147,27 @@ public class Polygon implements Drawable {
                 p2 = i;
         }
 
+        // the left/right caliper is constructed 'upwards'/'downwards'
         Line caliper1 = new Line(points[p1], new Point(points[p1].getX(), points[p1].getY() + 10.0d));
         Line caliper2 = new Line(points[p2], new Point(points[p2].getX(), points[p2].getY() - 10.0d));
         double rotatedAngle = 0.0d;
 
+        // do until the calipers rotated a total of 180 degrees
         while(rotatedAngle < Math.PI) {
+            // for both calipers: compute the angle between the caliper at point
+            // p_i and the linesegment p_i->p_(i+1)
             double angle1 = caliper1.angleTo(lines[p1]);
             double angle2 = caliper2.angleTo(lines[p2]);
             angle1 = Math.abs(angle1 > 0 ? 2.0d * Math.PI - angle1 : angle1);
             angle2 = Math.abs(angle2 > 0 ? 2.0d * Math.PI - angle2 : angle2);
+
+            // choose the smaller angle and rotate both calipers by that angle
             double minAngle = Math.min(angle1, angle2);
             caliper1 = new Line(points[p1], caliper1.rotate(points[p1], minAngle).u);
             caliper2 = new Line(points[p2], caliper2.rotate(points[p2], minAngle).u);
             rotatedAngle += minAngle;
 
+            // move the point that lies on the choosen caliper
             if(angle1 < angle2)
                 p1 = (p1 + 1) % points.length;
             else
@@ -167,6 +176,8 @@ public class Polygon implements Drawable {
             result.add(new PodalPoints(p1, p2, points[p1], points[p2], caliper1, caliper2));
         }
 
+        // just in case we rotated slightly more then 180 degrees, check if the
+        // first point is a duplicate of the last one
         if(result.getLast().point1 == result.getFirst().point2 && result.getLast().point2 == result.getFirst().point1)
             result.removeFirst();
 

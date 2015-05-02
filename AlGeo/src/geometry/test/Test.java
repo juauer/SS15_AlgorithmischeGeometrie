@@ -90,7 +90,5 @@ public class Test {
         System.out.println(String.format("intersection of polygon and line1 (blue): %s", p.intersectionWith(line1)));
         System.out.println(String.format("intersection of polygon and line2 (green): %s", p.intersectionWith(line2)));
         System.out.println(String.format("intersection of polygon and line3 (cyan): %s", p.intersectionWith(line3)));
-
-        // frame.writeToFile();
     }
 }
