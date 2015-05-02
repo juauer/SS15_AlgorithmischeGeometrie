@@ -30,9 +30,10 @@ public class Frame extends JFrame implements Runnable {
     protected ArrayList<Scene>    scenes             = null;
     protected boolean             keyboardControlled = false;
 
-    private Frame(Dimensions dimensions, String debugPath) {
+    private Frame(String title, Dimensions dimensions, String debugPath) {
         this.dimensions = dimensions;
         this.debugPath = debugPath;
+        setTitle(title);
         image_base = new BufferedImage(dimensions.width + 100, dimensions.height + 100, BufferedImage.TYPE_INT_RGB);
         image_animated = new BufferedImage(dimensions.width + 100, dimensions.height + 100, BufferedImage.TYPE_INT_RGB);
 
@@ -65,8 +66,8 @@ public class Frame extends JFrame implements Runnable {
         });
     }
 
-    public static Frame create(Dimensions dimensions, String debugPath) {
-        Frame f = new Frame(dimensions, debugPath);
+    public static Frame create(String title, Dimensions dimensions, String debugPath) {
+        Frame f = new Frame(title, dimensions, debugPath);
         SwingUtilities.invokeLater(f);
         return f;
     }

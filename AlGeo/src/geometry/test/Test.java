@@ -18,8 +18,21 @@ public class Test {
     public static void ub2() {
         Polygon p1 = new Polygon(new Point(8, 13), new Point(11, 13), new Point(15, 7), new Point(14, 5),
                 new Point(11, 2), new Point(8, 2), new Point(5, 4), new Point(4, 7), new Point(5, 10));
+        Polygon p2 = new Polygon(new Point(18, 13), new Point(22, 12), new Point(24, 11),
+                new Point(20, 10), new Point(6, 8), new Point(3, 11));
         LinkedList<PodalPoints> antiPodalPoints = p1.antipodalPoints();
-        Frame frame1 = Frame.create(new Dimensions(19, 15), "./../assignments/ub2/test1.png");
+        LinkedList<PodalPoints> coPodalPoints = Polygon.copodalPoints(p1, p2);
+
+        System.out.println(String.format("1A:%n"
+                + "calipers (blue) rotating around polygon P1 (red) at antipodal points (green)%n"
+                + "P1 diameter: %.1f%n%n"
+                + "2A:%n"
+                + "calipers rotating around copodal points of P1 and P2 (magenta) in search of bridges (orange)%n%n"
+                + "2B:%n"
+                + "convex hull of P1 and P2, found by following the polygonal chain across the bridges found in 2A%n"
+                , p1.diameter()));
+
+        Frame frame1 = Frame.create("1A", new Dimensions(19, 15), "./../assignments/ub2/test1.png");
         frame1.drawPolygon(p1, Color.RED);
 
         for(PodalPoints l : antiPodalPoints) {
@@ -32,10 +45,7 @@ public class Test {
             frame1.addScene(s);
         }
 
-        Polygon p2 = new Polygon(new Point(18, 13), new Point(22, 12), new Point(24, 11),
-                new Point(20, 10), new Point(6, 8), new Point(3, 11));
-        LinkedList<PodalPoints> coPodalPoints = Polygon.copodalPoints(p1, p2);
-        Frame frame2 = Frame.create(new Dimensions(27, 15), "./../assignments/ub2/test2.png");
+        Frame frame2 = Frame.create("2A", new Dimensions(27, 15), "./../assignments/ub2/test2.png");
         frame2.drawPolygon(p1, Color.RED);
         frame2.drawPolygon(p2, Color.MAGENTA);
 
@@ -52,13 +62,13 @@ public class Test {
             frame2.addScene(s);
         }
 
-        Frame.create(new Dimensions(27, 15), null).drawPolygon(Polygon.convexHull(p1, p2), Color.BLACK);
+        Frame.create("2B", new Dimensions(27, 15), null).drawPolygon(Polygon.convexHull(p1, p2), Color.BLACK);
     }
 
     public static void ub1() {
         Polygon p = new Polygon(new Point(4, 9), new Point(6, 9), new Point(8, 7), new Point(9, 5), new Point(8, 3),
                 new Point(6, 1), new Point(4, 1), new Point(2, 3), new Point(1, 5), new Point(2, 7));
-        Frame frame = Frame.create(new Dimensions(10, 10), "./../assignments/ub1/test.png");
+        Frame frame = Frame.create("", new Dimensions(10, 10), "./../assignments/ub1/test.png");
         frame.drawPolygon(p, Color.RED);
 
         Point point1 = new Point(3, 7);
