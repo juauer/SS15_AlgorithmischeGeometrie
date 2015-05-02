@@ -226,6 +226,19 @@ public class Polygon implements Drawable {
         return result;
     }
 
+    public double diameter() {
+        double max = 0.0d;
+
+        for(PodalPoints p : antipodalPoints()) {
+            double d = Math.abs(p.point1.toPosition().substract(p.point2.toPosition()).length());
+
+            if(d > max)
+                max = d;
+        }
+
+        return max;
+    }
+
     public static Polygon convexHull(Polygon p1, Polygon p2) {
         LinkedList<PodalPoints> copodalPoints = copodalPoints(p1, p2);
         LinkedList<Point> result = new LinkedList<Point>();
