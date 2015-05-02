@@ -52,6 +52,20 @@ public class Frame extends JFrame implements Runnable {
         setSize(dimensions.width + 200, dimensions.height + 200);
         setLocationRelativeTo(null);
         setVisible(true);
+        addKeyListener(new KeyAdapter() {
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                switch(e.getKeyCode()) {
+                    case KeyEvent.VK_ENTER:
+                        writeToFile();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+
         addWindowListener(new WindowAdapter() {
 
             @Override
@@ -98,9 +112,6 @@ public class Frame extends JFrame implements Runnable {
                             synchronized(scenes) {
                                 scenes.notifyAll();
                             }
-                            break;
-                        case KeyEvent.VK_ENTER:
-                            writeToFile();
                             break;
                         default:
                             break;
