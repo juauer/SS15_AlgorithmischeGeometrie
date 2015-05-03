@@ -222,7 +222,7 @@ Bei Erreichen des Rekursionsankers des divide-and-conquer-Algorithmus wird aus 3
 
 Werden zwei Polygone $S_1,S_2$ gemerged wird folglich ebenfalls nur konstante Zeit benötigt um $y_{min}=min_y(s_1y_{min},s_2y_{min})$ und $y_{max}=max_y(s_1y_{miax},s_2y_{max})$ zu bestimmen. Hierdurch stehen zwei Ecken von $CH(S_1\cup S_2)$ fest.
 
-Da $S_1,S_2$ disjunkt sind (aufgrund der Sortiertheit) gibt es zwischen $S_1$ und $S_2$ genau 2 Brücken. Es muss nun also lediglich für $y_{min}$/$y_{max}$ die obere/untere CLS zum anderen Polygon gefunden werden. Es wird im Folgenden geschildert wie eine solche Brücke gefunden wird, falls $S_1$ das linke Polygon ist mit $p_i=y_{max}\in S_1$. Die übrigen Fälle können analog berechnet werden.
+Da $S_1,S_2$ disjunkt sind (aufgrund der Sortiertheit) gibt es zwischen $S_1$ und $S_2$ genau 2 Brücken. Es muss nun also lediglich für $y_{min}$/$y_{max}$ die obere/untere Brücke zum anderen Polygon gefunden werden. Es wird im Folgenden geschildert wie eine solche Brücke gefunden wird, falls $S_1$ das linke Polygon ist mit $p_i=y_{max}\in S_1$. Die übrigen Fälle können analog berechnet werden.
 \begin{figure}[htpb]
 \begin{center}
 \includegraphics[width=9cm]{sketch1}
