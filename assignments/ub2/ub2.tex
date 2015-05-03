@@ -233,8 +233,27 @@ Da $S_1,S_2$ disjunkt sind (aufgrund der Sortiertheit) gibt es zwischen $S_1$ un
 Das von Toussaint vorgeschlagene Prinzip ist eine Binärsuche (die bekanntlich in $O(\log n)$ läuft): für einen Punkt $q_i\in S_2$ wird der  Winkel $\alpha=angle(\overline{p_ip_{i+1}},\overline{p_i,q_i})$ betrachtet. Gesucht ist der Punkt mit maximalem Winkel. Für einen zufälligen Startpunkt $q_i$ wird nun einfach eine Binärsuche in Richtung $q_{i-1}$ und eine weitere in Richtung $q_{i+1}$ durchgeführt - es ist zu Beginn nicht klar, in welcher Richtung der Punkt gefunden werden kann: Während sich in der einen Richtung der Winkel vergrößert wird er sich in der anderen zunächst verkleinern um sich ggf. später zu vergrößern.\\
 In beiden Fällen lässt sich mit binärer Suche der Punkt mit maximalem $\alpha$ finden, der somit zum Brückenpunkt wird.
 
+\newpage
 \subtask{b}
-TODO
+Sortieren benötigt üblicherweise $O(n\cdot\log n)$.
 
+Im merge-Schritt werden - wie oben beschrieben - in konstanter Zeit $y_{min}$ und $y_{max}$ bestimmt und anschließend 4 Binärsuchen durchgeführt, die im schlimmsten Fall $O(\log n)$ Zeit benötigen.
+
+Für den rekursiven Teil ergibt sich somit die Laufzeit zu:
+\begin{align*}
+T(3)&=d\\
+T(n)&=T\left\lfloor\frac{n}{2}\right\rfloor+T\left\lceil\frac{n}{2}\right\rceil+\log n+c
+\end{align*}
+[Annahme: 2er-Potenz] zu zeigen spare ich mir mal. Ich gehe auch davon aus, dass eine Rekursionstiefe von $\log n$ leicht zu sehen ist:
+\begin{align*}
+T(n)&=2\cdot T\left(\frac{n}{2}\right)+\log n+c\\
+&=2^2+2\cdot T\left(\frac{n}{2^2}\right)+2\cdot\log\frac{n}{2}+\log n+2\cdot c+c\\
+&=2^{\log n}+\log n\cdot T\left(\frac{n}{2^{\log n}}\right)+\sum_{i=0}^{\log n -1}\left(2^i\cdot\log\frac{n}{2^i}+2^i\cdot c\right)\\
+&\le n+d\cdot\log n+n\cdot c+\sum_{i=0}^{\log n -1}2^i\cdot(\log n-\log 2^i)\\
+&=n+d\cdot\log n+n\cdot c+\sum_{i=0}^{\log n -1}2^i\cdot(\log n-i)\\
+&\le n+d\cdot\log n+n\cdot c+n\cdot\log n
+\end{align*}
+
+Hmmm. Man kommt hier also auch nur auf $O(n\cdot\log n)$ ich hätte gedacht hier reichen $O(n)$. Ulkig.
 \end{task}
 \end{document}
