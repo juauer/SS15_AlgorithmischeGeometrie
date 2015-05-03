@@ -218,7 +218,20 @@ Die implementierten Testfälle sind visualisiert und animiert. Es lohnt sich tro
 
 \begin{task}{konvexe Hülle}
 \subtask{a}
-TODO
+Bei Erreichen des Rekursionsankers des divide-and-conquer-Algorithmus wird aus 3 Punkten in $O(1)$ ein konvexes Polygon $S$ konstruiert. Offensichtlich braucht es hier nicht mehr als noch einmal $O(1)$ Zeit, um für dieses Polygon die Punkte mit der kleinsten/größten y-Koordinate $sy_{min}$/$sy_{max}$ zu bestimmen und für dieses Polygon zu speichern.
+
+Werden zwei Polygone $S_1,S_2$ gemerged wird folglich ebenfalls nur konstante Zeit benötigt um $y_{min}=min_y(s_1y_{min},s_2y_{min})$ und $y_{max}=max_y(s_1y_{miax},s_2y_{max})$ zu bestimmen. Hierdurch stehen zwei Ecken von $CH(S_1\cup S_2)$ fest.
+
+Da $S_1,S_2$ disjunkt sind (aufgrund der Sortiertheit) gibt es zwischen $S_1$ und $S_2$ genau 2 Brücken. Es muss nun also lediglich für $y_{min}$/$y_{max}$ die obere/untere CLS zum anderen Polygon gefunden werden. Es wird im Folgenden geschildert wie eine solche Brücke gefunden wird, falls $S_1$ das linke Polygon ist mit $p_i=y_{max}\in S_1$. Die übrigen Fälle können analog berechnet werden.
+\begin{figure}[htpb]
+\begin{center}
+\includegraphics[width=9cm]{sketch1}
+\end{center}
+\caption{Brücke Punkt-Polygon}
+\end{figure}
+
+Das von Toussaint vorgeschlagene Prinzip ist eine Binärsuche (die bekanntlich in $O(\log n)$ läuft): für einen Punkt $q_i\in S_2$ wird der  Winkel $\alpha=angle(\overline{p_ip_{i+1}},\overline{p_i,q_i})$ betrachtet. Gesucht ist der Punkt mit maximalem Winkel. Für einen zufälligen Startpunkt $q_i$ wird nun einfach eine Binärsuche in Richtung $q_{i-1}$ und eine weitere in Richtung $q_{i+1}$ durchgeführt - es ist zu Beginn nicht klar, in welcher Richtung der Punkt gefunden werden kann: Während sich in der einen Richtung der Winkel vergrößert wird er sich in der anderen zunächst verkleinern um sich ggf. später zu vergrößern.\\
+In beiden Fällen lässt sich mit binärer Suche der Punkt mit maximalem $\alpha$ finden, der somit zum Brückenpunkt wird.
 
 \subtask{b}
 TODO
