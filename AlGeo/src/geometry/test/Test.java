@@ -4,14 +4,17 @@ import geometry.Line;
 import geometry.LineSegment;
 import geometry.PodalPoints;
 import geometry.Point;
+import geometry.Points;
 import geometry.Polygon;
 
 import java.awt.Color;
 import java.util.LinkedList;
+import java.util.Random;
 
 public class Test {
     public static void main(String[] args) {
-        ub2();
+    	ub3();
+        //ub2();
         // ub1();
     }
 
@@ -90,5 +93,28 @@ public class Test {
         System.out.println(String.format("intersection of polygon and line1 (blue): %s", p.intersectionWith(line1)));
         System.out.println(String.format("intersection of polygon and line2 (green): %s", p.intersectionWith(line2)));
         System.out.println(String.format("intersection of polygon and line3 (cyan): %s", p.intersectionWith(line3)));
+    }
+    
+    public static void ub3() {
+    	int dimx = 10;
+    	int dimy = 10;
+    	int total = 5;
+    	Frame frame = Frame.create("", new Dimensions(dimx, dimy));
+    	Points p = new Points(randomPoints(dimx, dimy, total));
+    	for(int i=0; i<p.points.length; i++){
+    		frame.drawPoint(p.points[i], Color.BLUE);
+    		System.out.println("(" + p.points[i].getX() + " | " + p.points[i].getY() +")");
+    	}
+    }
+    
+    private static Point[] randomPoints(int rangex, int rangey, int total) {
+    	Random rand = new Random();
+    	Point[] randomPoints = new Point[total];
+    	for (int i=0; i<total; i++) {
+    		int randX = rand.nextInt((rangex - 1) + 1) + 1;
+    		int randY = rand.nextInt((rangey - 1) + 1) + 1;
+    		randomPoints[i] = new Point(randX, randY);
+    	}
+    	return randomPoints;
     }
 }
