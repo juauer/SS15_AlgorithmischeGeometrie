@@ -85,7 +85,33 @@ belowcaptionskip=15pt}
 \hrule
 
 \begin{task}{Graham-Scan}\item[]
-TODO
+Implementieren Sie den Graham-Scan. Benutzen Sie dabei aus Gründen besserer Laufzeit und zur Vermeidung von Rundungsfehlern möglichst nur die Grundrechenarten $+,-,\times, \div$. Eine Umrechnung in Polarkoordinaten, wie in der Vorlesung beschrieben, ist nicht nötig, um die Strahlen nach Steigung zu sortieren.
+
+Im Folgenden wird der Algorithmus beschrieben, welcher implementiert wurde. Er orientiert sich an der in \emph{Introduction to Algorithms}\footnote{Introduction to Algorithms, Second Edition, S. 949}. Der Stack $S$ wird verwendet, um mögliche Kandidaten der konvexen Hülle abzulegen. Terminiert der Algorithmus so enthält $S$ die Knoten der konvexten Hülle, gegen den Urzeigersinn.
+
+\begin{algorithm}
+\caption{Graham-Scan(Q)}
+\begin{algorithmic}[1]
+\STATE sei $p_0 \in Q$ mit minimaler $y$-Koordinate:
+bei gleicher $y$-Koordinate minimale $x$-Koordinate verwenden
+\STATE sei ${p_1, p_2, \dots, p_n}$ die restlichen Punkte aus $Q$:\\
+sortiert nach Polarkooridaten\\
+gegen den Urzeigersinn\\
+bei gleichem Winkel, nur den Punkt behalten der den größten Abstand von $p_0$ hat\\
+(TODO schauen wie das ohne Polarkoordinaten auch geht, evtl. Kreuzprodukt oder so)\\
+\STATE \textsc{Push}($p_0$, $S$)\\
+\STATE \textsc{Push}($p_1$, $S$)\\
+\STATE \textsc{Push}($p_2$, $S$)\\
+\FOR{$i=3$ \TO $n$}
+    \WHILE{Winkel (\textsc{Next-To-Top}($S$), \textsc{Top}($S$), $p_i$) ist keine Linkskurve}
+    \STATE \textsc{Pop}($S$)
+    \ENDWHILE
+    \STATE \textsc{Push}($p_1$, $S$)
+\ENDFOR
+\RETURN{$S$}
+\end{algorithmic}
+\end{algorithm}
+
 \begin{lstlisting}
 \end{lstlisting}
 \end{task}
