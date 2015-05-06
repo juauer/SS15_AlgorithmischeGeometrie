@@ -96,15 +96,17 @@ public class Test {
     }
     
     public static void ub3() {
-    	int dimx = 10;
-    	int dimy = 10;
-    	int total = 5;
+    	int dimx = 20;
+    	int dimy = 20;
+    	int total = 10;
     	Frame frame = Frame.create("", new Dimensions(dimx, dimy));
     	Points p = new Points(randomPoints(dimx, dimy, total));
     	for(int i=0; i<p.points.length; i++){
     		frame.drawPoint(p.points[i], Color.BLUE);
     		System.out.println("(" + p.points[i].getX() + " | " + p.points[i].getY() +")");
     	}
+    	Point min = p.getMinY();
+    	frame.drawPoint(min, Color.RED);
     }
     
     private static Point[] randomPoints(int rangex, int rangey, int total) {

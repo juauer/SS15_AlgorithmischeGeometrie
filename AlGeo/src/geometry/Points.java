@@ -6,11 +6,28 @@ import java.awt.Graphics;
 import geometry.test.Dimensions;
 import geometry.test.Drawable;
 
-public class Points implements Drawable{
+public class Points implements Drawable {
 	public final Point[] points;
 	
 	public Points(Point... points) {
 		this.points = points;
+	}
+	
+	public Point getMinY() {
+		Point min = points[0];
+		for(Point p : points) {
+			if( min.getY() <= p.getY() ) {
+				if(min.getY() == p.getY()) {
+					// Compare x-values
+					if(min.getX() > p.getX() ){
+						min = p;
+					}
+				}
+			} else {
+				min = p;
+			}
+        }
+		return min;
 	}
 	
 	@Override
