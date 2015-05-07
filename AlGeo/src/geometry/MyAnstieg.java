@@ -9,15 +9,18 @@ public class MyAnstieg {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        Double objm = (Double) obj;
-        if(Math.abs(this.m - objm) > C.E) {
-            System.out.println("nicht drin");
-            return false;
-        }
-        else {
+    public int hashCode() {
+        return 0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o instanceof MyAnstieg && Math.abs(m - ((MyAnstieg) o).m) < C.E) {
             System.out.println("schon drin");
             return true;
         }
+
+        System.out.println("nicht drin");
+        return false;
     }
 }
