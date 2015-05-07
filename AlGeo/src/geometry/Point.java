@@ -23,7 +23,11 @@ public class Point implements Drawable, Comparable<Point> {
     }
 
     public Point add(Vector v) {
-        return new Point(Mat.add(m, v.m.clone().transpose()));
+        return new Point(Mat.add(m, Mat.transpose(v.m)));
+    }
+
+    public Point substract(Vector v) {
+        return new Point(Mat.subtract(m, Mat.transpose(v.m)));
     }
 
     public Vector toPosition() {
