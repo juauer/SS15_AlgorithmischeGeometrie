@@ -76,6 +76,14 @@ public class Point implements Drawable, Comparable<Point> {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if(o instanceof Point && getX() == ((Point) o).getX() && getY() == ((Point) o).getY())
+            return true;
+
+        return false;
+    }
+
+    @Override
     public int compareTo(Point p) {
         if(getX() == p.getX())
             return getY() < p.getY() ? -1 : getY() == p.getY() ? 0 : 1;
