@@ -44,6 +44,10 @@ public class Vector {
         return multiply(1.0d / length());
     }
 
+    public double getAscent() {
+        return m.get(1, 0) / m.get(0, 0);
+    }
+
     @Override
     public String toString() {
         return String.format(Locale.US, "(%.1f, %.1f)", m.get(0, 0), m.get(1, 0));

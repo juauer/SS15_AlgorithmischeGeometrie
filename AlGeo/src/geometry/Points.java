@@ -39,7 +39,7 @@ public class Points implements Drawable {
 
         for(Point p : points) {
             if(p != min) {
-                Double d = (p.getY() - min.getY()) / (p.getX() - min.getX());
+                Double d = p.toPosition().substract(min.toPosition()).getAscent();
                 MyAnstieg m = new MyAnstieg(d);
                 if(!relevantPoints.containsKey(m)) {
                     System.out.println(p);
