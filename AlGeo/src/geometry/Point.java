@@ -80,8 +80,13 @@ public class Point implements Drawable, Comparable<Point> {
     }
 
     @Override
+    public int hashCode() {
+        return 0;
+    }
+
+    @Override
     public boolean equals(Object o) {
-        if(o instanceof Point && getX() == ((Point) o).getX() && getY() == ((Point) o).getY())
+        if(o instanceof Point && Math.abs(getX() - ((Point) o).getX()) < C.E && Math.abs(getY() - ((Point) o).getY()) < C.E)
             return true;
 
         return false;
