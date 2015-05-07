@@ -15,8 +15,8 @@ import java.util.Random;
 
 public class Test {
     public static void main(String[] args) {
-    	ub3();
-        //ub2();
+        ub3();
+        // ub2();
         // ub1();
     }
 
@@ -96,40 +96,40 @@ public class Test {
         System.out.println(String.format("intersection of polygon and line2 (green): %s", p.intersectionWith(line2)));
         System.out.println(String.format("intersection of polygon and line3 (cyan): %s", p.intersectionWith(line3)));
     }
-    
+
     public static void ub3() {
-    	int dimx = 20;
-    	int dimy = 20;
-    	int total = 10;
-    	Frame frame = Frame.create("", new Dimensions(dimx, dimy));
-    	
-    	Point point1 = new Point(3, 3);
+        int dimx = 20;
+        int dimy = 20;
+        int total = 10;
+        Frame frame = Frame.create("", new Dimensions(dimx, dimy));
+
+        Point point1 = new Point(3, 3);
         Point point2 = new Point(6, 6);
         Point point3 = new Point(7, 7);
         Point point4 = new Point(1, 10);
         Point point5 = new Point(3, 5);
-    	
-    	//Points p = new Points(randomPoints(dimx, dimy, total));
+
+        // Points p = new Points(randomPoints(dimx, dimy, total));
         Points p = new Points(point1, point2, point3, point4, point5);
-        
-    	for(int i=0; i<p.points.length; i++){
-    		frame.drawPoint(p.points[i], Color.BLUE);
-    		System.out.println("(" + p.points[i].getX() + " | " + p.points[i].getY() +")");
-    	}
-    	Point min = p.getMinY();
-    	frame.drawPoint(min, Color.RED);
-    	Map<MyAnstieg, Point> relPoints = p.getRelevatPoints();
-    	System.out.println(relPoints.size());
+
+        for(int i = 0; i < p.points.length; i++) {
+            frame.drawPoint(p.points[i], Color.BLUE);
+            System.out.println("(" + p.points[i].getX() + " | " + p.points[i].getY() + ")");
+        }
+        Point min = p.getMinY();
+        frame.drawPoint(min, Color.RED);
+        Map<MyAnstieg, Point> relPoints = p.getRelevatPoints();
+        System.out.println(relPoints.size());
     }
-    
+
     private static Point[] randomPoints(int rangex, int rangey, int total) {
-    	Random rand = new Random();
-    	Point[] randomPoints = new Point[total];
-    	for (int i=0; i<total; i++) {
-    		int randX = rand.nextInt((rangex - 1) + 1) + 1;
-    		int randY = rand.nextInt((rangey - 1) + 1) + 1;
-    		randomPoints[i] = new Point(randX, randY);
-    	}
-    	return randomPoints;
+        Random rand = new Random();
+        Point[] randomPoints = new Point[total];
+        for(int i = 0; i < total; i++) {
+            int randX = rand.nextInt((rangex - 1) + 1) + 1;
+            int randY = rand.nextInt((rangey - 1) + 1) + 1;
+            randomPoints[i] = new Point(randX, randY);
+        }
+        return randomPoints;
     }
 }
