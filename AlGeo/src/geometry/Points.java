@@ -33,17 +33,32 @@ public class Points implements Drawable {
         return min;
     }
 
-    public Map<MyAnstieg, Point> getRelevatPoints() {
+    public Map<MyAnstieg, Point> getRelevantPoints() {
         Point min = getMinY();
         Map<MyAnstieg, Point> relevantPoints = new HashMap<MyAnstieg, Point>();
 
         for(Point p : points) {
+
             if(p != min) {
-                Double d = p.toPosition().substract(min.toPosition()).getAscent();
+                
+                Double d = p.toPosition().substract(min.toPosition()).getMirroredAscent();                 
                 MyAnstieg m = new MyAnstieg(d);
+
+                if (Double.isInfinite(d)) {
+                    m = new MyAnstieg(Double.MAX_VALUE);
+                }
+
                 if(!relevantPoints.containsKey(m)) {
-                    System.out.println(p);
                     relevantPoints.put(m, p);
+                } else {
+                    Point cp = relevantPoints.get(m);
+                    double distanceold = cp.getX()*cp.getX()+cp.getY()*cp.getY();
+                    double distancenew = p.getX()*p.getX()+p.getY()*p.getY();
+                    
+                    if(distancenew > distanceold) {
+                        relevantPoints.remove(m);
+                        relevantPoints.put(m, p);
+                    }
                 }
             }
         }
