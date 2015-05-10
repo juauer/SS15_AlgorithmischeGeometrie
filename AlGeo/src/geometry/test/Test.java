@@ -27,7 +27,7 @@ public class Test {
         for(int i = 0; i < pointcloud.length; i++)
             frame.drawPoint(pointcloud[i], Color.BLACK);
 
-        Polygon ch = ConvexHull.grahamscan(frame, pointcloud);
+        Polygon ch = ConvexHull.grahamScan(frame, pointcloud);
         Scene s = new Scene(5000);
         s.add(ch, Color.RED);
         frame.addScene(s);
