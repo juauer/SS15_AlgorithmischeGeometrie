@@ -112,7 +112,7 @@ Die Methode \emph{grahamScan(points)} erhält als Eingabe eine Punktwolke und li
 
 Wir verwenden als Startpunkt des Algorithmus den Punkt der am weitesten links liegt und die kleinste $y$-Koordinate besitzt (in der Vorlesung wird ein beliebiger Punkt in der Mitte der Punktwolke ermittelt). Die Sortierung der Punkte erfolgt nach ihrer Steigung.
 
-Um Links- und Rechtskurven zu prüfen, wird die Determinante einer $2\times 2$-Matrix bestimmt, welche sich aus den zwei Vektoren der folgenden drei Punkte zusammensetzt. $p2$ ist der letzte Punkt auf dem Stack, $p2$ der vorletzte Punkt und $p1$ der Punkt der aktuell betrachtet wird. Es wird getestet ob $\overline{p2~p1}$ links oder rechts von $\overline{p2~p3}$ liegt.\\
+Um Links- und Rechtskurven zu prüfen, wird die Determinante einer $2\times 2$-Matrix bestimmt, welche sich aus den zwei Vektoren der folgenden drei Punkte zusammensetzt: $p2$ ist der letzte Punkt auf dem Stack, $p3$ der vorletzte Punkt und $p1$ der Punkt der aktuell betrachtet wird. Es wird getestet ob $\overline{p2~p1}$ links oder rechts von $\overline{p2~p3}$ liegt.\\
 
 \lstinputlisting[language=Java, linerange={21-81,99-109,127-136}]{../../AlGeo/src/algorithms/ConvexHull.java}
 
@@ -193,7 +193,7 @@ D.h.: neben konstant 2 Vergleichen pro Aufruf des Algorithmus wird jede Kante de
 Die Gesamtlaufzeit ergibt sich somit zu $O(n\cdot\log n)$.
 
 \begin{task}{untere Schranke}\item[]
-Angenommen die konvexe Hülle der Punkte $S=\{(a_1,a_1^2),...,(a_n,a_n^2)\}$ ließe sich in weniger als $\Omega (n\cdot\log n)$ bestimmen. Die konvexe Hülle hat hier stets die Form $CH(S)=p_1,..,p_n$ mit $x_i\ge x_{i+1}$ und $y_i\ge y_{i+1}$ (vgl. auch Abb. 2).
+Angenommen die konvexe Hülle der Punkte $S=\{(a_1,a_1^2),...,(a_n,a_n^2)\}$ ließe sich in weniger als $\Omega (n\cdot\log n)$ bestimmen. Die konvexe Hülle hat hier stets die Form $CH(S)=p_1,..,p_n$ mit $x_i\ge x_{i+1}$ und $y_i\ge y_{i+1}$ wobei kein Punkt aus $S$ im Inneren des entstehenden Polygons liegt (vgl. auch Abb. 2).
 \begin{figure}[htpb]
 \begin{center}
 \includegraphics[width=5cm]{sketch1}
@@ -209,7 +209,7 @@ I.V.: Der Polygonzug $p_1,...,p_n$ mit $x_i\ge x_{i+1}$ beschreibt die konvexe H
 $n\rightarrow n+1:$ Alle Punkte $p_1,...,p_n$ liegen rechts der Geraden $\overrightarrow{p_{n+1}p_1}$, da stets
 \begin{align*}
 &\frac{y_1-y_{n+1}}{x_1-x_{n+1}}>\frac{y_1-y_n}{x_1-x_n}\\
-=&\frac{x_1^2-x_{n+1}^2}{x_1-x_{n+1}}>\frac{x_1^2-x_n^2}{x_1-x_n}
+\Leftrightarrow &\frac{x_1^2-x_{n+1}^2}{x_1-x_{n+1}}>\frac{x_1^2-x_n^2}{x_1-x_n}
 \end{align*}
 (aufgrund der Tatsache, dass nach Voraussetzung $x_n\ge x_{n+1}$) und nach I.V. alle $p_i$ mit $i<n$ schon vorher rechts der Geraden $\overrightarrow{p_np_1}$ lagen. $p_n$ (und somit auch alle $p_i$ mit $i<n$) kann jedoch auf keinen Fall aus der konvexen Hülle ''gestrichen'' werden, da (nach derselben Rechnung) die Steigung von $\overrightarrow{p_np_{n-1}}$ steiler sein muss, als die von $\overrightarrow{p_{n+1}p_n}$. Damit muss die konvexe Hülle $CH(p1,...,p_{n+1})=p1,...,p_{n+1}$ sein.
 

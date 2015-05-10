@@ -78,7 +78,7 @@ public class ConvexHull {
             Mat2x2 matrix = new Mat2x2(v1.get(0), v1.get(1), v2.get(0), v2.get(1));
 
             // testing for not left-turns
-            while(!(matrix.getDeterminant() <= 0)) {
+            while(matrix.getDeterminant() > 0) {
                 if(frame != null) {
                     LineSegment line1 = new LineSegment(p3, p2);
                     LineSegment line2 = new LineSegment(p2, p1);
