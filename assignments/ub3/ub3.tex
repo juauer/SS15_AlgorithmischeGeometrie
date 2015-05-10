@@ -117,8 +117,43 @@ bei gleichem Winkel, nur den Punkt behalten der den größten Abstand von $p_0$ 
 \end{task}
 
 \begin{task}{inkrementelle Konstruktion der konvexen Hülle}\item[]
-TODO
+Die ersten drei Punkte $S=p_1,p_2,p_3$ werden zunächst nach X-Koordinate aufsteigend und dann nach Y-Koordinate absteigend sortiert. Die konvexe Hülle $CH(S)=S$ ist somit ein Polygonzug der im Uhrzeigersinn verläuft. Ferner wird das Center of Mass $com=((x_1+x_2+x_3)/3,(y_1+y_2+y_3)/3)$ bestimmt. Außerdem wird als Datenstruktur ein binärer Suchbaum $T$ angelegt, der $search(p)$, $insert(p)$ und $delete(p)$ in $O(\log n)$ garantiert (z.B. ein AVL-Baum) - in diesen werden $p_1,p_2,p_3$ eingefügt, wobei die totale Ordnung gegeben ist durch
+$$p_i<p_j\text{ g.d.w. }\frac{y_i-y_{com}}{x_i-x_{com}}<\frac{y_j-y_{com}}{x_j-x_{com}}$$
+wenn also die Steigung zwischen $com$ und $p_i$ kleiner ist, als die von $com$ und $p_j$. Diese Ordnung gilt auch für zukünftige Operationen auf dem Baum. $search(p)$ soll hierbei den Punkt aus $CH(S)$ liefern, der die nächst kleinere Steigung im Vergleich zu $p$ hat. Diese Initialisierung benötigt offensichtlich nur $O(1)$ Zeit.
+
+Für jeden weiteren Punkt $p_n$ um den die konvexe Hülle $S=p_1,...,p_{n-1}$ erweitert werden soll wird nun $CH(S,p_n,T)$ aufgerufen, wobei $left(p,\overrightarrow q)$ die Funktion sei, die prüft ob $p$ auf der linken Seite des Vektors $\overrightarrow q$ liegt und $S.insert(p_i,j)$ den Punkt $p_i$ hinter dem Punkt $p_j$ zum Polygonzug $S$ der konvexen Hülle hinzufügt:
+\begin{algorithm}
+\caption{$CH(S,p_n,T)$}
+\begin{algorithmic}[1]
+\STATE$p_i=T.search(p_n)$\\
+\IF{$left(p_n,\overrightarrow{p_ip_{i+1}})$}
+\RETURN
+\ENDIF
+\STATE$T.insert(p_n)$\\
+\STATE$S.insert(p_n,i)$\\
+\STATE$j=i$\\
+\WHILE{$left(p_n,\overrightarrow{p_{j-1}p_j})$}
+\STATE$T.remove(p_j)$\\
+\STATE$S.remove(p_j)$\\
+\STATE$j-=1$\\
+\ENDWHILE
+\WHILE{$left(p_n,\overrightarrow{p_ip_{i+1}})$}
+\STATE$T.remove(p_i)$\\
+\STATE$S.remove(p_i)$\\
+\STATE$i+=1$\\
+\ENDWHILE
+\end{algorithmic}
+\end{algorithm}
 \end{task}
+
+Korrektheit:\\
+TODO
+
+Speicherplatz:\\
+TODO
+
+Laufzeit:\\
+TODO
 
 \begin{task}{untere Schranke}\item[]
 TODO
