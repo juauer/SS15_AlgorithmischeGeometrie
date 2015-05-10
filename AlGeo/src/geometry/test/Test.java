@@ -110,26 +110,13 @@ public class Test {
         System.out.println(String.format("intersection of polygon and line3 (cyan): %s", p.intersectionWith(line3)));
     }
 
-    private static Point[] randomPoints(int rangex, int rangey, int total) {
+    public static Point[] randomPoints(double rangex, double rangey, int total) {
         Random rand = new Random();
         Point[] randomPoints = new Point[total];
-        for(int i = 0; i < total; i++) {
-            int randX = rand.nextInt(rangex) + 1;
-            int randY = rand.nextInt(rangey) + 1;
-            randomPoints[i] = new Point(randX, randY);
-        }
-        return randomPoints;
-    }
 
-    // Wo soll das hin?
-    private static Point[] randomPoints(double rangex, double rangey, int total) {
-        Random rand = new Random();
-        Point[] randomPoints = new Point[total];
-        for(int i = 0; i < total; i++) {
-            double randX = rand.nextDouble() * total;
-            double randY = rand.nextDouble() * total;
-            randomPoints[i] = new Point(randX, randY);
-        }
+        for(int i = 0; i < total; i++)
+            randomPoints[i] = new Point(rand.nextDouble() * rangex, rand.nextDouble() * rangey);
+
         return randomPoints;
     }
 }
