@@ -47,10 +47,6 @@ public class Vector {
     public double getAscent() {
         return m.get(1, 0) / m.get(0, 0);
     }
-    
-    public double getMirroredAscent() {
-        return m.get(0, 0) / m.get(1, 0);
-    }
 
     @Override
     public String toString() {

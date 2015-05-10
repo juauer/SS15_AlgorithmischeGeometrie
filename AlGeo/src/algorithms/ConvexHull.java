@@ -18,43 +18,30 @@ import java.util.Stack;
 import mats.Mat2x2;
 
 public class ConvexHull {
-    public static Point getMinY(Point... points) {
-        Point min = points[0];
-        for(Point p : points) {
-            if(min.getY() <= p.getY()) {
-                if(min.getY() == p.getY()) {
-                    // Compare x-values
-                    if(min.getX() > p.getX()) {
-                        min = p;
-                    }
-                }
-            }
-            else {
-                min = p;
-            }
-        }
-        return min;
-    }
-
     public static Polygon grahamscan(Frame frame, Point... pointcloud) {
-        // get minimum
-        Point min = getMinY(pointcloud);
-
-        // sort by ascent first and distance second
+        // copy points to list and find minimum
+        Point m = pointcloud[0];
         LinkedList<Point> sortedPoints = new LinkedList<Point>();
 
-        for(Point p : pointcloud)
-            if(p != min)
-                sortedPoints.add(p);
+        for(Point p : pointcloud) {
+            sortedPoints.add(p);
 
+            if(p.compareTo(m) < 0)
+                m = p;
+        }
+
+        final Point min = m;
+        sortedPoints.remove(min);
+
+        // sort by ascent first and distance second
         Collections.sort(sortedPoints, new Comparator<Point>() {
 
             @Override
             public int compare(Point p1, Point p2) {
                 Vector pos1 = p1.toPosition().substract(min.toPosition());
                 Vector pos2 = p2.toPosition().substract(min.toPosition());
-                double ascent1 = pos2.getMirroredAscent();
-                double ascent2 = pos1.getMirroredAscent();
+                double ascent1 = pos1.getAscent();
+                double ascent2 = pos2.getAscent();
 
                 if(Math.abs(ascent1 - ascent2) < C.E) {
                     double l = pos1.length() - pos2.length();
