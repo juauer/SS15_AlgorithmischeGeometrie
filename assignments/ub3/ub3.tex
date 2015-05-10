@@ -186,17 +186,27 @@ Für jeden weiteren Punkt $p_n$ um den die konvexe Hülle $S=p_1,...,p_{n-1}$ er
 \end{algorithm}
 \end{task}
 
-Korrektheit:\\
-TODO
-
 Speicherplatz:\\
-TODO
+$O(n)$ für einen AVL-Baum.
 
 Laufzeit:\\
-TODO
+Es bietet sich hier an, den Polygonzug in einer verketteten Liste zu speichern. Die Elemente der Liste werden stets über den Baum adressiert - was effizient ist - während in konstanter Zeit Zeiger umgelegt werden können. Für das Einfügen von $n$ Punkten muss $n\times$ \emph{CH(...)} ausgeführt werden. Dessen Zeitaufwand ergibt sich zu:
+\begin{itemize}
+\item $O(\log n)$ für das Suchen im Baum (1)
+\item $O(1)$ für Listenoperationen (2-4, 6)
+\item $O(\log n)$ für das Einfügen in den Baum (5)
+\item $O(f(n))\cdot O(\log n)$ wobei die Größe von $f(n)$ im Folgenden zu untersuchen ist (8-17)
+\end{itemize}
+
+Anstatt über planare Graphen zu argumentieren ist hier vlt. eine sehr einfache Anwendung der Buchhalter-Methode möglich!?:
+
+Jeder Punkt wird nur höchstens einmal zu der konvexen Hülle hinzugefügt und beim Hinzufügen mit einem Guthaben von '1' ausgestattet. Wird ein Punkt gar nicht zur konvexen Hülle hinzugefügt verbleibt er mit einem Guthaben von '0'. Beim Hinzufügen eines Punktes $p_i$ werden in den beiden Schleifen einmal der linke und einmal der rechte Nachbar inspiziert, was beim Hinzufügen von $n$ Punkten $O(n)$ Zeit benötigt. Nur wenn $p_{i-1}$ oder $p_{i+1}$ entfernt werden müssen, besteht die Notwendigkeit einen weiteren Punkt zu untersuchen. Für diesen zusätzlichen Schritt wird nun das Guthaben von $p_{i-1}$ bzw. $p_{i+1}$ aufgebraucht. $p_{i-1}$ bzw. $p_{i+1}$ werden in diesem Fall allerdings entfernt und verbleiben so mit einem Guthaben von '0'.\\
+D.h.: neben konstant 2 Vergleichen pro Aufruf des Algorithmus wird jede Kante des Polygons bei der Suche nach zu Entfernenden Kanten höchstens 1 mal passiert (nach dem ersten Mal fliegt die Kante raus). Bei $n$-maligem Aufruf fallen somit nur Kosten von $O(n)$ an.
+
+Die Gesamtlaufzeit ergibt sich somit zu $O(n\cdot\log n)$.
 
 \begin{task}{untere Schranke}\item[]
-Angenommen die konvexe Hülle der Punkte $S=\{(a_1,a_1^2),...,(a_n,a_n^2)\}$ ließe sich in weniger als $\Omega (n\cdot\log n)$ bestimmen. Die konvexe Hülle hat hier stets die Form $CH(S)=p_1,..,p_n$ mit $x_i\ge x_{i+1}$ und $y_i\ge y_{i+1}$ (vgl. auch Abb. 1).
+Angenommen die konvexe Hülle der Punkte $S=\{(a_1,a_1^2),...,(a_n,a_n^2)\}$ ließe sich in weniger als $\Omega (n\cdot\log n)$ bestimmen. Die konvexe Hülle hat hier stets die Form $CH(S)=p_1,..,p_n$ mit $x_i\ge x_{i+1}$ und $y_i\ge y_{i+1}$ (vgl. auch Abb. 2).
 \begin{figure}[htpb]
 \begin{center}
 \includegraphics[width=5cm]{sketch1}
