@@ -2,22 +2,14 @@ package geometry.test;
 
 import geometry.Line;
 import geometry.LineSegment;
-import geometry.MyAnstieg;
 import geometry.PodalPoints;
 import geometry.Point;
 import geometry.Polygon;
-import geometry.Vector;
 
 import java.awt.Color;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.Random;
-import java.util.Stack;
-import java.util.TreeMap;
 
-import mats.Mat2x2;
 import algorithms.ConvexHull;
 
 public class Test {
@@ -32,105 +24,10 @@ public class Test {
         Frame frame = Frame.create("Graham Scan - animated steps", new Dimensions(dim, dim));
         Point[] pointcloud = randomPoints(dim, dim, dim);
 
-        for(int i = 0; i < pointcloud.length; i++) {
+        for(int i = 0; i < pointcloud.length; i++)
             frame.drawPoint(pointcloud[i], Color.BLACK);
-        }
 
-        // get minimum
-        Point min = ConvexHull.getMinY(pointcloud);
-        frame.drawPoint(min, Color.RED);
-
-        // select only relevant points from point cloud
-        Map<MyAnstieg, Point> relevantPoints = ConvexHull.getRelevantPoints(pointcloud);
-        System.out.println(relevantPoints.size() + "relevant points for graham from " + dim + "points in point cloud.");
-
-        // sort by ascent
-        Map<MyAnstieg, Point> sortedPoints = new TreeMap<MyAnstieg, Point>(Collections.reverseOrder());
-        for(MyAnstieg a : relevantPoints.keySet()) {
-            sortedPoints.put(a, relevantPoints.get(a));
-        }
-
-        // put first 3 points on stack
-        Stack<Point> stack = new Stack<Point>();
-        stack.push(min); // first
-
-        MyAnstieg ascent = ((TreeMap<MyAnstieg, Point>) sortedPoints).firstKey();
-        Point p = sortedPoints.get(ascent);
-        sortedPoints.remove(ascent);
-        stack.push(p); // second point
-
-        ascent = ((TreeMap<MyAnstieg, Point>) sortedPoints).firstKey();
-        p = sortedPoints.get(ascent);
-        sortedPoints.remove(ascent);
-        stack.push(p); // third point
-
-        // have a look at each point
-        for(MyAnstieg ca : sortedPoints.keySet()) { // ca ... current ascent
-
-            Point t = stack.pop(); // t ... top
-            Point ntt = stack.peek(); // ntt ... next-to-top
-            stack.push(t); // put top back on stack
-
-            LineSegment line1 = new LineSegment(ntt, t);
-            LineSegment line2 = new LineSegment(t, sortedPoints.get(ca));
-
-            // use determinant for testing left/right turns
-            Vector v1 = new Vector(ntt.getX() - t.getX(), ntt.getY() - t.getY());
-            Vector v2 = new Vector(sortedPoints.get(ca).getX() - t.getX(), sortedPoints.get(ca).getY() - t.getY());
-
-            Mat2x2 matrix = new Mat2x2(v1.get(0), v1.get(1), v2.get(0), v2.get(1));
-
-            // testing for not left-turns
-            while(!(matrix.getDeterminant() <= 0)) {
-
-                Scene s = new Scene(1000);
-                Point ptemp = min;
-                for(Iterator<Point> it = stack.iterator(); it.hasNext();) {
-                    LineSegment l = new LineSegment(ptemp, ptemp = it.next());
-                    s.add(l, Color.BLACK);
-                }
-                s.add(ntt, Color.GREEN);
-                s.add(line1, Color.GREEN);
-                s.add(line2, Color.GREEN);
-                frame.addScene(s);
-
-                // remove last point
-                stack.pop();
-
-                // have a look at the next point
-                t = stack.pop();
-                ntt = stack.peek();
-                stack.push(t);
-
-                line1 = new LineSegment(ntt, t);
-                line2 = new LineSegment(t, sortedPoints.get(ca));
-
-                v1 = new Vector(ntt.getX() - t.getX(), ntt.getY() - t.getY());
-                v2 = new Vector(sortedPoints.get(ca).getX() - t.getX(), sortedPoints.get(ca).getY() - t.getY());
-
-                matrix = new Mat2x2(v1.get(0), v1.get(1), v2.get(0), v2.get(1));
-            }
-
-            Scene s = new Scene(1000);
-            Point ptemp = min;
-            for(Iterator<Point> it = stack.iterator(); it.hasNext();) {
-                LineSegment l = new LineSegment(ptemp, ptemp = it.next());
-                s.add(l, Color.BLACK);
-            }
-            s.add(ntt, Color.BLACK);
-            s.add(line1, Color.BLACK);
-            s.add(line2, Color.BLACK);
-            frame.addScene(s);
-
-            // put current point on stack
-            stack.push(sortedPoints.get(ca));
-        }
-
-        // generate polygon from points on stack
-        Point[] points = new Point[stack.size()];
-        stack.toArray(points);
-        Polygon ch = new Polygon(points);
-
+        Polygon ch = ConvexHull.grahamscan(frame, pointcloud);
         Scene s = new Scene(5000);
         s.add(ch, Color.RED);
         frame.addScene(s);

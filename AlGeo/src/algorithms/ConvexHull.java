@@ -1,12 +1,17 @@
 package algorithms;
 
+import geometry.LineSegment;
 import geometry.MyAnstieg;
 import geometry.Point;
 import geometry.Polygon;
 import geometry.Vector;
+import geometry.test.Frame;
+import geometry.test.Scene;
 
+import java.awt.Color;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Stack;
 import java.util.TreeMap;
@@ -33,7 +38,7 @@ public class ConvexHull {
     }
 
     public static Map<MyAnstieg, Point> getRelevantPoints(Point... points) {
-        Point min = getMinY();
+        Point min = getMinY(points);
         Map<MyAnstieg, Point> relevantPoints = new HashMap<MyAnstieg, Point>();
 
         for(Point p : points) {
@@ -65,8 +70,7 @@ public class ConvexHull {
         return relevantPoints;
     }
 
-    public static Polygon grahamscan(Point... pointcloud) {
-
+    public static Polygon grahamscan(Frame frame, Point... pointcloud) {
         // get minimum
         Point min = getMinY(pointcloud);
 
@@ -95,7 +99,6 @@ public class ConvexHull {
 
         // have a look at each point
         for(MyAnstieg ca : sortedPoints.keySet()) { // ca ... current ascent
-
             Point t = stack.pop(); // t ... top
             Point ntt = stack.peek(); // ntt ... next-to-top
             stack.push(t); // put top back on stack
@@ -108,6 +111,22 @@ public class ConvexHull {
 
             // testing for not left-turns
             while(!(matrix.getDeterminant() <= 0)) {
+                if(frame != null) {
+                    LineSegment line1 = new LineSegment(ntt, t);
+                    LineSegment line2 = new LineSegment(t, sortedPoints.get(ca));
+                    Scene s = new Scene(1000);
+                    Point ptemp = min;
+
+                    for(Iterator<Point> it = stack.iterator(); it.hasNext();) {
+                        LineSegment l = new LineSegment(ptemp, ptemp = it.next());
+                        s.add(l, Color.BLACK);
+                    }
+
+                    s.add(ntt, Color.GREEN);
+                    s.add(line1, Color.GREEN);
+                    s.add(line2, Color.GREEN);
+                    frame.addScene(s);
+                }
 
                 // remove last point
                 stack.pop();
@@ -121,6 +140,23 @@ public class ConvexHull {
                 v2 = new Vector(sortedPoints.get(ca).getX() - t.getX(), sortedPoints.get(ca).getY() - t.getY());
 
                 matrix = new Mat2x2(v1.get(0), v1.get(1), v2.get(0), v2.get(1));
+            }
+
+            if(frame != null) {
+                LineSegment line1 = new LineSegment(ntt, t);
+                LineSegment line2 = new LineSegment(t, sortedPoints.get(ca));
+                Scene s = new Scene(1000);
+                Point ptemp = min;
+
+                for(Iterator<Point> it = stack.iterator(); it.hasNext();) {
+                    LineSegment l = new LineSegment(ptemp, ptemp = it.next());
+                    s.add(l, Color.BLACK);
+                }
+
+                s.add(ntt, Color.BLACK);
+                s.add(line1, Color.BLACK);
+                s.add(line2, Color.BLACK);
+                frame.addScene(s);
             }
 
             // put current point on stack
