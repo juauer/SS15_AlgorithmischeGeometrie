@@ -22,7 +22,6 @@ import algorithms.ConvexHull;
 
 public class Test {
     public static void main(String[] args) {
-        // ub3tinytest();
         ub3();
         // ub2();
         // ub1();
@@ -135,23 +134,6 @@ public class Test {
         Scene s = new Scene(5000);
         s.add(ch, Color.RED);
         frame.addScene(s);
-    }
-
-    public static void ub3tinytest() {
-        int dimx = 40, dimy = 40;
-        int total = 20;
-        Frame frame = Frame.create("Graham Scan - point cloud and convex hull", new Dimensions(dimx, dimy));
-        Point[] pointcloud = randomPoints(dimx, dimy, total);
-
-        // draw pointcloud
-        for(int i = 0; i < pointcloud.length; i++) {
-            frame.drawPoint(pointcloud[i], Color.BLACK);
-        }
-
-        Polygon ch = ConvexHull.grahamscan(pointcloud);
-
-        // draw convex hull
-        frame.drawPolygon(ch, Color.RED);
     }
 
     public static void ub2() {
