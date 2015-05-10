@@ -5,7 +5,6 @@ import geometry.LineSegment;
 import geometry.MyAnstieg;
 import geometry.PodalPoints;
 import geometry.Point;
-import geometry.Points;
 import geometry.Polygon;
 import geometry.Vector;
 
@@ -32,18 +31,18 @@ public class Test {
     public static void ub3() {
         int dim = 30;
         Frame frame = Frame.create("Graham Scan - animated steps", new Dimensions(dim, dim));
-        Points pointcloud = new Points(randomPoints(dim, dim, dim));
+        Point[] pointcloud = randomPoints(dim, dim, dim);
 
-        for(int i = 0; i < pointcloud.points.length; i++) {
-            frame.drawPoint(pointcloud.points[i], Color.BLACK);
+        for(int i = 0; i < pointcloud.length; i++) {
+            frame.drawPoint(pointcloud[i], Color.BLACK);
         }
 
         // get minimum
-        Point min = pointcloud.getMinY();
+        Point min = ConvexHull.getMinY(pointcloud);
         frame.drawPoint(min, Color.RED);
 
         // select only relevant points from point cloud
-        Map<MyAnstieg, Point> relevantPoints = pointcloud.getRelevantPoints();
+        Map<MyAnstieg, Point> relevantPoints = ConvexHull.getRelevantPoints(pointcloud);
         System.out.println(relevantPoints.size() + "relevant points for graham from " + dim + "points in point cloud.");
 
         // sort by ascent
@@ -142,11 +141,11 @@ public class Test {
         int dimx = 40, dimy = 40;
         int total = 20;
         Frame frame = Frame.create("Graham Scan - point cloud and convex hull", new Dimensions(dimx, dimy));
-        Points pointcloud = new Points(randomPoints(dimx, dimy, total));
+        Point[] pointcloud = randomPoints(dimx, dimy, total);
 
         // draw pointcloud
-        for(int i = 0; i < pointcloud.points.length; i++) {
-            frame.drawPoint(pointcloud.points[i], Color.BLACK);
+        for(int i = 0; i < pointcloud.length; i++) {
+            frame.drawPoint(pointcloud[i], Color.BLACK);
         }
 
         Polygon ch = ConvexHull.grahamscan(pointcloud);
