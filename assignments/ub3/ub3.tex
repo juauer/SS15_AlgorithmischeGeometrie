@@ -156,6 +156,17 @@ Laufzeit:\\
 TODO
 
 \begin{task}{untere Schranke}\item[]
+Angenommen die konvexe Hülle der Punkte $S={(a_1,a_1^2),...,(a_n,a_n^2)}$ ließe sich in weniger als $\Omega (n\cdot\log n)$ bestimmen. Die konvexe Hülle hat hier stets die Form $CH(S)=p_1,..,p_n$ mit $x_i\ge x_{i+1}$ und $y_i\ge y{i+1}$ (vgl. auch Abb. 1).
+\begin{figure}[htpb]
+\begin{center}
+\includegraphics[width=5cm]{sketch1}
+\end{center}
+\caption{Konvexe Hülle}
+\end{figure}
+
+Beweis:\\
 TODO
+
+Somit könnte man den Polygonzug in linearer Zeit ablaufen um die sortierte Folge $a_n,..,a_1$ zu erhalten (da stets $x_i\ge x_{i+1}$). Das Sortieren der Folge hätte somit nur soviel Zeit benötigt wie die Konstruktion der konvexen Hülle zzgl. $O(n)$ für das Berechnen der Quadrate und noch einmal $O(n)$ für das Ablaufen des Polygonzugs. Dies ist nach Annahme jedoch nicht möglich: die Konstruktion der konvexen Hülle muss folglich $\Omega (n\cdot\log n)$ Zeit benötigen.
 \end{task}
 \end{document}
