@@ -85,20 +85,18 @@ belowcaptionskip=15pt}
 \hrule
 
 \begin{task}{Graham-Scan}\item[]
-Implementieren Sie den Graham-Scan. Benutzen Sie dabei aus Gründen besserer Laufzeit und zur Vermeidung von Rundungsfehlern möglichst nur die Grundrechenarten $+,-,\times, \div$. Eine Umrechnung in Polarkoordinaten, wie in der Vorlesung beschrieben, ist nicht nötig, um die Strahlen nach Steigung zu sortieren.
+\emph{Implementieren Sie den Graham-Scan. Benutzen Sie dabei aus Gründen besserer Laufzeit und zur Vermeidung von Rundungsfehlern möglichst nur die Grundrechenarten $+,-,\times, \div$. Eine Umrechnung in Polarkoordinaten, wie in der Vorlesung beschrieben, ist nicht nötig, um die Strahlen nach Steigung zu sortieren.}
 
-Im Folgenden wird der Algorithmus beschrieben, welcher implementiert wurde. Er orientiert sich an der in \emph{Introduction to Algorithms}\footnote{Introduction to Algorithms, Second Edition, S. 949}. Der Stack $S$ wird verwendet, um mögliche Kandidaten der konvexen Hülle abzulegen. Terminiert der Algorithmus so enthält $S$ die Knoten der konvexten Hülle, gegen den Urzeigersinn.
+Im Folgenden wird der implementierte Algorithmus mit Hilfe von Pseudocode beschreiben, dieser orientiert sich an der in \emph{Introduction to Algorithms}\footnote{Introduction to Algorithms, Second Edition, S. 949} vorgestellten Lösung. Der Stack $S$ wird verwendet, um mögliche Kandidaten der konvexen Hülle zu verwalten. Nach terminierung des Algorithmus enthält $S$ die Knoten der konvexen Hülle entgegen dem Urzeigersinn.
 
 \begin{algorithm}
 \caption{Graham-Scan(Q)}
 \begin{algorithmic}[1]
-\STATE sei $p_0 \in Q$ mit minimaler $y$-Koordinate:
-bei gleicher $y$-Koordinate minimale $x$-Koordinate verwenden
+\STATE sei $p_0 \in Q$ mit minimaler $y$-Koordinate:\\
+bei gleicher $y$-Koordinate wird minimale $x$-Koordinate verwendet
 \STATE sei ${p_1, p_2, \dots, p_n}$ die restlichen Punkte aus $Q$:\\
-sortiert nach Polarkooridaten\\
-gegen den Urzeigersinn\\
-bei gleichem Winkel, nur den Punkt behalten der den größten Abstand von $p_0$ hat\\
-(TODO schauen wie das ohne Polarkoordinaten auch geht, evtl. Kreuzprodukt oder so)\\
+von $p_0$ aus gesehen in Polarkorrdinaten gegen den Urzeigersinn sortiert\\
+bei gleichem Winkel, nur Punkt mit größtem Abstand von $p_0$ behalten\\
 \STATE \textsc{Push}($p_0$, $S$)\\
 \STATE \textsc{Push}($p_1$, $S$)\\
 \STATE \textsc{Push}($p_2$, $S$)\\
@@ -106,14 +104,56 @@ bei gleichem Winkel, nur den Punkt behalten der den größten Abstand von $p_0$ 
     \WHILE{Winkel (\textsc{Next-To-Top}($S$), \textsc{Top}($S$), $p_i$) ist keine Linkskurve}
     \STATE \textsc{Pop}($S$)
     \ENDWHILE
-    \STATE \textsc{Push}($p_1$, $S$)
+    \STATE \textsc{Push}($p_i$, $S$)
 \ENDFOR
 \RETURN{$S$}
 \end{algorithmic}
 \end{algorithm}
 
-\begin{lstlisting}
-\end{lstlisting}
+Die Methode \emph{grahamscan()} erhält als Eingabe eine Punktwolke und liefert ein Polygon zurück, welches der Konvexenhülle dieser Punktwolke entspricht.
+
+Wir verwenden als Startpunkt des Algorithmus den Punkt der am weitestens Links liegt und die kleinsten $y$-Koordinte besitzt (\emph{getMinY()}). (In der Vorlesung wird ein beliebiebiger Punkt in der Mitte der Punktwolke ermittelt.)
+
+Die Sortierung der Punkte erfolgt nach ihrer Steigung. Damit die Punkte gegen den Urzeigersinn sortiert sind werden sie vorher an der Funktion $f(x)=|x|$ gespiegelt und erst dann der Anstiegt berechnet (\emph{getRelevantPoints()}).
+
+Um Links- und Rechskurven zu prüfen, wird die Determinante einer $2x2$-Matrix bestimmt, welche sich aus den zwei Vektoren der folgenden drei Punkte zusammensetzt. $t$ ist der letzte Punkt auf dem Stack, $ntt$ der vorletzte Punkt und $ca$ der Punkt der aktuelle betrachtet wird. Es wird getestet ob $\overline{t~cp}$ links oder rechts von $\overline{t~ntt}$ liegt.
+
+\newpage
+
+\lstinputlisting[language=Java, firstline=18, lastline=85]{../../AlGeo/src/algorithms/ConvexHull.java}
+
+\lstinputlisting[language=Java, firstline=18, lastline=34]{../../AlGeo/src/geometry/Points.java}
+
+\lstinputlisting[language=Java, firstline=36, lastline=66]{../../AlGeo/src/geometry/Points.java}
+
+\newpage
+
+Zur Veranschaulichung des Algorithmus gibt es einen Testklasse, wo die einzelnen Schritte visualisiert werden. Hier ein Beispiel mit 10 zufälligen Punkten:
+
+\begin{figure}[h]
+\begin{center}
+\subfigure{
+    \includegraphics[width=5cm]{capture1}
+}
+\subfigure{
+    \includegraphics[width=5cm]{capture2}
+}
+\subfigure{
+    \includegraphics[width=5cm]{capture3}
+}
+\subfigure{
+    \includegraphics[width=5cm]{capture4}
+}
+\subfigure{
+    \includegraphics[width=5cm]{capture5}
+}
+\subfigure{
+    \includegraphics[width=5cm]{capture12}
+}
+\end{center}
+\caption{Die ersten 5 Schritte und die resultierende Konvexehülle.}
+\end{figure}
+
 \end{task}
 
 \begin{task}{inkrementelle Konstruktion der konvexen Hülle}\item[]
