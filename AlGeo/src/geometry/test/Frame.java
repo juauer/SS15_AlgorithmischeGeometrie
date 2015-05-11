@@ -80,8 +80,8 @@ public class Frame extends JFrame implements Runnable {
         });
     }
 
-    public static Frame create(String title, Dimensions dimensions) {
-        Frame f = new Frame(title, dimensions);
+    public static Frame create(String title, int range_x, int range_y) {
+        Frame f = new Frame(title, new Dimensions(range_x, range_y));
         SwingUtilities.invokeLater(f);
         return f;
     }
