@@ -94,6 +94,44 @@ public class Line implements Drawable {
         this(p1, p2, null, null, null, 0.0d);
     }
 
+    @Override
+    public String toString() {
+        return String.format(Locale.US, "Line:%n"
+                + "between %s and %s%n"
+                + "from %s, slope %s%n"
+                + "at %s, normal %s%n"
+                + "normal %s, distance %.1f",
+                p1, p2, p1, u, p1, n, n0, d);
+    }
+
+    @Override
+    public void paint(Graphics g, Dimensions dimensions, Color color) {
+        Point p1 = null;
+        Point p2 = null;
+    
+        for(LineSegment l : new LineSegment[] {
+                new LineSegment(new Point(0.0d, 0.0d), new Point(dimensions.range_x, 0.0d)),
+                new LineSegment(new Point(0.0d, 0.0d), new Point(0.0d, dimensions.range_y)),
+                new LineSegment(new Point(0.0d, dimensions.range_y), new Point(dimensions.range_x, dimensions.range_y)),
+                new LineSegment(new Point(dimensions.range_x, 0.0d), new Point(dimensions.range_x, dimensions.range_y)) }) {
+            Point p = intersectionWith(l);
+    
+            if(p != null)
+                if(p1 == null)
+                    p1 = p;
+                else if(p1.add(p.toPosition().multiply(-1.0d)).toPosition().length() > C.E) {
+                    p2 = p;
+                    break;
+                }
+        }
+    
+        new LineSegment(this.p1, this.p1.add(u.multiply(-1.0d))).rotate(this.p1, Math.PI / 4.0d).paint(g, dimensions, color);
+        new LineSegment(this.p1, this.p1.add(u.multiply(-1.0d))).rotate(this.p1, Math.PI / -4.0d).paint(g, dimensions, color);
+    
+        if(p1 != null && p2 != null)
+            new LineSegment(p1, p2).paint(g, dimensions, color);
+    }
+
     public boolean isParallelTo(Line line) {
         return 1.0d - Math.abs(u.dotProduct(line.u)) < C.E;
     }
@@ -147,43 +185,5 @@ public class Line implements Drawable {
         // it around the euler-angle, shift it back
         return new Line(p1.add(pos.multiply(-1)).compose(mat).add(pos),
                 p2.add(pos.multiply(-1)).compose(mat).add(pos));
-    }
-
-    @Override
-    public String toString() {
-        return String.format(Locale.US, "Line:%n"
-                + "between %s and %s%n"
-                + "from %s, slope %s%n"
-                + "at %s, normal %s%n"
-                + "normal %s, distance %.1f",
-                p1, p2, p1, u, p1, n, n0, d);
-    }
-
-    @Override
-    public void paint(Graphics g, Dimensions dimensions, Color color) {
-        Point p1 = null;
-        Point p2 = null;
-
-        for(LineSegment l : new LineSegment[] {
-                new LineSegment(new Point(0.0d, 0.0d), new Point(dimensions.range_x, 0.0d)),
-                new LineSegment(new Point(0.0d, 0.0d), new Point(0.0d, dimensions.range_y)),
-                new LineSegment(new Point(0.0d, dimensions.range_y), new Point(dimensions.range_x, dimensions.range_y)),
-                new LineSegment(new Point(dimensions.range_x, 0.0d), new Point(dimensions.range_x, dimensions.range_y)) }) {
-            Point p = intersectionWith(l);
-
-            if(p != null)
-                if(p1 == null)
-                    p1 = p;
-                else if(p1.add(p.toPosition().multiply(-1.0d)).toPosition().length() > C.E) {
-                    p2 = p;
-                    break;
-                }
-        }
-
-        new LineSegment(this.p1, this.p1.add(u.multiply(-1.0d))).rotate(this.p1, Math.PI / 4.0d).paint(g, dimensions, color);
-        new LineSegment(this.p1, this.p1.add(u.multiply(-1.0d))).rotate(this.p1, Math.PI / -4.0d).paint(g, dimensions, color);
-
-        if(p1 != null && p2 != null)
-            new LineSegment(p1, p2).paint(g, dimensions, color);
     }
 }

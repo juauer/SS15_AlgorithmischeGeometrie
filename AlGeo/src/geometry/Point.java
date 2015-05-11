@@ -22,6 +22,46 @@ public class Point implements Drawable, Comparable<Point> {
         this(new Mat(x, y).transpose());
     }
 
+    public double getX() {
+        return m.get(0, 0);
+    }
+
+    public double getY() {
+        return m.get(0, 1);
+    }
+
+    @Override
+    public String toString() {
+        return String.format(Locale.US, "(%.1f, %.1f)", m.get(0, 0), m.get(0, 1));
+    }
+
+    @Override
+    public void paint(Graphics g, Dimensions dimensions, Color color) {
+        g.setColor(color);
+        g.fillOval(dimensions.xToInt(getX()) - 3, dimensions.yToInt(getY()) - 3, 6, 6);
+    }
+
+    @Override
+    public int hashCode() {
+        return 0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o instanceof Point && Math.abs(getX() - ((Point) o).getX()) < C.E && Math.abs(getY() - ((Point) o).getY()) < C.E)
+            return true;
+    
+        return false;
+    }
+
+    @Override
+    public int compareTo(Point p) {
+        if(getX() == p.getX())
+            return getY() < p.getY() ? -1 : getY() == p.getY() ? 0 : 1;
+    
+        return getX() < p.getX() ? -1 : 1;
+    }
+
     public Point add(Vector v) {
         return new Point(Mat.add(m, Mat.transpose(v.m)));
     }
@@ -32,14 +72,6 @@ public class Point implements Drawable, Comparable<Point> {
 
     public Vector toPosition() {
         return new Vector(Mat.transpose(m));
-    }
-
-    public double getX() {
-        return m.get(0, 0);
-    }
-
-    public double getY() {
-        return m.get(0, 1);
     }
 
     /**
@@ -66,37 +98,5 @@ public class Point implements Drawable, Comparable<Point> {
 
     public Point compose(Mat2x2 mat) {
         return new Point(Mat.compose(m, mat));
-    }
-
-    @Override
-    public String toString() {
-        return String.format(Locale.US, "(%.1f, %.1f)", m.get(0, 0), m.get(0, 1));
-    }
-
-    @Override
-    public void paint(Graphics g, Dimensions dimensions, Color color) {
-        g.setColor(color);
-        g.fillOval(dimensions.xToInt(getX()) - 3, dimensions.yToInt(getY()) - 3, 6, 6);
-    }
-
-    @Override
-    public int hashCode() {
-        return 0;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if(o instanceof Point && Math.abs(getX() - ((Point) o).getX()) < C.E && Math.abs(getY() - ((Point) o).getY()) < C.E)
-            return true;
-
-        return false;
-    }
-
-    @Override
-    public int compareTo(Point p) {
-        if(getX() == p.getX())
-            return getY() < p.getY() ? -1 : getY() == p.getY() ? 0 : 1;
-
-        return getX() < p.getX() ? -1 : 1;
     }
 }

@@ -86,6 +86,20 @@ public class Frame extends JFrame implements Runnable {
         return f;
     }
 
+    @Override
+    public void paint(Graphics g) {
+        if(scenes == null)
+            g.drawImage(image_base, 50, 50, null);
+        else
+            synchronized(scenes) {
+                g.drawImage(image_animated, 50, 50, null);
+            }
+    }
+
+    @Override
+    public void run() {
+    }
+
     public void addScene(Scene scene) {
         if(scenes == null) {
             scenes = new ArrayList<Scene>(2);
@@ -174,16 +188,6 @@ public class Frame extends JFrame implements Runnable {
         }
     }
 
-    @Override
-    public void paint(Graphics g) {
-        if(scenes == null)
-            g.drawImage(image_base, 50, 50, null);
-        else
-            synchronized(scenes) {
-                g.drawImage(image_animated, 50, 50, null);
-            }
-    }
-
     public void writeToFile() {
         try {
             String path = String.format(PATH_CAPTURES, ++captured);
@@ -217,9 +221,5 @@ public class Frame extends JFrame implements Runnable {
         Graphics g = image_base.getGraphics();
         point.paint(g, dimensions, color);
         repaint();
-    }
-
-    @Override
-    public void run() {
     }
 }

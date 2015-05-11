@@ -20,6 +20,11 @@ public class Vector {
         return m.get(i, 0);
     }
 
+    @Override
+    public String toString() {
+        return String.format(Locale.US, "(%.1f, %.1f)", m.get(0, 0), m.get(1, 0));
+    }
+
     public Vector add(Vector v) {
         return new Vector(Mat.add(v.m, m));
     }
@@ -46,10 +51,5 @@ public class Vector {
 
     public double getAscent() {
         return m.get(1, 0) / m.get(0, 0);
-    }
-
-    @Override
-    public String toString() {
-        return String.format(Locale.US, "(%.1f, %.1f)", m.get(0, 0), m.get(1, 0));
     }
 }

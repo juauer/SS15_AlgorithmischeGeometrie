@@ -52,6 +52,111 @@ public class Polygon implements Drawable {
         bHDRoot = new BHDNode(p1.getFirst().left, p1.removeFirst().right, null);
     }
 
+    public static LinkedList<PodalPoints> copodalPoints(Polygon polygon1, Polygon polygon2) {
+        LinkedList<PodalPoints> result = new LinkedList<PodalPoints>();
+        int p1 = 0;
+        int p2 = 0;
+    
+        for(int i = 1; i < polygon1.points.length; i++)
+            if(polygon1.points[i].compareTo(polygon1.points[p1]) < 0)
+                p1 = i;
+    
+        for(int i = 1; i < polygon2.points.length; i++)
+            if(polygon2.points[i].compareTo(polygon2.points[p2]) < 0)
+                p2 = i;
+    
+        Line caliper1 = new Line(polygon1.points[p1], new Point(polygon1.points[p1].getX(), polygon1.points[p1].getY() + 10.0d));
+        Line caliper2 = new Line(polygon2.points[p2], new Point(polygon2.points[p2].getX(), polygon2.points[p2].getY() + 10.0d));
+        double rotatedAngle = 0.0d;
+    
+        while(rotatedAngle < 2.0d * Math.PI) {
+            double angle1 = caliper1.angleTo(polygon1.lines[p1]);
+            double angle2 = caliper2.angleTo(polygon2.lines[p2]);
+            angle1 = Math.abs(angle1 > 0 ? 2.0d * Math.PI - angle1 : angle1);
+            angle2 = Math.abs(angle2 > 0 ? 2.0d * Math.PI - angle2 : angle2);
+            double minAngle = Math.min(angle1, angle2);
+            caliper1 = new Line(polygon1.points[p1], caliper1.rotate(polygon1.points[p1], minAngle).u);
+            caliper2 = new Line(polygon2.points[p2], caliper2.rotate(polygon2.points[p2], minAngle).u);
+            rotatedAngle += minAngle;
+    
+            if(angle1 < angle2)
+                p1 = (p1 + 1) % polygon1.points.length;
+            else
+                p2 = (p2 + 1) % polygon2.points.length;
+    
+            Line support = new Line(polygon1.points[p1], polygon2.points[p2]);
+            double side1 = polygon1.points[p1 == 0 ? polygon1.points.length - 1 : p1 - 1].distanceTo(support);
+            double side2 = polygon1.points[(p1 + 1) % polygon1.points.length].distanceTo(support);
+            double side3 = polygon2.points[p2 == 0 ? polygon2.points.length - 1 : p2 - 1].distanceTo(support);
+            double side4 = polygon2.points[(p2 + 1) % polygon2.points.length].distanceTo(support);
+            int isBridge = 0;
+    
+            if(side1 < -C.E && side2 <= 0 && side3 <= 0 && side4 < -C.E)
+                isBridge = -1;
+            else if(side1 >= 0 && side2 > C.E && side3 > C.E && side4 >= 0)
+                isBridge = 1;
+    
+            result.add(new PodalPoints(p1, p2, polygon1.points[p1], polygon2.points[p2], caliper1, caliper2, isBridge));
+        }
+    
+        if(result.getFirst().point1 == result.getLast().point1 && result.getFirst().point2 == result.getLast().point2)
+            result.removeFirst();
+    
+        return result;
+    }
+
+    public static Polygon convexHull(Polygon p1, Polygon p2) {
+        LinkedList<PodalPoints> copodalPoints = copodalPoints(p1, p2);
+        LinkedList<Point> result = new LinkedList<Point>();
+    
+        for(int i = copodalPoints.size() - 1; i > -1; --i)
+            if(copodalPoints.get(i).isBridge == 0)
+                copodalPoints.remove(i);
+    
+        copodalPoints.add(copodalPoints.getFirst());
+        Polygon current = copodalPoints.getFirst().isBridge == 1 ? p1 : p2;
+        int j;
+    
+        for(int i = 0; i < copodalPoints.size() - 1; ++i) {
+            PodalPoints pp1 = copodalPoints.get(i);
+            PodalPoints pp2 = copodalPoints.get(i + 1);
+    
+            if(current == p1) {
+                j = pp1.index1;
+    
+                result.add(p1.points[j]);
+    
+                while(j != pp2.index1) {
+                    result.add(p1.points[j]);
+                    j = (j + 1) % p1.points.length;
+                }
+    
+                current = p2;
+            }
+            else {
+                j = pp1.index2;
+                result.add(p2.points[j]);
+    
+                while(j != pp2.index2) {
+                    result.add(p2.points[j]);
+                    j = (j + 1) % p2.points.length;
+                }
+    
+                current = p1;
+            }
+        }
+    
+        return new Polygon(result.toArray(new Point[result.size()]));
+    }
+
+    @Override
+    public void paint(Graphics g, Dimensions dimensions, Color color) {
+        for(int i = 0; i < points.length; ++i) {
+            points[i].paint(g, dimensions, color);
+            lines[i].paint(g, dimensions, color);
+        }
+    }
+
     private boolean contains(Point point, BHDNode node) {
         if(node.left == null && node.right == null)
             return false;
@@ -184,59 +289,6 @@ public class Polygon implements Drawable {
         return result;
     }
 
-    public static LinkedList<PodalPoints> copodalPoints(Polygon polygon1, Polygon polygon2) {
-        LinkedList<PodalPoints> result = new LinkedList<PodalPoints>();
-        int p1 = 0;
-        int p2 = 0;
-
-        for(int i = 1; i < polygon1.points.length; i++)
-            if(polygon1.points[i].compareTo(polygon1.points[p1]) < 0)
-                p1 = i;
-
-        for(int i = 1; i < polygon2.points.length; i++)
-            if(polygon2.points[i].compareTo(polygon2.points[p2]) < 0)
-                p2 = i;
-
-        Line caliper1 = new Line(polygon1.points[p1], new Point(polygon1.points[p1].getX(), polygon1.points[p1].getY() + 10.0d));
-        Line caliper2 = new Line(polygon2.points[p2], new Point(polygon2.points[p2].getX(), polygon2.points[p2].getY() + 10.0d));
-        double rotatedAngle = 0.0d;
-
-        while(rotatedAngle < 2.0d * Math.PI) {
-            double angle1 = caliper1.angleTo(polygon1.lines[p1]);
-            double angle2 = caliper2.angleTo(polygon2.lines[p2]);
-            angle1 = Math.abs(angle1 > 0 ? 2.0d * Math.PI - angle1 : angle1);
-            angle2 = Math.abs(angle2 > 0 ? 2.0d * Math.PI - angle2 : angle2);
-            double minAngle = Math.min(angle1, angle2);
-            caliper1 = new Line(polygon1.points[p1], caliper1.rotate(polygon1.points[p1], minAngle).u);
-            caliper2 = new Line(polygon2.points[p2], caliper2.rotate(polygon2.points[p2], minAngle).u);
-            rotatedAngle += minAngle;
-
-            if(angle1 < angle2)
-                p1 = (p1 + 1) % polygon1.points.length;
-            else
-                p2 = (p2 + 1) % polygon2.points.length;
-
-            Line support = new Line(polygon1.points[p1], polygon2.points[p2]);
-            double side1 = polygon1.points[p1 == 0 ? polygon1.points.length - 1 : p1 - 1].distanceTo(support);
-            double side2 = polygon1.points[(p1 + 1) % polygon1.points.length].distanceTo(support);
-            double side3 = polygon2.points[p2 == 0 ? polygon2.points.length - 1 : p2 - 1].distanceTo(support);
-            double side4 = polygon2.points[(p2 + 1) % polygon2.points.length].distanceTo(support);
-            int isBridge = 0;
-
-            if(side1 < -C.E && side2 <= 0 && side3 <= 0 && side4 < -C.E)
-                isBridge = -1;
-            else if(side1 >= 0 && side2 > C.E && side3 > C.E && side4 >= 0)
-                isBridge = 1;
-
-            result.add(new PodalPoints(p1, p2, polygon1.points[p1], polygon2.points[p2], caliper1, caliper2, isBridge));
-        }
-
-        if(result.getFirst().point1 == result.getLast().point1 && result.getFirst().point2 == result.getLast().point2)
-            result.removeFirst();
-
-        return result;
-    }
-
     public double diameter() {
         double max = 0.0d;
 
@@ -248,57 +300,5 @@ public class Polygon implements Drawable {
         }
 
         return max;
-    }
-
-    public static Polygon convexHull(Polygon p1, Polygon p2) {
-        LinkedList<PodalPoints> copodalPoints = copodalPoints(p1, p2);
-        LinkedList<Point> result = new LinkedList<Point>();
-
-        for(int i = copodalPoints.size() - 1; i > -1; --i)
-            if(copodalPoints.get(i).isBridge == 0)
-                copodalPoints.remove(i);
-
-        copodalPoints.add(copodalPoints.getFirst());
-        Polygon current = copodalPoints.getFirst().isBridge == 1 ? p1 : p2;
-        int j;
-
-        for(int i = 0; i < copodalPoints.size() - 1; ++i) {
-            PodalPoints pp1 = copodalPoints.get(i);
-            PodalPoints pp2 = copodalPoints.get(i + 1);
-
-            if(current == p1) {
-                j = pp1.index1;
-
-                result.add(p1.points[j]);
-
-                while(j != pp2.index1) {
-                    result.add(p1.points[j]);
-                    j = (j + 1) % p1.points.length;
-                }
-
-                current = p2;
-            }
-            else {
-                j = pp1.index2;
-                result.add(p2.points[j]);
-
-                while(j != pp2.index2) {
-                    result.add(p2.points[j]);
-                    j = (j + 1) % p2.points.length;
-                }
-
-                current = p1;
-            }
-        }
-
-        return new Polygon(result.toArray(new Point[result.size()]));
-    }
-
-    @Override
-    public void paint(Graphics g, Dimensions dimensions, Color color) {
-        for(int i = 0; i < points.length; ++i) {
-            points[i].paint(g, dimensions, color);
-            lines[i].paint(g, dimensions, color);
-        }
     }
 }
