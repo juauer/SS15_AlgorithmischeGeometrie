@@ -84,21 +84,30 @@ belowcaptionskip=15pt}
 \hrule
 
 \begin{task}{Bewegungsplanung in der Ebene}\item[]
-TODO
+Idee: Aus H Voronoi-Diagramm basteln. Aus dem Graph die Kanten entfernen, wo der Roboter nicht durchpasst. {\bf Auf} den verbliebenen Voronoi-Kanten kann sich der Roboter dann bewegen.
 
+- VD basteln\\
+- prüfen, ob s und z nicht bereits kollidieren\\
+- Kanten rausschmeissen, wo der Abstand zwischen den Punkten der VRs kleiner ist als Rs Durchmesser\\
+- VRs suchen, in denen s und z liegen\\
+- Kante suchen die von s aus erreichbar ist, ohne mit dem Hindernis in dieser VR zu kollidieren (Lot fällen?)\\
+- Weg suchen über Knoten entlang Kanten (Dijkstra)
 \end{task}
 
 \begin{task}{Geometriche Graphen}
 \subtask{a}
-TODO
+z.z.: $|E|=|V|+|F|-2$\\
+Induktion über |E|. Im Schritt 2 neue Flächen innen. Anders kann es nicht sein, sonst wäre $G_{n-1}$ nicht konvex.
 
 \subtask{b}
-TODO
-
+Induktion über n. Im Schritt einen äußeren Punkt (den es geben muss) entfernen.
 \end{task}
 
 \begin{task}{Voronoi-Diagramm}\item[]
-TODO
+- Suche in n einen Extrempunkt (minx, miny, o.ä.)\\
+- suche in n zugehörige VR\\
+- wiederholen (bis wieder an Startpunkt): suche in konstant (ggf. zeigen) kante die gemeinsamen Knoten mit einer der 'Strahl-Kanten' hat und die kleinste Drehung beschreibt (zur Strahl-Kante)
 
+Schneller als nlogn geht nicht, sonst auch CH schneller und somit auch - wie in U3 gezeigt - Sortieren schneller. Für Sortieren ist aber nlogn optimal.
 \end{task}
 \end{document}
