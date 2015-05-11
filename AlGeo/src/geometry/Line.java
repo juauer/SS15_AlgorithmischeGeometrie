@@ -98,7 +98,7 @@ public class Line implements Drawable {
         return 1.0d - Math.abs(u.dotProduct(line.u)) < C.E;
     }
 
-    public Point getIntersection(Line line) {
+    public Point intersectionWith(Line line) {
         if(isParallelTo(line))
             return null;
 
@@ -169,7 +169,7 @@ public class Line implements Drawable {
                 new LineSegment(new Point(0.0d, 0.0d), new Point(0.0d, dimensions.range_y)),
                 new LineSegment(new Point(0.0d, dimensions.range_y), new Point(dimensions.range_x, dimensions.range_y)),
                 new LineSegment(new Point(dimensions.range_x, 0.0d), new Point(dimensions.range_x, dimensions.range_y)) }) {
-            Point p = getIntersection(l);
+            Point p = intersectionWith(l);
 
             if(p != null)
                 if(p1 == null)

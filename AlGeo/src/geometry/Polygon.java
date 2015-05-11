@@ -95,7 +95,7 @@ public class Polygon implements Drawable {
 
         // On leaf level compute intersections immediately and return
         if(node.left == null && node.right == null) {
-            Point intersection = node.line.getIntersection(line);
+            Point intersection = node.line.intersectionWith(line);
 
             if(intersection != null)
                 acc.add(intersection);
@@ -107,12 +107,12 @@ public class Polygon implements Drawable {
         // gives a hint on which side the line lies. Anyways, if a linesegment
         // itself intersects with the line, the matching branch must always be
         // searched
-        Point intersection_extendedLine = new Line(node.line.p1, node.line.p2).getIntersection(line);
+        Point intersection_extendedLine = new Line(node.line.p1, node.line.p2).intersectionWith(line);
 
-        if(node.left.line.getIntersection(line) != null || intersection_extendedLine.distanceTo(node.left.line) > C.E)
+        if(node.left.line.intersectionWith(line) != null || intersection_extendedLine.distanceTo(node.left.line) > C.E)
             intersectionWith(line, node.left, acc);
 
-        if(node.right.line.getIntersection(line) != null || intersection_extendedLine.distanceTo(node.right.line) > C.E)
+        if(node.right.line.intersectionWith(line) != null || intersection_extendedLine.distanceTo(node.right.line) > C.E)
             intersectionWith(line, node.right, acc);
     }
 

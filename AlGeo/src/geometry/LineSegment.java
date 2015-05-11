@@ -13,8 +13,8 @@ public class LineSegment extends Line implements Drawable {
     }
 
     @Override
-    public Point getIntersection(Line line) {
-        Point is = super.getIntersection(line);
+    public Point intersectionWith(Line line) {
+        Point is = super.intersectionWith(line);
 
         if(is == null || !is.isInsideBoundingBox(this))
             return null;
