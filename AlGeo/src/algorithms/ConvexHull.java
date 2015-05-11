@@ -131,7 +131,10 @@ public class ConvexHull {
 
         // generate polygon from points on stack
         Point[] points = new Point[stack.size()];
-        stack.toArray(points);
+
+        for(int i = 0; i < points.length; ++i)
+            points[i] = stack.pop();
+
         return new Polygon(points);
     }
 }
