@@ -80,7 +80,7 @@ public class Test {
             frame2.addScene(s);
         }
 
-        Frame.create("2B", 27, 15).drawPolygon(Polygon.convexHull(p1, p2), Color.BLACK);
+        Frame.create("2B", 27, 15).drawPolygon(ConvexHull.convexHull(p1, p2), Color.BLACK);
     }
 
     public static void ub1() {

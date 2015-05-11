@@ -2,6 +2,7 @@ package algorithms;
 
 import geometry.C;
 import geometry.LineSegment;
+import geometry.PodalPoints;
 import geometry.Point;
 import geometry.Polygon;
 import geometry.Vector;
@@ -136,5 +137,56 @@ public class ConvexHull {
             points[i] = stack.pop();
 
         return new Polygon(points);
+    }
+
+    /**
+     * Compute the convex hull of two polygons using the rotating calipers.
+     * 
+     * @param p1 a polygon
+     * @param p2 another polygon
+     * @return a polygon describing the convex hull of p1 and p2
+     */
+    public static Polygon convexHull(Polygon p1, Polygon p2) {
+        LinkedList<PodalPoints> copodalPoints = Polygon.copodalPoints(p1, p2);
+        LinkedList<Point> result = new LinkedList<Point>();
+
+        for(int i = copodalPoints.size() - 1; i > -1; --i)
+            if(copodalPoints.get(i).isBridge == 0)
+                copodalPoints.remove(i);
+
+        copodalPoints.add(copodalPoints.getFirst());
+        Polygon current = copodalPoints.getFirst().isBridge == 1 ? p1 : p2;
+        int j;
+
+        for(int i = 0; i < copodalPoints.size() - 1; ++i) {
+            PodalPoints pp1 = copodalPoints.get(i);
+            PodalPoints pp2 = copodalPoints.get(i + 1);
+
+            if(current == p1) {
+                j = pp1.index1;
+
+                result.add(p1.points[j]);
+
+                while(j != pp2.index1) {
+                    result.add(p1.points[j]);
+                    j = (j + 1) % p1.points.length;
+                }
+
+                current = p2;
+            }
+            else {
+                j = pp1.index2;
+                result.add(p2.points[j]);
+
+                while(j != pp2.index2) {
+                    result.add(p2.points[j]);
+                    j = (j + 1) % p2.points.length;
+                }
+
+                current = p1;
+            }
+        }
+
+        return new Polygon(result.toArray(new Point[result.size()]));
     }
 }
