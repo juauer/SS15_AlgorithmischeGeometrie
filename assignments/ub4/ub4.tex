@@ -96,11 +96,38 @@ Idee: Aus H Voronoi-Diagramm basteln. Aus dem Graph die Kanten entfernen, wo der
 
 \begin{task}{Geometriche Graphen}
 \subtask{a}
-z.z.: $|E|=|V|+|F|-2$\\
-Induktion über |E|. Im Schritt 2 neue Flächen innen. Anders kann es nicht sein, sonst wäre $G_{n-1}$ nicht konvex.
+Induktion über $|V|$:
+
+I.A.: Für $G_0=(V,E,F)$ zusammenhängend und planar mit $|V|=1$ folgt offensichtlich $|E|=0$ und $|F|=1$.
+
+I.V.: Für $G_n=(V,E,F)$ zusammenhängend und planar mit $|V|=n$ gilt: $|E|=|V|+|F|-2$
+
+$n\rightarrow n+1$: Aus $G_{n+1}=(V',E',F')$ zusammenhängend und planar mit $|V'|=n+1$ werden ein Knoten $v$ und alle zu $v$ inzidenten Kanten entfernt.
+
+Fall 1: Der entstehende Graph ist zusammenhängend:\\
+Für den entstehenden Graphen $G_n=(V,E,F)$ gilt $|V|=n$ und $|E|=|E'|-deg(v)$ sowie die I.V.. Nun muss $v$ in einer Facette $f$ von $G_n$ liegen und somit jede zu $v$ inzidente Kante in $G_{n+1}$ zu einem Knoten auf dem Rand von $f$ führen (sonst wäre Planarität verletzt). Die zu $v$ inzidenten Kanten unterteilen $f$ offensichtlich in $deg(v)-1$ zusätzliche Facetten. Somit gilt für $G_{n+1}$:
+\begin{align*}
+F'&=F+deg(v)-1\\
+&=|E|-|V|+2+deg(v)-1\\
+&=|E'|-deg(v)-|V'|+1+2+deg(v)-1\\
+&=|E'|-|V'|+2
+\end{align*}
+
+Fall 2: Der entstehende Graph ist nicht zusammenhängend:\\
+Dann entstehen $k\le deg(v)$ planare Zusammenhangskomponenten $G^1,...,G^k$. Für jede gilt die I.V..\\
+Für das Verbinden dieser ZHK waren zuvor $k$ Kanten erforderlich, die keine Facetten bilden (sonst hätte es einen Kreis und nicht mehrere ZHK gegeben). Die anderen $deg(v)-k$ Kanten bildeten $deg(v)-k$ Facetten (analog zur Argumentation in Fall 1).\\
+Ferner ist klar, dass sich die $k$ ZHK eine Facette (die ''Äußere'') teilen - also $k-1$ Facetten zuviel gezählt werden.\\
+Somit ergibt sich insgesamt für $|F'|$:
+\begin{align*}
+F'&=\sum_{i=0}^k|F^i|+(deg(v)-k)-(k-1)\\
+&=\sum_{i=0}^k(|E^i|-|V^i|+2)+deg(v)-2\cdot k+1\\
+&=|E'|-deg(v)-(|V'|-1)+2\cdot k+deg(v)-2\cdot k+1\\
+&=|E'|-|V'|+2\\
+\end{align*}
+\qed
 
 \subtask{b}
-Induktion über n. Im Schritt einen äußeren Punkt (den es geben muss) entfernen.
+PENDING
 \end{task}
 
 \begin{task}{Voronoi-Diagramm}\item[]
