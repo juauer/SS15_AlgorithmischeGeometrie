@@ -127,7 +127,21 @@ F'&=\sum_{i=0}^k|F^i|+(deg(v)-k)-(k-1)\\
 \qed
 
 \subtask{b}
-PENDING
+Sei $D$ die Menge der Dreiecke des triangulierten Graphen $G=(V,E)$. $r$ Knoten liegen auf dem Rand der konvexen Hülle der Punkte aus $G$ und beschreiben einen geschlossenen Polygonzug, der folglich aus ebenfalls $r$ Kanten $E_r$ besteht. Jede dieser Kanten grenzt an genau ein Dreieck. Die $|E|-|E_r|$ Kanten, die im Inneren des Graphen liegen, begrenzen jeweils zwei Dreiecke. Jedes Dreieck wiederum wird von drei Kanten begrenzt. Somit gilt:
+\begin{align*}
+&|E_r|+2\cdot (|E|-|E_r|)=3\cdot |D|\\
+\Leftrightarrow &|E|=\frac{3\cdot |D|+r}{2}
+\end{align*}
+In (a) wurde gezeigt, dass:
+$$|F|=|E|-|V|+2$$
+Wobei hier offensichtlich $|D|=|F|-1$ (die ''äußere'' Facette ist kein Dreieck). Das sollte ausreichen, etwas Aussagekräftiges auszurechnen :)
+\begin{align*}
+|F|&=|E|-|V|+2\\
+\Leftrightarrow |D|+1&=\frac{3\cdot |D|+r}{2}-n+2\\
+\Leftrightarrow |D|&=2\cdot n-r-2\\
+&=2\cdot (n-1)-r
+\end{align*}
+\qed
 \end{task}
 
 \begin{task}{Voronoi-Diagramm}\item[]
