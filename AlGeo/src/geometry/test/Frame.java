@@ -2,6 +2,7 @@ package geometry.test;
 
 import geometry.Line;
 import geometry.LineSegment;
+import geometry.Parabola;
 import geometry.Point;
 import geometry.Polygon;
 
@@ -220,6 +221,12 @@ public class Frame extends JFrame implements Runnable {
     public void drawPoint(Point point, Color color) {
         Graphics g = image_base.getGraphics();
         point.paint(g, dimensions, color);
+        repaint();
+    }
+
+    public void drawParabola(Parabola parabola, Color color) {
+        Graphics g = image_base.getGraphics();
+        parabola.paint(g, dimensions, color);
         repaint();
     }
 }
