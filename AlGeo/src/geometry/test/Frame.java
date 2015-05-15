@@ -1,11 +1,5 @@
 package geometry.test;
 
-import geometry.Line;
-import geometry.LineSegment;
-import geometry.Parabola;
-import geometry.Point;
-import geometry.Polygon;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -200,33 +194,9 @@ public class Frame extends JFrame implements Runnable {
         }
     }
 
-    public void drawPolygon(Polygon polygon, Color color) {
+    public void draw(Drawable drawable, Color color) {
         Graphics g = image_base.getGraphics();
-        polygon.paint(g, dimensions, color);
-        repaint();
-    }
-
-    public void drawLine(Line line, Color color) {
-        Graphics g = image_base.getGraphics();
-        line.paint(g, dimensions, color);
-        repaint();
-    }
-
-    public void drawLineSegment(LineSegment line, Color color) {
-        Graphics g = image_base.getGraphics();
-        line.paint(g, dimensions, color);
-        repaint();
-    }
-
-    public void drawPoint(Point point, Color color) {
-        Graphics g = image_base.getGraphics();
-        point.paint(g, dimensions, color);
-        repaint();
-    }
-
-    public void drawParabola(Parabola parabola, Color color) {
-        Graphics g = image_base.getGraphics();
-        parabola.paint(g, dimensions, color);
+        drawable.paint(g, dimensions, color);
         repaint();
     }
 }

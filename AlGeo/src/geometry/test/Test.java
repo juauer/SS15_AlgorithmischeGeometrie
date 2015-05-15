@@ -27,7 +27,7 @@ public class Test {
         Point[] pointcloud = randomPoints(dim, dim, dim);
 
         for(int i = 0; i < pointcloud.length; i++)
-            frame.drawPoint(pointcloud[i], Color.BLACK);
+            frame.draw(pointcloud[i], Color.BLACK);
 
         Polygon ch = ConvexHull.grahamScan(frame, pointcloud);
         Scene s = new Scene(5000);
@@ -53,7 +53,7 @@ public class Test {
                 , p1.diameter()));
 
         Frame frame1 = Frame.create("1A", 19, 15);
-        frame1.drawPolygon(p1, Color.RED);
+        frame1.draw(p1, Color.RED);
 
         for(PodalPoints l : antiPodalPoints) {
             Scene s = new Scene(1000);
@@ -66,8 +66,8 @@ public class Test {
         }
 
         Frame frame2 = Frame.create("2A", 27, 15);
-        frame2.drawPolygon(p1, Color.RED);
-        frame2.drawPolygon(p2, Color.MAGENTA);
+        frame2.draw(p1, Color.RED);
+        frame2.draw(p2, Color.MAGENTA);
 
         for(PodalPoints l : coPodalPoints) {
             Scene s = new Scene(1000);
@@ -82,21 +82,21 @@ public class Test {
             frame2.addScene(s);
         }
 
-        Frame.create("2B", 27, 15).drawPolygon(ConvexHull.convexHull(p1, p2), Color.BLACK);
+        Frame.create("2B", 27, 15).draw(ConvexHull.convexHull(p1, p2), Color.BLACK);
     }
 
     public static void ub1() {
         Polygon p = new Polygon(new Point(4, 9), new Point(6, 9), new Point(8, 7), new Point(9, 5), new Point(8, 3),
                 new Point(6, 1), new Point(4, 1), new Point(2, 3), new Point(1, 5), new Point(2, 7));
         Frame frame = Frame.create("", 10, 10);
-        frame.drawPolygon(p, Color.RED);
+        frame.draw(p, Color.RED);
 
         Point point1 = new Point(3, 7);
         Point point2 = new Point(2, 7);
         Point point3 = new Point(2, 8);
-        frame.drawPoint(point1, Color.BLUE);
-        frame.drawPoint(point2, Color.GREEN);
-        frame.drawPoint(point3, Color.CYAN);
+        frame.draw(point1, Color.BLUE);
+        frame.draw(point2, Color.GREEN);
+        frame.draw(point3, Color.CYAN);
         System.out.println(String.format("polygon contains %s (blue): %s", point1, p.contains(point1)));
         System.out.println(String.format("polygon contains %s (green): %s", point2, p.contains(point2)));
         System.out.println(String.format("polygon contains %s (cyan): %s", point3, p.contains(point3)));
@@ -104,9 +104,9 @@ public class Test {
         Line line1 = new Line(new Point(3, 1), new Point(9, 6));
         Line line2 = new Line(new Point(8.5, 1), new Point(8.5, 9));
         Line line3 = new Line(new Point(9, 1), new Point(10, 7));
-        frame.drawLine(line1, Color.BLUE);
-        frame.drawLine(line2, Color.GREEN);
-        frame.drawLine(line3, Color.CYAN);
+        frame.draw(line1, Color.BLUE);
+        frame.draw(line2, Color.GREEN);
+        frame.draw(line3, Color.CYAN);
         System.out.println(String.format("intersection of polygon and line1 (blue): %s", p.intersectionWith(line1)));
         System.out.println(String.format("intersection of polygon and line2 (green): %s", p.intersectionWith(line2)));
         System.out.println(String.format("intersection of polygon and line3 (cyan): %s", p.intersectionWith(line3)));
