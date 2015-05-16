@@ -84,14 +84,45 @@ belowcaptionskip=15pt}
 \hrule
 
 \begin{task}{Bewegungsplanung in der Ebene}\item[]
-Idee: Aus H Voronoi-Diagramm basteln. Aus dem Graph die Kanten entfernen, wo der Roboter nicht durchpasst. {\bf Auf} den verbliebenen Voronoi-Kanten kann sich der Roboter dann bewegen.
+Gegeben sei ein kreisförmiger Roboter $R$ mit Radius $d$, sowie eine Menge $H={p_1, \dots, p_n}$ von $n$ punktförmigen Hindernissen in der Ebene. Eingabewerte sind Startpunkt $s$ und Zielpunkt $z$. Die Ausgabe ist kollisionsfreier Weg $w$ (Polygonzug), falls er existiert, sonst $\emptyset$.
 
-- VD basteln\\
-- prüfen, ob s und z nicht bereits kollidieren\\
-- Kanten rausschmeissen, wo der Abstand zwischen den Punkten der VRs kleiner ist als Rs Durchmesser\\
-- VRs suchen, in denen s und z liegen\\
-- Kante suchen die von s aus erreichbar ist, ohne mit dem Hindernis in dieser VR zu kollidieren (Lot fällen?)\\
-- Weg suchen über Knoten entlang Kanten (Dijkstra)
+Die Idee des Algorithmus ist es, aus $H$ ein Voronio-Diagramm (VD) zu erstellen und das Zentrum des Roboters auf den Voronio-Kanten (VK) entlang zum bewegen. Zusätzlich werden diejenigen VK entfernt, wo der Abstand der zugehörigen Punkte kleiner ist als der Durchmesser des Roboter. Auf den verbleibenden Kanten kann sich der Roboter bewegen, d.h. sein Zentrum bewegt sich.
+
+Der Algorithmus wird in 3 Schritte unterteilt:
+
+{\large\textcircled{\small{1}}} Roboter von $s$ zum/auf VD bewegen\\
+{\large\textcircled{\small{2}}} Roboter entlang des VD bewegen\\
+{\large\textcircled{\small{2}}} Roboter von VD zu $z$ bewegen\\
+
+\begin{algorithm}
+\caption{movingAround($H, s, z, d$)}
+\begin{algorithmic}[1]
+\STATE Berechnung VD($H$)
+\STATE VR($s$) und VR($z$) bestimmen
+\IF{$s$ bzw. $z$ kollidieren mit Punkt in VR($s$) bzw. VR($z$)}
+		\RETURN{$\emptyset$}
+\ENDIF
+\STATE $s'$ und $z'$ auf VD finden und als Knoten zu VD($H$) hinzufügen und Kanten aufsplitten (senkrecht vom Punkt in zugehöriger VR wegbewegen bis VK getroffen wird, siehe~Abbildung\ref{fig:vds})
+\STATE Sei $G$ der zugehörige Graph zum VD($H$): alle Kanten entfernen, wo der Abstand der zugehörigen Punkte $\leq d$ ist
+\IF{Weg $w$ von $s'$ nach $z'$ existiert}
+		\RETURN{$w \cup \overline{ss'} \textrm{ und } \overline{pp'}$}
+		\ELSE
+				\RETURN {$\emptyset$}
+\ENDIF
+\end{algorithmic}
+\end{algorithm}
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=7cm]{vds.png}
+\end{center}
+\caption{Finden von $s'$}
+\label{fig:vds}
+\end{figure}
+
+Der existierende Weg kann z.B. per Tiefensuche oder Dijkstra bestimmt werden. Liegt der Start bzw. Endpunkt auf einer Kante die später entfernt wird, so liefert die Suche nach einem existierenden Weg kein Ergebnis.
+
+Was mir noch nicht ganz klar ist, wenn $s$ und $z$ in einer unbeschränkten VR liegen (bzw. man da immer irgendwie hin kommt) dann könnte man doch immer einmal komplett außen rum laufen, oder? Oder ist man in einem Zimmer gefangen wo die Punkte auf dem Boden rumliegen und man sonst gegen die Wand läuft?
 \end{task}
 
 \begin{task}{Geometriche Graphen}
