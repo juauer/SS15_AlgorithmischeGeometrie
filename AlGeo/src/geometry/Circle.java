@@ -15,7 +15,7 @@ public class Circle implements Drawable {
         this.r = r;
     }
 
-    public Circle(Point p1, Point p2, Point p3) {
+    public static Circle create(Point p1, Point p2, Point p3) {
         double a = p2.getX() - p1.getX();
         double b = p2.getY() - p1.getY();
         double c = p3.getX() - p1.getX();
@@ -23,8 +23,13 @@ public class Circle implements Drawable {
         double e = a * (p1.getX() + p2.getX()) + b * (p1.getY() + p2.getY());
         double f = c * (p1.getX() + p3.getX()) + d * (p1.getY() + p3.getY());
         double g = 2.0d * (a * (p3.getY() - p2.getY()) - b * (p3.getX() - p2.getX()));
-        m = new Point((d * e - b * f) / g, (a * f - c * e) / g);
-        r = Math.sqrt(Math.pow(p1.getX() - m.getX(), 2.0d) + Math.pow(p1.getY() - m.getY(), 2.0d));
+
+        if(g == 0.0d)
+            return null;
+
+        Point m = new Point((d * e - b * f) / g, (a * f - c * e) / g);
+        return new Circle(m,
+                Math.sqrt(Math.pow(p1.getX() - m.getX(), 2.0d) + Math.pow(p1.getY() - m.getY(), 2.0d)));
     }
 
     @Override

@@ -1,11 +1,11 @@
 package geometry.test;
 
 public class Dimensions {
-    private static final int UNIT = 20;
-    public final int         range_x;
-    public final int         range_y;
-    public final int         width;
-    public final int         height;
+    public static final int UNIT = 20;
+    public final int        range_x;
+    public final int        range_y;
+    public final int        width;
+    public final int        height;
 
     public Dimensions(int range_x, int range_y) {
         this.range_x = range_x;

@@ -7,8 +7,10 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 public class Parabola implements Drawable {
-    private static final double STEPSIZE_DRAWING = 0.2d;
+    private static final double STEPSIZE_DRAWING = 0.1d;
     public double               a, d, e;
+    public double               minX             = 0;
+    public double               maxX             = Double.MAX_VALUE;
 
     public Parabola(double a, double d, double e) {
         this.a = a;
@@ -16,7 +18,8 @@ public class Parabola implements Drawable {
         this.e = e;
     }
 
-    public Parabola(Point point, double distance) {
+    public Parabola(Point point, double lineY) {
+        double distance = point.getY() - lineY;
         a = 0.5d / distance;
         d = -point.getX();
         e = point.getY() - distance / 2.0d;
@@ -25,10 +28,12 @@ public class Parabola implements Drawable {
     @Override
     public void paint(Graphics g, Dimensions dimensions, Color color) {
         g.setColor(color);
-        double y1 = a * d * d + e;
+        double x = Math.max(0.0d, minX - STEPSIZE_DRAWING);
+        double f = x + d;
+        double y1 = a * f * f + e;
 
-        for(double x = STEPSIZE_DRAWING; x <= dimensions.range_x; x += STEPSIZE_DRAWING) {
-            double f = x + d;
+        for(x += STEPSIZE_DRAWING; x <= Math.min(dimensions.range_x, maxX + STEPSIZE_DRAWING); x += STEPSIZE_DRAWING) {
+            f = x + d;
             double y2 = a * f * f + e;
 
             if(y1 <= dimensions.range_y && y1 >= 0 && y2 <= dimensions.range_y && y2 >= 0)
@@ -36,6 +41,11 @@ public class Parabola implements Drawable {
 
             y1 = y2;
         }
+    }
+
+    public static Point intersection(Parabola parabola, double verticalBeamX) {
+        double f = verticalBeamX + parabola.d;
+        return new Point(verticalBeamX, parabola.a * f * f + parabola.e);
     }
 
     public static Point leftIntersection(Parabola parabola1, Parabola parabola2) {
@@ -54,5 +64,12 @@ public class Parabola implements Drawable {
         double f = x + parabola1.d;
         double y = parabola1.a * f * f + parabola1.e;
         return new Point(x, y);
+    }
+
+    public static Point midIntersection(Parabola parabola1, Parabola parabola2) {
+        if(parabola1.e < parabola2.e)
+            return rightIntersection(parabola1, parabola2);
+
+        return leftIntersection(parabola1, parabola2);
     }
 }
