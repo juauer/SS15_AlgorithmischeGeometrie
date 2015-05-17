@@ -2,10 +2,10 @@ package geometry.test;
 
 import geometry.Line;
 import geometry.LineSegment;
-import geometry.Parabola;
 import geometry.PodalPoints;
 import geometry.Point;
 import geometry.Polygon;
+import geometry.Voronoi;
 
 import java.awt.Color;
 import java.util.LinkedList;
@@ -123,22 +123,12 @@ public class Test {
     }
 
     public static void fortuneSweep() {
-        Frame f = Frame.create("", 30, 30);
-        Point p1 = new Point(11, 13);
-        Point p2 = new Point(18, 26);
-        f.drawPoint(p1, Color.BLUE);
-        f.drawPoint(p2, Color.GREEN);
+        Frame frame = Frame.create("", 30, 30);
+        Point[] points = randomPoints(30, 30, 16);
 
-        for(int i = 1; i < p1.getY(); ++i) {
-            Scene s = new Scene(500);
-            s.add(new Line(new Point(0, i), new Point(30, i)), Color.BLACK);
-            Parabola pa1 = new Parabola(p1, p1.getY() - i);
-            Parabola pa2 = new Parabola(p2, p2.getY() - i);
-            s.add(pa1, Color.BLUE);
-            s.add(pa2, Color.GREEN);
-            s.add(Parabola.leftIntersection(pa1, pa2), Color.RED);
-            s.add(Parabola.rightIntersection(pa1, pa2), Color.ORANGE);
-            f.addScene(s);
-        }
+        for(Point p : points)
+            frame.draw(p, Color.BLACK);
+
+        new Voronoi().fortunesSweep(frame, points);
     }
 }

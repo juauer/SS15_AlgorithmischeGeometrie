@@ -28,11 +28,11 @@ public class Parabola implements Drawable {
     @Override
     public void paint(Graphics g, Dimensions dimensions, Color color) {
         g.setColor(color);
-        double x = Math.max(0.0d, minX - STEPSIZE_DRAWING);
+        double x = Math.max(0.0d, minX);
         double f = x + d;
         double y1 = a * f * f + e;
 
-        for(x += STEPSIZE_DRAWING; x <= Math.min(dimensions.range_x, maxX + STEPSIZE_DRAWING); x += STEPSIZE_DRAWING) {
+        for(x += STEPSIZE_DRAWING; x <= Math.min(dimensions.range_x, maxX); x += STEPSIZE_DRAWING) {
             f = x + d;
             double y2 = a * f * f + e;
 

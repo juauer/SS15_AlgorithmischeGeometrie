@@ -34,6 +34,7 @@ public class Circle implements Drawable {
 
     @Override
     public void paint(Graphics g, Dimensions dimensions, Color color) {
+        m.paint(g, dimensions, color);
         g.setColor(color);
         g.drawOval(dimensions.xToInt(m.getX() - r), dimensions.yToInt(m.getY() + r),
                 (int) Math.round((r + r) * Dimensions.UNIT), (int) Math.round((r + r) * Dimensions.UNIT));
