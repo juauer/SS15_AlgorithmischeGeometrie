@@ -125,33 +125,23 @@ Der existierende Weg kann z.B. per Tiefensuche oder Dijkstra bestimmt werden. Li
 Was mir noch nicht ganz klar ist, wenn $s$ und $z$ in einer unbeschränkten VR liegen (bzw. man da immer irgendwie hin kommt) dann könnte man doch immer einmal komplett außen rum laufen, oder? Oder ist man in einem Zimmer gefangen wo die Punkte auf dem Boden rumliegen und man sonst gegen die Wand läuft?
 \end{task}
 
-\begin{task}{Geometriche Graphen}
+\begin{task}{Geometrische Graphen}
 \subtask{a}
 Induktion über $|V|$:
 
-I.A.: Für $G_0=(V,E,F)$ zusammenhängend und planar mit $|V|=1$ folgt offensichtlich $|E|=0$ und $|F|=1$.
+I.A.: Für $G_1=(V,E,F)$ zusammenhängend und planar mit $|V|=1$ folgt offensichtlich $|E|=0$ und $|F|=1$.
 
 I.V.: Für $G_n=(V,E,F)$ zusammenhängend und planar mit $|V|=n$ gilt: $|E|=|V|+|F|-2$
 
-$n\rightarrow n+1$: Aus $G_{n+1}=(V',E',F')$ zusammenhängend und planar mit $|V'|=n+1$ werden ein Knoten $v$ und alle zu $v$ inzidenten Kanten entfernt.
+$n\rightarrow n+1$: Aus $G_{n+1}=(V',E',F')$ zusammenhängend und planar mit $|V'|=n+1$ werden ein Knoten $v$ und alle zu $v$ inzidenten Kanten entfernt. Der entstehende Graph muss nicht zusammenhängend sein. Unabhängig von der Anzahl der Zusammenhangskomponenten (ZHKs) lässt sich aus den folgenden Beobachtungen $|F'|$ ableiten:
 
-Fall 1: Der entstehende Graph ist zusammenhängend:\\
-Für den entstehenden Graphen $G_n=(V,E,F)$ gilt $|V|=n$ und $|E|=|E'|-deg(v)$ sowie die I.V.. Nun muss $v$ in einer Facette $f$ von $G_n$ liegen und somit jede zu $v$ inzidente Kante in $G_{n+1}$ zu einem Knoten auf dem Rand von $f$ führen (sonst wäre Planarität verletzt). Die zu $v$ inzidenten Kanten unterteilen $f$ offensichtlich in $deg(v)-1$ zusätzliche Facetten. Somit gilt für $G_{n+1}$:
-\begin{align*}
-F'&=F+deg(v)-1\\
-&=|E|-|V|+2+deg(v)-1\\
-&=|E'|-deg(v)-|V'|+1+2+deg(v)-1\\
-&=|E'|-|V'|+2
-\end{align*}
-
-Fall 2: Der entstehende Graph ist nicht zusammenhängend:\\
-{\large\textcircled{\small{1}}} Dann entstehen $k\le deg(v)$ planare Zusammenhangskomponenten $G^1,...,G^k$. Für jede gilt die I.V..\\
-{\large\textcircled{\small{2}}} Für das Verbinden dieser ZHK waren zuvor $k$ Kanten erforderlich, die keine Facetten begrenzten (sonst hätte es einen Kreis und nicht mehrere ZHK gegeben). Die anderen $deg(v)-k$ Kanten bildeten $deg(v)-k$ Facetten (analog zur Argumentation in Fall 1).\\
-{\large\textcircled{\small{3}}} Ferner ist klar, dass sich die $k$ ZHK eine Facette (die ''Äußere'') teilen - also $k-1$ Facetten zuviel gezählt werden.\\
+{\large\textcircled{\small{1}}} $G_{n+1}$ ohne $v$ und die zu $v$ inzidenten Kanten besteht aus $k\le deg(v)$ planaren ZHKs $G^1,...,G^k$. Für jede ZHK gilt die I.V..\\
+{\large\textcircled{\small{2}}} Für das Verbinden dieser ZHKs waren zuvor $k$ Kanten erforderlich, die keine Facetten begrenzten (sonst hätte es einen Kreis und nicht mehrere ZHKs gegeben). Die anderen $deg(v)-k$ Kanten bildeten $deg(v)-k$ Facetten (durch das Hinzufügen zu einer bestehenden ZHK muss ein Kreis und somit eine neue Facette entstehen).\\
+{\large\textcircled{\small{3}}} Ferner ist klar, dass sich die $k$ ZHKs eine Facette (die ''Äußere'') teilen - also bei {\large\textcircled{\small{1}}} $k-1$ Facetten zuviel gezählt werden.\\
 Somit ergibt sich insgesamt für $|F'|$:
 \begin{align*}
-F'&=\overbrace{\sum_{i=0}^k|F^i|}^{\large\textcircled{\small{1}}}+\overbrace{(deg(v)-k)}^{\large\textcircled{\small{2}}}-\overbrace{(k-1)}^{\large\textcircled{\small{3}}}\\
-&=\sum_{i=0}^k(|E^i|-|V^i|+2)+deg(v)-2\cdot k+1\\
+|F'|&=\overbrace{\sum_{i=1}^k|F^i|}^{\large\textcircled{\small{1}}}+\overbrace{(deg(v)-k)}^{\large\textcircled{\small{2}}}-\overbrace{(k-1)}^{\large\textcircled{\small{3}}}\\
+&=\sum_{i=1}^k(|E^i|-|V^i|+2)+deg(v)-2\cdot k+1\\
 &=|E'|-deg(v)-(|V'|-1)+2\cdot k+deg(v)-2\cdot k+1\\
 &=|E'|-|V'|+2\\
 \end{align*}
@@ -176,8 +166,35 @@ Wobei hier offensichtlich $|D|=|F|-1$ (die ''äußere'' Facette ist kein Dreieck
 \end{task}
 
 \begin{task}{Voronoi-Diagramm}\item[]
-Delaunay basteln und Rand entlang laufen.
+Das dürfte straight-forward funktionieren:
 
-Schneller als nlogn geht nicht, sonst auch CH schneller und somit auch - wie in U3 gezeigt - Sortieren schneller. Für Sortieren ist aber nlogn optimal.
+Eingabe ist ein Voronoi-Graph mit Knoten $V$, Kanten $E$ und Facetten $F$ sowie die leere Menge $CH$ die nach aufruf von $CH(V,E,F,CH)$ die konvexe Hülle von $S$ enthält. Für eine Kante $e$ seien $e.f1$ und $e.f2$ die angenzenden Facetten. Für eine Facette $f$ seien $E(f)$ die angrenzenden Kanten.
+
+\begin{algorithm}
+\caption{$CH(V,E,F,CH)$}
+\begin{algorithmic}[1]
+\STATE$start:=\text{Facette mit minimaler x-Koordinate}$\\
+\STATE$f:=start$\\
+\STATE$last:=null$
+\REPEAT
+\STATE$CH\leftarrow f$\\
+\FOR{$\text{ \bf each }e\in E(f)$}
+\IF{$e\text{ is unbound }$\AND\NOT$(e.f1=last$ \OR$e.f2=last)$}
+\STATE$last:=f$\\
+\STATE$f:=(f=e.f1?e.f1:e.f2)$\\
+\STATE$\text{\bf break}$
+\ENDIF
+\ENDFOR
+\UNTIL{$r=start$}
+\end{algorithmic}
+\end{algorithm}
+
+Es wird auf den äußeren Facetten entlanggelaufen, bis man wieder den Ausgangspunkt erreicht. Hierfür überquert man immer genau die Kante von der man nicht gekommen ist, und die ein offenes Ende hat.
+
+(1) benötigt $O(n)$ Zeit.\\
+(4) wird $O(n)$ mal wiederholt\\
+(6-12) kann zwar $O(n)$ mal wiederholt werden, insgesamt wird jedoch offensichtlich in (4-13) jede äußere (ungebundene) Kante nur konstant oft betrachtet. Die Anzahl Kanten ist asymptotisch begrenzt durch die Anzahl der Knoten, womit insgesamt keine Kosten von mehr als $O(n)$ zu erwarten sind.
+
+Insgesamt ist ein Zeitaufwand von $O(n)$ zu erwarten, zusätzlicher Speicherplatz ist nicht erforderlich ($O(n)$ für die konvexe Hülle).
 \end{task}
 \end{document}
