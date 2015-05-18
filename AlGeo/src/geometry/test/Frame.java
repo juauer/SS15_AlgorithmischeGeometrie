@@ -24,6 +24,7 @@ public class Frame extends JFrame implements Runnable {
     protected final BufferedImage image_base;
     protected final BufferedImage image_animated;
     protected ArrayList<Scene>    scenes             = null;
+    protected int                 i                  = 0;
     protected boolean             keyboardControlled = false;
 
     private Frame(String title, Dimensions dimensions) {
@@ -118,6 +119,13 @@ public class Frame extends JFrame implements Runnable {
 
                             break;
                         case KeyEvent.VK_SPACE:
+                        case KeyEvent.VK_RIGHT:
+                            synchronized(scenes) {
+                                scenes.notifyAll();
+                            }
+                            break;
+                        case KeyEvent.VK_LEFT:
+                            i = i > 1 ? i - 2 : scenes.size() + i - 2;
                             synchronized(scenes) {
                                 scenes.notifyAll();
                             }
@@ -137,7 +145,6 @@ public class Frame extends JFrame implements Runnable {
             }
 
             new Thread(new Runnable() {
-                private int i = 0;
 
                 @Override
                 public void run() {

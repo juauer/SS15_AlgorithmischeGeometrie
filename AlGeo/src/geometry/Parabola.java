@@ -43,6 +43,11 @@ public class Parabola implements Drawable {
         }
     }
 
+    public double y(double x) {
+        double f = x + d;
+        return a * f * f + e;
+    }
+
     public static Point intersection(Parabola parabola, double verticalBeamX) {
         double f = verticalBeamX + parabola.d;
         return new Point(verticalBeamX, parabola.a * f * f + parabola.e);

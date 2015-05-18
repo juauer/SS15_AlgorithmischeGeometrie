@@ -16,6 +16,9 @@ public class Circle implements Drawable {
     }
 
     public static Circle create(Point p1, Point p2, Point p3) {
+        if((p2.getX() - p1.getX()) * (p3.getY() - p1.getY()) - (p3.getX() - p1.getX()) * (p2.getY() - p1.getY()) > 0)
+            return null;
+
         double a = p2.getX() - p1.getX();
         double b = p2.getY() - p1.getY();
         double c = p3.getX() - p1.getX();

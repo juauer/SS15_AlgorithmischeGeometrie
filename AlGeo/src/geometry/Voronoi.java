@@ -45,13 +45,15 @@ public class Voronoi {
 
             Arc right = new Arc(left.location);
             right.right = left.right;
+
             Arc mid = new Arc(triggersAt, left, right);
             left.right = mid;
             right.left = mid;
-            left.createCycleEvent();
-            right.createCycleEvent();
+            left.createCycleEvent(triggersAt.getY());
+            right.createCycleEvent(triggersAt.getY());
 
-            Point intersection = Parabola.intersection(new Parabola(left.location, triggersAt.getY()), triggersAt.getX());
+            right.s2 = left.s2;
+            left.s2 = null;
             mid.s1 = new Edge(null, null, left.location, mid.location);
             mid.s2 = mid.s1;
         }
@@ -76,18 +78,19 @@ public class Voronoi {
             Edge newEdge = new Edge(null, null, arc.left.location, arc.right.location);
             Vertex v = new Vertex(circle.m, arc.left.s2, arc.right.s1, newEdge);
             newEdge.connect(v);
-            arc.left.s2.connect(v);
-            arc.right.s1.connect(v);
+
+            if(arc.left.s2 != null)
+                arc.left.s2.connect(v);
             arc.left.s2 = newEdge;
+
+            if(arc.right.s1 != null)
+                arc.right.s1.connect(v);
             arc.right.s1 = newEdge;
+
             arc.left.right = arc.right;
             arc.right.left = arc.left;
-
-            if(arc.left != null)
-                arc.left.createCycleEvent();
-
-            if(arc.right != null)
-                arc.right.createCycleEvent();
+            arc.left.createCycleEvent(triggersAt.getY());
+            arc.right.createCycleEvent(triggersAt.getY());
         }
     }
 
@@ -109,18 +112,22 @@ public class Voronoi {
             this(location, null, null);
         }
 
-        public void createCycleEvent() {
+        public void createCycleEvent(double lineY) {
             if(event != null) {
                 event.valid = false;
                 event = null;
             }
 
-            if(left != null && right != null && left.location.getY() < location.getY() && right.location.getY() < location.getY()) {
+            if(left != null && right != null) {
                 Circle circle = Circle.create(left.location, location, right.location);
 
                 if(circle != null) {
                     event = new CircleEvent(this, circle);
-                    queue.offer(event);
+
+                    if(event.triggersAt.getY() <= lineY)
+                        queue.offer(event);
+                    else
+                        event.valid = false;
                 }
             }
         }
@@ -171,23 +178,18 @@ public class Voronoi {
                 return;
             }
 
-            Point closestBBSite = new Point(2 * maxX, 2 * maxY);
-            l = new Line(v1.location, l.n0);
+            Vertex v = v1 != null ? v1 : v2;
+            Point lowerSite = null;
 
-            for(LineSegment bbs : new LineSegment[] {
-                    new LineSegment(new Point(minX, minY), new Point(maxX, minY)),
-                    new LineSegment(new Point(minX, minY), new Point(minX, maxY)),
-                    new LineSegment(new Point(minX, maxY), new Point(maxX, maxY)),
-                    new LineSegment(new Point(maxX, minY), new Point(maxX, maxY))
-            }) {
-                Point is = l.intersectionWith(bbs);
+            for(Edge e2 : v.edges)
+                if(e2 != this && e2 != null) {
+                    lowerSite = e2.region1 == region1 || e2.region1 == region2 ? e2.region2 : e2.region1;
+                    break;
+                }
 
-                if(is != null && is.toPosition().substract(mid.toPosition()).length()
-                        < closestBBSite.toPosition().substract(mid.toPosition()).length())
-                    closestBBSite = is;
-            }
-
-            s.add(new Beam(v1.location, closestBBSite), Color.BLACK);
+            Vector u = v1.location.substract(lowerSite.toPosition()).toPosition().length()
+                    < mid.substract(lowerSite.toPosition()).toPosition().length() ? new Line(v1.location, mid).u : new Line(mid, v1.location).u;
+            s.add(new Beam(v1.location, v1.location.add(u)), Color.BLACK);
         }
     }
 
@@ -225,7 +227,10 @@ public class Voronoi {
 
                     if(a.right != null)
                         mid.maxX = Parabola.midIntersection(mid, new Parabola(a.right.location, y)).getX();
+                    else
+                        mid.maxX = frame.dimensions.range_x;
 
+                    s.add(new LineSegment(a.location, new Point(mid.minX + (mid.maxX - mid.minX) / 2, mid.y(mid.minX + (mid.maxX - mid.minX) / 2))), Color.CYAN);
                     s.add(mid, Color.BLUE);
                     s.add(a.location, Color.BLUE);
 

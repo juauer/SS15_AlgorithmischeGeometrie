@@ -24,7 +24,7 @@ public class Test {
     public static void ub3() {
         int dim = 30;
         Frame frame = Frame.create("Graham Scan - animated steps", dim, dim);
-        Point[] pointcloud = randomPoints(dim, dim, dim);
+        Point[] pointcloud = randomPoints(0, dim, 0, dim, dim);
 
         for(int i = 0; i < pointcloud.length; i++)
             frame.draw(pointcloud[i], Color.BLACK);
@@ -112,19 +112,19 @@ public class Test {
         System.out.println(String.format("intersection of polygon and line3 (cyan): %s", p.intersectionWith(line3)));
     }
 
-    public static Point[] randomPoints(double rangex, double rangey, int total) {
+    public static Point[] randomPoints(double minX, double maxX, double minY, double maxY, int total) {
         Random rand = new Random();
         Point[] randomPoints = new Point[total];
 
         for(int i = 0; i < total; i++)
-            randomPoints[i] = new Point(rand.nextDouble() * rangex, rand.nextDouble() * rangey);
+            randomPoints[i] = new Point(minX + rand.nextDouble() * (maxX - minX), minY + rand.nextDouble() * (maxY - minY));
 
         return randomPoints;
     }
 
     public static void fortuneSweep() {
         Frame frame = Frame.create("", 30, 30);
-        Point[] points = randomPoints(30, 30, 16);
+        Point[] points = randomPoints(5, 25, 5, 25, 5);
 
         for(Point p : points)
             frame.draw(p, Color.BLACK);
