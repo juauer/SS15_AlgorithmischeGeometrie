@@ -15,7 +15,7 @@ import java.util.Random;
 
 public class Test {
     public static void main(String[] args) {
-        fortuneSweep();
+        fortunesSweep();
         // ub3();
         // ub2();
         // ub1();
@@ -126,7 +126,7 @@ public class Test {
         return randomPoints;
     }
 
-    public static void fortuneSweep() {
+    public static void fortunesSweep() {
         Frame frame = Frame.create("", 50, 30);
         Point[] points = randomPoints(5, 45, 5, 25, 80);
 
