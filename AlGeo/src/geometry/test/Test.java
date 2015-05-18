@@ -5,7 +5,7 @@ import geometry.LineSegment;
 import geometry.PodalPoints;
 import geometry.Point;
 import geometry.Polygon;
-import geometry.Voronoi;
+import geometry.algorithms.FortunesSweep;
 
 import java.awt.Color;
 import java.util.LinkedList;
@@ -134,6 +134,6 @@ public class Test {
         for(Point p : points)
             frame.draw(p, Color.BLACK);
 
-        new Voronoi().fortunesSweep(frame, points);
+        new FortunesSweep().fortunesSweep(frame, points);
     }
 }
