@@ -128,8 +128,8 @@ public class Test {
     }
 
     public static void fortuneSweep() {
-        Frame frame = Frame.create("", 30, 30);
-        Point[] points = randomPoints(5, 25, 5, 25, 20);
+        Frame frame = Frame.create("", 50, 30);
+        Point[] points = randomPoints(5, 45, 5, 25, 80);
 
         for(Point p : points)
             frame.draw(p, Color.BLACK);

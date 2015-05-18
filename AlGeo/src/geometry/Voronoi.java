@@ -9,15 +9,15 @@ import java.util.PriorityQueue;
 
 public class Voronoi {
     private abstract class Event implements Comparable<Event> {
-        Point triggersAt;
+        Point triggeredAt;
 
         public Event(Point triggersAt) {
-            this.triggersAt = triggersAt;
+            this.triggeredAt = triggersAt;
         }
 
         @Override
         public int compareTo(Event e) {
-            return triggersAt.getY() < e.triggersAt.getY() ? 1 : -1;
+            return triggeredAt.getY() < e.triggeredAt.getY() ? 1 : -1;
         }
 
         public abstract void process();
@@ -31,16 +31,16 @@ public class Voronoi {
         @Override
         public void process() {
             if(root == null) {
-                root = new Arc(triggersAt);
+                root = new Arc(triggeredAt);
                 return;
             }
 
             Arc left = root;
 
             while(left.right != null &&
-                    triggersAt.getX() > Parabola.midIntersection(
-                            new Parabola(left.location, triggersAt.getY()),
-                            new Parabola(left.right.location, triggersAt.getY())).getX())
+                    triggeredAt.getX() > Parabola.midIntersection(
+                            new Parabola(left.location, triggeredAt.getY()),
+                            new Parabola(left.right.location, triggeredAt.getY())).getX())
                 left = left.right;
 
             Arc right = new Arc(left.location);
@@ -49,17 +49,18 @@ public class Voronoi {
             if(right.right != null)
                 right.right.left = right;
 
-            Arc mid = new Arc(triggersAt, left, right);
+            Arc mid = new Arc(triggeredAt, left, right);
             left.right = mid;
             right.left = mid;
-            left.createCycleEvent(triggersAt.getY());
-            right.createCycleEvent(triggersAt.getY());
 
-            mid.s1 = new Edge(null, null, left.location, mid.location);
-            mid.s2 = mid.s1;
-            right.s1 = mid.s1;
-            right.s2 = left.s2;
-            left.s2 = mid.s1;
+            left.createCycleEvent(triggeredAt.getY());
+            right.createCycleEvent(triggeredAt.getY());
+
+            mid.edge1 = new Edge(left.location, mid.location);
+            mid.edge2 = mid.edge1;
+            right.edge1 = mid.edge1;
+            right.edge2 = left.edge2;
+            left.edge2 = mid.edge1;
         }
     }
 
@@ -79,22 +80,20 @@ public class Voronoi {
             if(!valid)
                 return;
 
-            Edge newEdge = new Edge(null, null, arc.left.location, arc.right.location);
-            Vertex v = new Vertex(circle.m, arc.left.s2, arc.right.s1, newEdge);
+            Edge newEdge = new Edge(arc.left.location, arc.right.location);
+            Vertex v = new Vertex(circle.m, arc.left.edge2, arc.right.edge1, newEdge);
             newEdge.connect(v);
 
-            if(arc.left.s2 != null)
-                arc.left.s2.connect(v);
-            arc.left.s2 = newEdge;
+            arc.left.edge2.connect(v);
+            arc.left.edge2 = newEdge;
 
-            if(arc.right.s1 != null)
-                arc.right.s1.connect(v);
-            arc.right.s1 = newEdge;
+            arc.right.edge1.connect(v);
+            arc.right.edge1 = newEdge;
 
             arc.left.right = arc.right;
             arc.right.left = arc.left;
-            arc.left.createCycleEvent(triggersAt.getY());
-            arc.right.createCycleEvent(triggersAt.getY());
+            arc.left.createCycleEvent(triggeredAt.getY());
+            arc.right.createCycleEvent(triggeredAt.getY());
         }
     }
 
@@ -103,8 +102,8 @@ public class Voronoi {
         Arc         left;
         Arc         right;
         CircleEvent event = null;
-        Edge        s1    = null;
-        Edge        s2    = null;
+        Edge        edge1 = null;
+        Edge        edge2 = null;
 
         public Arc(Point location, Arc left, Arc right) {
             this.location = location;
@@ -128,7 +127,7 @@ public class Voronoi {
                 if(circle != null) {
                     event = new CircleEvent(this, circle);
 
-                    if(event.triggersAt.getY() <= lineY)
+                    if(event.triggeredAt.getY() <= lineY)
                         queue.offer(event);
                     else
                         event.valid = false;
@@ -144,31 +143,30 @@ public class Voronoi {
         public Vertex(Point location, Edge... edges) {
             this.location = location;
             this.edges = edges;
+            vertices.add(this);
         }
     }
 
     private class Edge {
         Point  region1;
         Point  region2;
-        Vertex v1;
-        Vertex v2;
+        Vertex v1 = null;
+        Vertex v2 = null;
 
-        public Edge(Vertex v1, Vertex v2, Point region1, Point region2) {
+        public Edge(Point region1, Point region2) {
             this.region1 = region1;
             this.region2 = region2;
-            this.v1 = v1;
-            this.v2 = v2;
             edges.add(this);
         }
 
-        void connect(Vertex v) {
+        public void connect(Vertex v) {
             if(v1 == null)
                 v1 = v;
             else
                 v2 = v;
         }
 
-        void paint(Frame frame, Scene s) {
+        public void paint(Frame frame, Scene s) {
             if(v1 != null && v2 != null) {
                 s.add(new LineSegment(v1.location, v2.location), Color.BLACK);
                 return;
@@ -197,20 +195,14 @@ public class Voronoi {
         }
     }
 
-    public LinkedList<Edge> edges = new LinkedList<Edge>();
-    PriorityQueue<Event>    queue = new PriorityQueue<Event>();
-    protected Arc           root  = null;
-    double                  minX, minY = Double.MAX_VALUE;
-    double                  maxX, maxY = -Double.MAX_VALUE;
+    public LinkedList<Edge>        edges    = new LinkedList<Edge>();
+    public LinkedList<Vertex>      vertices = new LinkedList<Vertex>();
+    protected PriorityQueue<Event> queue    = new PriorityQueue<Event>();
+    protected Arc                  root     = null;
 
     public void fortunesSweep(Frame frame, Point... points) {
-        for(Point p : points) {
-            minX = Math.min(minX, p.getX());
-            maxX = Math.max(maxX, p.getX());
-            minY = Math.min(minY, p.getY());
-            maxY = Math.max(maxY, p.getY());
+        for(Point p : points)
             queue.offer(new SiteEvent(p));
-        }
 
         Event e;
 
@@ -218,9 +210,9 @@ public class Voronoi {
             e.process();
 
             if(frame != null && (e instanceof SiteEvent || ((CircleEvent) e).valid)) {
-                Scene s = new Scene(1000);
-                s.add(new Line(new Point(0, e.triggersAt.getY()), new Point(1, e.triggersAt.getY())), Color.BLACK);
-                double y = e.triggersAt.getY() - 0.001;
+                Scene s = new Scene(100);
+                s.add(new Line(new Point(0, e.triggeredAt.getY()), new Point(1, e.triggeredAt.getY())), Color.BLACK);
+                double y = e.triggeredAt.getY() - 0.001;
                 Arc a = root;
 
                 do {
@@ -249,19 +241,20 @@ public class Voronoi {
                 for(Edge edge : edges)
                     edge.paint(frame, s);
 
-                s.add(e.triggersAt, e instanceof SiteEvent ? Color.RED : Color.ORANGE);
+                s.add(e.triggeredAt, e instanceof SiteEvent ? Color.RED : Color.ORANGE);
                 frame.addScene(s);
             }
         }
 
         for(Arc a = root; a.right != null; a = a.right)
-            if(a.s2 != null && a.right.s1 != null && a.s2 != a.right.s1) {
+            if(a.edge2 != null && a.right.edge1 != null) {
+                double y = -2.0d * (Math.abs(a.location.getY()) + Math.abs(a.right.location.getY()));
                 Vertex v = new Vertex(Parabola.midIntersection(
-                        new Parabola(a.location, -100),
-                        new Parabola(a.right.location, -100)
-                        ), a.s2, a.right.s1);
-                a.s2.connect(v);
-                a.right.s1.connect(v);
+                        new Parabola(a.location, y),
+                        new Parabola(a.right.location, y)
+                        ), a.edge2, a.right.edge1);
+                a.edge2.connect(v);
+                a.right.edge1.connect(v);
             }
 
         if(frame != null) {

@@ -164,9 +164,10 @@ public class Frame extends JFrame implements Runnable {
             if(!displayedHelpOnce) {
                 displayedHelpOnce = true;
                 System.out.println(String.format("Keyboard Controls:%n"
-                        + "\tt\ttoggle keyboard control / animation%n"
-                        + "\tspace\tnext scene%n"
-                        + "\tenter\tsave image to file"));
+                        + "\tt           toggle keyboard control / animation%n"
+                        + "\t<-          previous scene%n"
+                        + "\t->/space    next scene%n"
+                        + "\tenter       save image to file"));
             }
 
             new Thread(new Runnable() {
