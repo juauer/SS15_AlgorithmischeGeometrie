@@ -46,16 +46,20 @@ public class Voronoi {
             Arc right = new Arc(left.location);
             right.right = left.right;
 
+            if(right.right != null)
+                right.right.left = right;
+
             Arc mid = new Arc(triggersAt, left, right);
             left.right = mid;
             right.left = mid;
             left.createCycleEvent(triggersAt.getY());
             right.createCycleEvent(triggersAt.getY());
 
-            right.s2 = left.s2;
-            left.s2 = null;
             mid.s1 = new Edge(null, null, left.location, mid.location);
             mid.s2 = mid.s1;
+            right.s1 = mid.s1;
+            right.s2 = left.s2;
+            left.s2 = mid.s1;
         }
     }
 

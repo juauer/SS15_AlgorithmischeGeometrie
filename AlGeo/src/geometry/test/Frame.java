@@ -3,8 +3,11 @@ package geometry.test;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
@@ -26,6 +29,7 @@ public class Frame extends JFrame implements Runnable {
     protected ArrayList<Scene>    scenes             = null;
     protected int                 i                  = 0;
     protected boolean             keyboardControlled = false;
+    protected Point               mousePosition      = null;
 
     private Frame(String title, Dimensions dimensions) {
         this.dimensions = dimensions;
@@ -48,6 +52,20 @@ public class Frame extends JFrame implements Runnable {
         setSize(dimensions.width + 200, dimensions.height + 200);
         setLocationRelativeTo(null);
         setVisible(true);
+        addMouseMotionListener(new MouseMotionAdapter() {
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                if(keyboardControlled && e.getX() > 100 && e.getX() < dimensions.width + 100
+                        && e.getY() > 100 && e.getY() < dimensions.height + 100) {
+                    mousePosition = e.getPoint();
+                    repaint();
+                }
+                else
+                    mousePosition = null;
+            }
+        });
+
         addKeyListener(new KeyAdapter() {
 
             @Override
@@ -84,12 +102,19 @@ public class Frame extends JFrame implements Runnable {
 
     @Override
     public void paint(Graphics g) {
+        g.clearRect(0, 0, dimensions.width + 200, dimensions.height + 200);
+
         if(scenes == null)
             g.drawImage(image_base, 50, 50, null);
         else
             synchronized(scenes) {
                 g.drawImage(image_animated, 50, 50, null);
             }
+
+        if(mousePosition != null)
+            g.drawString(String.format("%.1f, %.1f",
+                    dimensions.intToX(mousePosition.getX()), dimensions.intToY(mousePosition.getY())),
+                    (int) mousePosition.getX(), (int) mousePosition.getY());
     }
 
     @Override

@@ -21,4 +21,12 @@ public class Dimensions {
     public int yToInt(double y) {
         return height + 50 - (int) Math.round(y * UNIT);
     }
+
+    public double intToX(double x) {
+        return (x - 100) / UNIT;
+    }
+
+    public double intToY(double y) {
+        return (height + 100 - y) / UNIT;
+    }
 }

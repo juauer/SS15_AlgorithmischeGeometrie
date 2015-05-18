@@ -9,6 +9,7 @@ import geometry.Voronoi;
 
 import java.awt.Color;
 import java.util.LinkedList;
+import java.util.Locale;
 import java.util.Random;
 
 import algorithms.ConvexHull;
@@ -115,16 +116,20 @@ public class Test {
     public static Point[] randomPoints(double minX, double maxX, double minY, double maxY, int total) {
         Random rand = new Random();
         Point[] randomPoints = new Point[total];
+        System.out.print("randomPoints = new Point[] {");
 
-        for(int i = 0; i < total; i++)
+        for(int i = 0; i < total; i++) {
             randomPoints[i] = new Point(minX + rand.nextDouble() * (maxX - minX), minY + rand.nextDouble() * (maxY - minY));
+            System.out.printf(Locale.US, "%snew Point(%f, %f)", (i == 0 ? "" : ", "), randomPoints[i].getX(), randomPoints[i].getY());
+        }
 
+        System.out.println("};");
         return randomPoints;
     }
 
     public static void fortuneSweep() {
         Frame frame = Frame.create("", 30, 30);
-        Point[] points = randomPoints(5, 25, 5, 25, 5);
+        Point[] points = randomPoints(5, 25, 5, 25, 20);
 
         for(Point p : points)
             frame.draw(p, Color.BLACK);
