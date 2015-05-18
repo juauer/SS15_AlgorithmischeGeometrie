@@ -1,4 +1,4 @@
-package algorithms;
+package geometry.algorithms;
 
 import geometry.C;
 import geometry.LineSegment;

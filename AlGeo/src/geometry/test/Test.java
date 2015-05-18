@@ -5,14 +5,13 @@ import geometry.LineSegment;
 import geometry.PodalPoints;
 import geometry.Point;
 import geometry.Polygon;
+import geometry.algorithms.ConvexHull;
 import geometry.algorithms.FortunesSweep;
 
 import java.awt.Color;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Random;
-
-import algorithms.ConvexHull;
 
 public class Test {
     public static void main(String[] args) {
