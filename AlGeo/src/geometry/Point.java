@@ -50,7 +50,7 @@ public class Point implements Drawable, Comparable<Point> {
     public boolean equals(Object o) {
         if(o instanceof Point && Math.abs(getX() - ((Point) o).getX()) < C.E && Math.abs(getY() - ((Point) o).getY()) < C.E)
             return true;
-    
+
         return false;
     }
 
@@ -58,7 +58,7 @@ public class Point implements Drawable, Comparable<Point> {
     public int compareTo(Point p) {
         if(getX() == p.getX())
             return getY() < p.getY() ? -1 : getY() == p.getY() ? 0 : 1;
-    
+
         return getX() < p.getX() ? -1 : 1;
     }
 
@@ -84,16 +84,6 @@ public class Point implements Drawable, Comparable<Point> {
      */
     public double distanceTo(Line line) {
         return toPosition().dotProduct(line.n0) + line.d;
-    }
-
-    public boolean isInsideBoundingBox(LineSegment ls) {
-        if(getX() < Math.min(ls.p1.getX(), ls.p2.getX()) - C.E
-                || getX() > Math.max(ls.p1.getX(), ls.p2.getX()) + C.E
-                || getY() < Math.min(ls.p1.getY(), ls.p2.getY()) - C.E
-                || getY() > Math.max(ls.p1.getY(), ls.p2.getY()) + C.E)
-            return false;
-
-        return true;
     }
 
     public Point compose(Mat2x2 mat) {

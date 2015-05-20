@@ -13,13 +13,14 @@ public class LineSegment extends Line implements Drawable {
     }
 
     @Override
-    public Point intersectionWith(Line line) {
-        Point is = super.intersectionWith(line);
+    public boolean isInsideBoundingBox(Point point) {
+        if(point.getX() < Math.min(p1.getX(), p2.getX())
+                || point.getX() > Math.max(p1.getX(), p2.getX())
+                || point.getY() < Math.min(p1.getY(), p2.getY())
+                || point.getY() > Math.max(p1.getY(), p2.getY()))
+            return false;
 
-        if(is == null || !is.isInsideBoundingBox(this))
-            return null;
-
-        return is;
+        return true;
     }
 
     @Override

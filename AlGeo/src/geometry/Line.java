@@ -108,14 +108,14 @@ public class Line implements Drawable {
     public void paint(Graphics g, Dimensions dimensions, Color color) {
         Point p1 = null;
         Point p2 = null;
-    
+
         for(LineSegment l : new LineSegment[] {
                 new LineSegment(new Point(0.0d, 0.0d), new Point(dimensions.range_x, 0.0d)),
                 new LineSegment(new Point(0.0d, 0.0d), new Point(0.0d, dimensions.range_y)),
                 new LineSegment(new Point(0.0d, dimensions.range_y), new Point(dimensions.range_x, dimensions.range_y)),
                 new LineSegment(new Point(dimensions.range_x, 0.0d), new Point(dimensions.range_x, dimensions.range_y)) }) {
             Point p = intersectionWith(l);
-    
+
             if(p != null)
                 if(p1 == null)
                     p1 = p;
@@ -124,10 +124,10 @@ public class Line implements Drawable {
                     break;
                 }
         }
-    
+
         new LineSegment(this.p1, this.p1.add(u.multiply(-1.0d))).rotate(this.p1, Math.PI / 4.0d).paint(g, dimensions, color);
         new LineSegment(this.p1, this.p1.add(u.multiply(-1.0d))).rotate(this.p1, Math.PI / -4.0d).paint(g, dimensions, color);
-    
+
         if(p1 != null && p2 != null)
             new LineSegment(p1, p2).paint(g, dimensions, color);
     }
@@ -150,10 +150,14 @@ public class Line implements Drawable {
         Point is = new Point((d3 * d5 - d1 * d6) / d7,
                 (d5 * d4 - d6 * d2) / d7);
 
-        if(line instanceof LineSegment && !is.isInsideBoundingBox((LineSegment) line))
+        if(!(isInsideBoundingBox(is) && line.isInsideBoundingBox(is)))
             return null;
 
         return is;
+    }
+
+    public boolean isInsideBoundingBox(Point point) {
+        return true;
     }
 
     /**

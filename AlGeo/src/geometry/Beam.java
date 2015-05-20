@@ -13,12 +13,14 @@ public class Beam extends Line implements Drawable {
     }
 
     @Override
-    public Point intersectionWith(Line line) {
-        Point is = super.intersectionWith(line);
+    public boolean isInsideBoundingBox(Point point) {
+        if(point.getX() < (p1.getX() < p2.getX() ? p1.getX() : -Double.MAX_VALUE)
+                || point.getX() > (p1.getX() < p2.getX() ? Double.MAX_VALUE : p1.getX())
+                || point.getY() < (p1.getY() < p2.getY() ? p1.getY() : -Double.MAX_VALUE)
+                || point.getY() > (p1.getY() < p2.getY() ? Double.MAX_VALUE : p1.getY()))
+            return false;
 
-        // TODO
-
-        return is;
+        return true;
     }
 
     @Override
