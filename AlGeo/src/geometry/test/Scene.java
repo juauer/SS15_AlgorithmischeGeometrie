@@ -12,8 +12,9 @@ public class Scene {
         this.duration = duration;
     }
 
-    public void add(Drawable d, Color color) {
+    public Scene add(Drawable d, Color color) {
         drawables.add(d);
         colors.add(color);
+        return this;
     }
 }

@@ -1,71 +1,98 @@
 package geometry;
 
-import geometry.test.Frame;
-import geometry.test.Scene;
+import geometry.test.Dimensions;
+import geometry.test.Drawable;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.util.LinkedList;
 
-public class Voronoi {
+public class Voronoi implements Drawable {
+    public class Region {
+        public Point            location;
+        public LinkedList<Edge> edges = new LinkedList<Edge>();
+
+        public Region(Point location) {
+            this.location = location;
+            regions.add(this);
+        }
+    }
+
     public class Vertex {
-        Point  location;
-        Edge[] edges;
+        public Point  location;
+        public Edge[] edges;
 
         public Vertex(Point location, Edge... edges) {
             this.location = location;
             this.edges = edges;
             vertices.add(this);
+
+            for(Edge edge : edges)
+                edge.connect(this);
         }
     }
 
-    public class Edge {
-        Point  region1;
-        Point  region2;
-        Vertex v1 = null;
-        Vertex v2 = null;
+    public class Edge implements Drawable {
+        public Region region1;
+        public Region region2;
+        public Vertex vertex1 = null;
+        public Vertex vertex2 = null;
 
-        public Edge(Point region1, Point region2) {
+        public Edge(Region region1, Region region2) {
             this.region1 = region1;
             this.region2 = region2;
+            region1.edges.add(this);
+            region2.edges.add(this);
             edges.add(this);
         }
 
         public void connect(Vertex v) {
-            if(v1 == null)
-                v1 = v;
+            if(vertex1 == null)
+                vertex1 = v;
             else
-                v2 = v;
+                vertex2 = v;
         }
 
-        public void paint(Frame frame, Scene s) {
-            if(v1 != null && v2 != null) {
-                s.add(new LineSegment(v1.location, v2.location), Color.BLACK);
+        @Override
+        public void paint(Graphics g, Dimensions dimensions, Color color) {
+            if(vertex1 != null && vertex2 != null) {
+                new LineSegment(vertex1.location, vertex2.location).paint(g, dimensions, color);
                 return;
             }
 
-            Line l = new Line(region1, region2);
-            Point mid = region1.add(l.u.multiply(region2.substract(region1.toPosition()).toPosition().length() / 2));
+            Line l = new Line(region1.location, region2.location);
+            Point mid = region1.location.add(l.u.multiply(
+                    region2.location.substract(region1.location.toPosition()).toPosition().length() / 2));
 
-            if(v1 == null && v2 == null) {
-                s.add(new Line(l.u, mid), Color.BLACK);
+            if(vertex1 == null && vertex2 == null) {
+                new Line(l.u, mid).paint(g, dimensions, color);
                 return;
             }
 
-            Vertex v = v1 != null ? v1 : v2;
+            Vertex v = vertex1 != null ? vertex1 : vertex2;
             Point lowerSite = null;
 
             for(Edge e2 : v.edges)
                 if(e2 != this && e2 != null) {
-                    lowerSite = e2.region1 == region1 || e2.region1 == region2 ? e2.region2 : e2.region1;
+                    lowerSite = e2.region1 == region1 || e2.region1 == region2
+                            ? e2.region2.location : e2.region1.location;
                     break;
                 }
 
-            Vector u = v1.location.substract(lowerSite.toPosition()).toPosition().length()
-                    < mid.substract(lowerSite.toPosition()).toPosition().length() ? new Line(v1.location, mid).u : new Line(mid, v1.location).u;
-            s.add(new Beam(v1.location, v1.location.add(u)), Color.BLACK);
+            Vector u = vertex1.location.substract(lowerSite.toPosition()).toPosition().length()
+                    < mid.substract(lowerSite.toPosition()).toPosition().length()
+                    ? new Line(vertex1.location, mid).u : new Line(mid, vertex1.location).u;
+            new Beam(vertex1.location, vertex1.location.add(u)).paint(g, dimensions, color);
         }
     }
 
+    public LinkedList<Region> regions  = new LinkedList<Region>();
     public LinkedList<Edge>   edges    = new LinkedList<Edge>();
     public LinkedList<Vertex> vertices = new LinkedList<Vertex>();
+
+    @Override
+    public void paint(Graphics g, Dimensions dimensions, Color color) {
+        for(Edge edge : edges)
+            edge.paint(g, dimensions, color);
+    }
 }

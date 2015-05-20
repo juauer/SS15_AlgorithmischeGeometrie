@@ -7,7 +7,7 @@ import geometry.Parabola;
 import geometry.Point;
 import geometry.Voronoi;
 import geometry.Voronoi.Edge;
-import geometry.Voronoi.Vertex;
+import geometry.Voronoi.Region;
 import geometry.test.Frame;
 import geometry.test.Scene;
 
@@ -31,14 +31,17 @@ public class FortunesSweep {
     }
 
     private class SiteEvent extends Event {
-        public SiteEvent(Point triggersAt) {
-            super(triggersAt);
+        Region region;
+
+        public SiteEvent(Region region) {
+            super(region.location);
+            this.region = region;
         }
 
         @Override
         public void process() {
             if(root == null) {
-                root = new Arc(triggeredAt);
+                root = new Arc(region);
                 return;
             }
 
@@ -46,24 +49,24 @@ public class FortunesSweep {
 
             while(left.right != null &&
                     triggeredAt.getX() > Parabola.midIntersection(
-                            new Parabola(left.location, triggeredAt.getY()),
-                            new Parabola(left.right.location, triggeredAt.getY())).getX())
+                            new Parabola(left.region.location, triggeredAt.getY()),
+                            new Parabola(left.right.region.location, triggeredAt.getY())).getX())
                 left = left.right;
 
-            Arc right = new Arc(left.location);
+            Arc right = new Arc(left.region);
             right.right = left.right;
 
             if(right.right != null)
                 right.right.left = right;
 
-            Arc mid = new Arc(triggeredAt, left, right);
+            Arc mid = new Arc(region, left, right);
             left.right = mid;
             right.left = mid;
 
             left.createCycleEvent(triggeredAt.getY());
             right.createCycleEvent(triggeredAt.getY());
 
-            mid.edge1 = voronoi.new Edge(left.location, mid.location);
+            mid.edge1 = voronoi.new Edge(left.region, mid.region);
             mid.edge2 = mid.edge1;
             right.edge1 = mid.edge1;
             right.edge2 = left.edge2;
@@ -87,16 +90,10 @@ public class FortunesSweep {
             if(!valid)
                 return;
 
-            Edge newEdge = voronoi.new Edge(arc.left.location, arc.right.location);
-            Vertex v = voronoi.new Vertex(circle.m, arc.left.edge2, arc.right.edge1, newEdge);
-            newEdge.connect(v);
-
-            arc.left.edge2.connect(v);
+            Edge newEdge = voronoi.new Edge(arc.left.region, arc.right.region);
+            voronoi.new Vertex(circle.m, arc.left.edge2, arc.right.edge1, newEdge);
             arc.left.edge2 = newEdge;
-
-            arc.right.edge1.connect(v);
             arc.right.edge1 = newEdge;
-
             arc.left.right = arc.right;
             arc.right.left = arc.left;
             arc.left.createCycleEvent(triggeredAt.getY());
@@ -105,21 +102,21 @@ public class FortunesSweep {
     }
 
     private class Arc {
-        Point       location;
+        Region      region;
         Arc         left;
         Arc         right;
         CircleEvent event = null;
         Edge        edge1 = null;
         Edge        edge2 = null;
 
-        public Arc(Point location, Arc left, Arc right) {
-            this.location = location;
+        public Arc(Region region, Arc left, Arc right) {
+            this.region = region;
             this.left = left;
             this.right = right;
         }
 
-        public Arc(Point location) {
-            this(location, null, null);
+        public Arc(Region region) {
+            this(region, null, null);
         }
 
         public void createCycleEvent(double lineY) {
@@ -129,7 +126,7 @@ public class FortunesSweep {
             }
 
             if(left != null && right != null) {
-                Circle circle = Circle.create(left.location, location, right.location);
+                Circle circle = Circle.create(left.region.location, region.location, right.region.location);
 
                 if(circle != null) {
                     event = new CircleEvent(this, circle);
@@ -149,7 +146,7 @@ public class FortunesSweep {
 
     public Voronoi fortunesSweep(Frame frame, Point... points) {
         for(Point p : points)
-            queue.offer(new SiteEvent(p));
+            queue.offer(new SiteEvent(voronoi.new Region(p)));
 
         Event e;
 
@@ -163,19 +160,19 @@ public class FortunesSweep {
                 Arc a = root;
 
                 do {
-                    Parabola mid = new Parabola(a.location, y);
+                    Parabola mid = new Parabola(a.region.location, y);
 
                     if(a.left != null)
-                        mid.minX = Parabola.midIntersection(new Parabola(a.left.location, y), mid).getX();
+                        mid.minX = Parabola.midIntersection(new Parabola(a.left.region.location, y), mid).getX();
 
                     if(a.right != null)
-                        mid.maxX = Parabola.midIntersection(mid, new Parabola(a.right.location, y)).getX();
+                        mid.maxX = Parabola.midIntersection(mid, new Parabola(a.right.region.location, y)).getX();
                     else
                         mid.maxX = frame.dimensions.range_x;
 
-                    s.add(new LineSegment(a.location, new Point(mid.minX + (mid.maxX - mid.minX) / 2, mid.y(mid.minX + (mid.maxX - mid.minX) / 2))), Color.CYAN);
+                    s.add(new LineSegment(a.region.location, new Point(mid.minX + (mid.maxX - mid.minX) / 2, mid.y(mid.minX + (mid.maxX - mid.minX) / 2))), Color.CYAN);
                     s.add(mid, Color.BLUE);
-                    s.add(a.location, Color.BLUE);
+                    s.add(a.region.location, Color.BLUE);
 
                     if(a.event != null)
                         s.add(a.event.circle, Color.GREEN);
@@ -186,7 +183,7 @@ public class FortunesSweep {
                     s.add(((CircleEvent) e).circle, Color.ORANGE);
 
                 for(Edge edge : voronoi.edges)
-                    edge.paint(frame, s);
+                    s.add(edge, Color.BLACK);
 
                 s.add(e.triggeredAt, e instanceof SiteEvent ? Color.RED : Color.ORANGE);
                 frame.addScene(s);
@@ -195,23 +192,15 @@ public class FortunesSweep {
 
         for(Arc a = root; a.right != null; a = a.right)
             if(a.edge2 != null && a.right.edge1 != null) {
-                double y = -2.0d * (Math.abs(a.location.getY()) + Math.abs(a.right.location.getY()));
-                Vertex v = voronoi.new Vertex(Parabola.midIntersection(
-                        new Parabola(a.location, y),
-                        new Parabola(a.right.location, y)
+                double y = -2.0d * (Math.abs(a.region.location.getY()) + Math.abs(a.right.region.location.getY()));
+                voronoi.new Vertex(Parabola.midIntersection(
+                        new Parabola(a.region.location, y),
+                        new Parabola(a.right.region.location, y)
                         ), a.edge2, a.right.edge1);
-                a.edge2.connect(v);
-                a.right.edge1.connect(v);
             }
 
-        if(frame != null) {
-            Scene s = new Scene(5000);
-
-            for(Edge edge : voronoi.edges)
-                edge.paint(frame, s);
-
-            frame.addScene(s);
-        }
+        if(frame != null)
+            frame.addScene(new Scene(5000).add(voronoi, Color.BLACK));
 
         return voronoi;
     }
