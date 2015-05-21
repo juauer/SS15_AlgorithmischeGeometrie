@@ -5,6 +5,7 @@ import geometry.LineSegment;
 import geometry.PodalPoints;
 import geometry.Point;
 import geometry.Polygon;
+import geometry.Voronoi;
 import geometry.algorithms.ConvexHull;
 import geometry.algorithms.FortunesSweep;
 
@@ -133,6 +134,9 @@ public class Test {
         for(Point p : points)
             frame.draw(p, Color.BLACK);
 
-        new FortunesSweep().fortunesSweep(frame, points);
+        Voronoi v = new FortunesSweep().fortunesSweep(frame, points);
+        frame.addScene(new Scene(5000)
+                .add(v, Color.BLACK)
+                .add(v.triangulation(), Color.RED));
     }
 }

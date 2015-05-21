@@ -5,6 +5,7 @@ import geometry.test.Drawable;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 public class Voronoi implements Drawable {
@@ -94,5 +95,29 @@ public class Voronoi implements Drawable {
     public void paint(Graphics g, Dimensions dimensions, Color color) {
         for(Edge edge : edges)
             edge.paint(g, dimensions, color);
+    }
+
+    public Triangulation triangulation() {
+        Triangulation triangulation = new Triangulation();
+        HashMap<Region, Triangulation.Vertex> nodes = new HashMap<Region, Triangulation.Vertex>(regions.size(), 1.0f);
+
+        for(Edge edge : edges) {
+            Triangulation.Vertex v1 = nodes.get(edge.region1);
+            Triangulation.Vertex v2 = nodes.get(edge.region2);
+
+            if(v1 == null) {
+                v1 = triangulation.new Vertex(edge.region1.location);
+                nodes.put(edge.region1, v1);
+            }
+
+            if(v2 == null) {
+                v2 = triangulation.new Vertex(edge.region2.location);
+                nodes.put(edge.region2, v2);
+            }
+
+            triangulation.new Edge(v1, v2);
+        }
+
+        return triangulation;
     }
 }

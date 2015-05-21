@@ -14,6 +14,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -112,7 +113,7 @@ public class Frame extends JFrame implements Runnable {
             }
 
         if(mousePosition != null)
-            g.drawString(String.format("%.1f, %.1f",
+            g.drawString(String.format(Locale.US, "%.1f, %.1f",
                     dimensions.intToX(mousePosition.getX()), dimensions.intToY(mousePosition.getY())),
                     (int) mousePosition.getX(), (int) mousePosition.getY());
     }
