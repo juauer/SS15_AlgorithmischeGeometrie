@@ -1,9 +1,12 @@
 package geometry.test;
 
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Stroke;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -22,6 +25,7 @@ import javax.swing.SwingUtilities;
 
 public class Frame extends JFrame implements Runnable {
     protected static final String PATH_CAPTURES      = "./capture%d.png";
+    protected static final Stroke STROKE             = new BasicStroke(2);
     protected static int          captured           = 0;
     private static boolean        displayedHelpOnce  = false;
     public final Dimensions       dimensions;
@@ -38,7 +42,7 @@ public class Frame extends JFrame implements Runnable {
         image_base = new BufferedImage(dimensions.width + 100, dimensions.height + 100, BufferedImage.TYPE_INT_RGB);
         image_animated = new BufferedImage(dimensions.width + 100, dimensions.height + 100, BufferedImage.TYPE_INT_RGB);
 
-        Graphics g = image_base.getGraphics();
+        Graphics2D g = image_base.createGraphics();
         g.setColor(Color.WHITE);
         g.fillRect(0, 0, dimensions.width + 100, dimensions.height + 100);
         g.setColor(Color.LIGHT_GRAY);
@@ -175,7 +179,8 @@ public class Frame extends JFrame implements Runnable {
 
                 @Override
                 public void run() {
-                    Graphics g = image_animated.getGraphics();
+                    Graphics2D g = image_animated.createGraphics();
+                    g.setStroke(STROKE);
                     Scene scene;
 
                     while(isVisible())
@@ -229,7 +234,8 @@ public class Frame extends JFrame implements Runnable {
     }
 
     public void draw(Drawable drawable, Color color) {
-        Graphics g = image_base.getGraphics();
+        Graphics2D g = image_base.createGraphics();
+        g.setStroke(STROKE);
         drawable.paint(g, dimensions, color);
         repaint();
     }
