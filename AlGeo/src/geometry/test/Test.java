@@ -1,5 +1,6 @@
 package geometry.test;
 
+import geometry.Beam;
 import geometry.Line;
 import geometry.LineSegment;
 import geometry.PodalPoints;
@@ -16,10 +17,87 @@ import java.util.Random;
 
 public class Test {
     public static void main(String[] args) {
-        fortunesSweep();
+        ub5();
         // ub3();
         // ub2();
         // ub1();
+        // fortunesSweep();
+    }
+
+    public static void ub5() {
+        Frame frame = Frame.create("", 11, 11);
+
+        for(Point[] ps : new Point[][] {
+                { new Point(4, 3), new Point(6, 8) },
+                { new Point(5, 4), new Point(5, 7) },
+                { new Point(4, 8), new Point(6, 3) },
+                { new Point(3, 4), new Point(8, 6) },
+                { new Point(4, 5), new Point(7, 5) },
+                { new Point(3, 6), new Point(8, 4) },
+                { new Point(4, 4), new Point(7, 7) },
+        }) {
+            Point p1 = ps[0];
+            Point p2 = ps[1];
+            double dx = Math.abs(p1.getX() - p2.getX());
+            double dy = Math.abs(p1.getY() - p2.getY());
+            double d2 = (dx + dy) / 2;
+            double r = dx / dy;
+
+            if(r < 1.0d) {
+                Point q1 = new Point(p1.getX(), p1.getY() + (p1.getY() < p2.getY() ? d2 : -d2));
+                Point q2 = new Point(p2.getX(), p2.getY() + (p1.getY() < p2.getY() ? -d2 : d2));
+                LineSegment ls = new LineSegment(q1, q2);
+                Beam b1 = new Beam(q1, new Point(q1.getX() + (q1.getX() < q2.getX() ? -1 : 1), q1.getY()));
+                Beam b2 = new Beam(q2, new Point(q2.getX() + (q1.getX() < q2.getX() ? 1 : -1), q2.getY()));
+                frame.addScene(new Scene(1000)
+                        .add(p1, Color.BLACK).add(p2, Color.BLACK).add(ls, Color.BLACK)
+                        .add(b1, Color.BLACK).add(b2, Color.BLACK));
+            }
+            else if(r > 1.0d) {
+                Point q1 = new Point(p1.getX() + (p1.getX() < p2.getX() ? d2 : -d2), p1.getY());
+                Point q2 = new Point(p2.getX() + (p1.getX() < p2.getX() ? -d2 : d2), p2.getY());
+                LineSegment ls = new LineSegment(q1, q2);
+                Beam b1 = new Beam(q1, new Point(q1.getX(), q1.getY() + (q1.getY() < q2.getY() ? -1 : 1)));
+                Beam b2 = new Beam(q2, new Point(q2.getX(), q2.getY() + (q1.getY() < q2.getY() ? 1 : -1)));
+                frame.addScene(new Scene(1000)
+                        .add(p1, Color.BLACK).add(p2, Color.BLACK).add(ls, Color.BLACK)
+                        .add(b1, Color.BLACK).add(b2, Color.BLACK));
+            }
+            else {
+                Scene s = new Scene(1000);
+                Point q1 = new Point(p1.getX(), p2.getY());
+                Point q2 = new Point(p2.getX(), p1.getY());
+                LineSegment ls = new LineSegment(q1, q2);
+                Point top = q1.getY() < q2.getY() ? q2 : q1;
+                Point bottom = q1.getY() < q2.getY() ? q1 : q2;
+                Point left = q1.getX() < q2.getX() ? q1 : q2;
+                Point right = q1.getX() < q2.getX() ? q2 : q1;
+                Beam bt = new Beam(top, new Point(top.getX(), top.getY() + 1));
+                Beam bb = new Beam(bottom, new Point(bottom.getX(), bottom.getY() - 1));
+                Beam bl = new Beam(left, new Point(left.getX() - 1, left.getY()));
+                Beam br = new Beam(right, new Point(right.getX() + 1, right.getY()));
+
+                for(double i = -10.5; i < 11; i += 0.5) {
+                    Line l = new Line(new Point(i, 0), new Point(i + 11, 11));
+                    Point is1 = null;
+                    Point is2 = null;
+
+                    for(Beam b : new Beam[] { bt, bb, bl, br })
+                        if(is2 != null)
+                            break;
+                        else if(is1 == null)
+                            is1 = l.intersectionWith(b);
+                        else
+                            is2 = l.intersectionWith(b);
+
+                    if(is2 != null)
+                        s.add(new LineSegment(is1, is2), Color.RED);
+                }
+
+                frame.addScene(s.add(p1, Color.BLACK).add(p2, Color.BLACK).add(ls, Color.BLACK)
+                        .add(bt, Color.BLACK).add(bb, Color.BLACK).add(bl, Color.BLACK).add(br, Color.BLACK));
+            }
+        }
     }
 
     public static void ub3() {
