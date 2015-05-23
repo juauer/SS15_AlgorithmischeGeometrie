@@ -92,7 +92,13 @@ belowcaptionskip=15pt}
 
 \begin{task}{$L_1$-Voronoi-Diagramme}
 \item[]
-Alle Möglichkeiten (Erklärungen folgen noch):
+Für zwei Punkte $p=(p_x, p_y)$ und $q=(q_x, q_y)$ ist die $L_1$-Metrik wie folgt definiert:\\ $d_1=\left|p_x-q_x\right| + \left|p_y-q_y\right|$
+
+Es lassen sich drei Fälle unterscheiden, je nach dem in welchem Verhältnis die Differenz der $x$ bzw. $y$ Werte der Punkte $p$ und $q$ zueinander stehen.
+
+Fall {\large\textcircled{\small{1}}}: $\left|p_x-q_x\right| < \left|p_y-q_y\right|$\\
+Fall {\large\textcircled{\small{2}}}: $\left|p_x-q_x\right| > \left|p_y-q_y\right|$\\
+Fall {\large\textcircled{\small{3}}}: $\left|p_x-q_x\right| = \left|p_y-q_y\right|$\\
 
 \begin{figure}[h]
 \begin{center}
@@ -106,7 +112,7 @@ Alle Möglichkeiten (Erklärungen folgen noch):
 \includegraphics[width=3cm]{capture3}
 }
 \end{center}
-\caption{Fall 1: $\left|\frac{x_1-x_2}{y_1-y_2}\right| <0$}
+\caption{Fall 1: Bisektor verläuft in Richtung der $x$-Achse, horizontal}
 \end{figure}
 
 \begin{figure}[h]
@@ -121,14 +127,14 @@ Alle Möglichkeiten (Erklärungen folgen noch):
 \includegraphics[width=3cm]{capture6}
 }
 \end{center}
-\caption{Fall 2: $\left|\frac{x_1-x_2}{y_1-y_2}\right| >0$}
+\caption{Fall 2: Bisektor verläuft in Richtung der $y$-Achse, vertikal}
 \end{figure}
 
 \begin{figure}[h]
 \begin{center}
 \includegraphics[width=4cm]{capture7}
 \end{center}
-\caption{Fall 3: $\left|\frac{x_1-x_2}{y_1-y_2}\right| =0$}
+\caption{Fall 3: Bisektor besteht aus zwei unbeschränkten Bereichen und einer Strecke.}
 \end{figure}
 \end{task}
 
