@@ -85,6 +85,13 @@ belowcaptionskip=15pt}
 
 \begin{task}{Suchen in ebenen Unterteilungen}
 \item[]
+
+Eine ebene Unterteilung ist eine Partition von $\mathbb{R}^2$ in durch Strecken und Strahlen begrenzte Gebiete (Einbettung eines planaren Graphen $G$)\\
+
+Wenn man durch jeden Knoten der ebenen Unterteilung eine vertikale Linie zieht und sich dann den Schnittpunkt nach oben und unten merkt, dann entstehen ganz viele Trapze, die man dann wieder in zwei Dreiecke unterteilen kann. Was man dann davon hat keine Ahnung. Und welche Datenstruktur hier Sinn macht mit ($O(log(n))$ weiß ich auch nicht. Vielleicht ein Baum? So eine ebene Unterteilung wenns dumm läuft kann doch dann ganz ganz viele Trapeze haben oder?
+
+Ich verstehe die Aufgabe nicht so richtig. Wir hatten in der VL auch das Thema Suche in Ebenen Unterteilungen, da haben wir aber triangulierte Unterteilungen betrachtet, wo die Außenfacette ein Dreieck ist, das Suchproblem dafür gelöst und dann einfach um es Allgmeiner zu machen, um ebene Unterteilungen die nicht so sind, ein ganz ganz großes Dreieck rundrum konstruiert und dann den Rest trianguliert.
+
 * einfache Datenstruktur beschreiben zum Suchen mit Anfragezeit $O(\log n)$\\
 * Vorverarbeitungszeit\\
 * Speicherplatz für Datensturktur
@@ -152,6 +159,58 @@ Auffälig ist hier der letzte, entartete Fall, bei dem eine Menge von Punkten (r
 
 \begin{task}{Suche in ebenen Unterteilungen - Verallgemeinerung}
 \item[]
+
+Die Lokalisierungsdatenstruktur (LDS) wurde in der Vorlesung als gerichteter azyklischer Graph (ADG) beschrieben und funktioniert für Triangulierung von $G$ mit Dreieck als Außenfacette.
+
+$S_1$ entspricht $G$, also der ebenen Unterteilung  (eingebetteter Graph)
+$S_n$ ist das äußere (umschließende) Dreieck
+
+Ich habe es so verstanden dass in jedem Schritt die unabhänige Knotenmenge bestimmt und entfert wird, dass sind dann die $S_i$'s' die zwischen 1 und n konstruiert werden.
+
+Eine Knotenmenge $I$ von $G$ (Teilmenge) heißt unabhängig, wenn keine zwei Knoten aus $I$ in $G$ durch eine Kante verbungen sind. Es geht wohl in linearer Zeit zu berechnen, weil warum auch immer, wurde in VL bewiesen.
+
+
+
+
+1. vorher das Ding Triangulieren\\
+2. großes Dreieck drumrum bauen\\
+3. wenn ein Strahl das äußerer Dreieck schneidet, dann dort einen neuen Knoten einfügen\\
+4. Eckpunkte vom Dreieck mit Punkten verbinden oder einfach nochmal Triangulieren? oder voher schon Dreicke rumbasteln
+
+die beiden algorithmen wurden in der VL vorgestellt, diese dann noch ein bischen erweitern.
+
+\begin{algorithm}
+\caption{Algorithmus zur Konstruktion}
+\begin{algorithmic}[1]
+\STATE Sei $S_1=G$
+\STATE Für jedes $\triangle$ in $G$ erzeuge einen Knoten in LDS($G$)
+\STATE i = 1
+\WHILE{$|S_i|>3$}
+    \STATE{Berechne $I$}
+    \STATE {Entferne $I$ aus $S_i$}
+    \STATE {Trianguliere $S_i ohne I$, das ist dann $S_i+1$}
+    \STATE {für jedes neue $\triangle$ $t$ in $S_i+1$ erzeuge einen Knoten K($t$)in LDS($G$), füge eine Kante von K($t$) zu allen Knoten von Dreiecken von $S_i$ die von  $t$ geschnitten werden}
+    \STATE i++
+\ENDWHILE
+\end{algorithmic}
+\end{algorithm}
+
+
+h ... log(n)
+
+\begin{algorithm}
+\caption{Lokalisiere (q, LDS(G))}
+\begin{algorithmic}[1]
+\STATE teste ob $q \in S_h$ falls nein gib aussenfassette zurück
+\STATE $v$=Wurzel(LDS(G))
+\WHILE{$v$ hat Nachfolger}
+    \STATE { für jeden Nachfolger von $u$ von $v$ teste ob $q$ im Dreiech $u$ liegt.}
+    \STATE {Falls ja, setze $v=u$ und wiederhole}
+\RETURN {$q$ liegt im Dreieck von $v$}
+\ENDWHILE
+\end{algorithmic}
+\end{algorithm}
+
 * Erweiterung von LDS\\
 * Algorithmen zur Suche und Konstruktion anpassen\\
 * alle Unterteilungen den Ebene sollen unterstützt werden (mehrere unbeschränkte Facetten)\\
