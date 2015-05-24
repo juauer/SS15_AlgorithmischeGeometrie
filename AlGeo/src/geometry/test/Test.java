@@ -26,6 +26,17 @@ public class Test {
 
     public static void ub5() {
         Frame frame = Frame.create("", 11, 11);
+        Scene s = new Scene(1000)
+                .add(new Point(5, 5), Color.BLACK);
+
+        for(int i = 1; i < 4; ++i) {
+            s.add(new LineSegment(new Point(5, 5 + i), new Point(5 + i, 5)), Color.GRAY);
+            s.add(new LineSegment(new Point(5 + i, 5), new Point(5, 5 - i)), Color.GRAY);
+            s.add(new LineSegment(new Point(5, 5 - i), new Point(5 - i, 5)), Color.GRAY);
+            s.add(new LineSegment(new Point(5 - i, 5), new Point(5, 5 + i)), Color.GRAY);
+        }
+
+        frame.addScene(s);
 
         for(Point[] ps : new Point[][] {
                 { new Point(4, 3), new Point(6, 8) },
@@ -64,7 +75,7 @@ public class Test {
                         .add(b1, Color.BLACK).add(b2, Color.BLACK));
             }
             else {
-                Scene s = new Scene(1000);
+                s = new Scene(1000);
                 Point q1 = new Point(p1.getX(), p2.getY());
                 Point q2 = new Point(p2.getX(), p1.getY());
                 LineSegment ls = new LineSegment(q1, q2);

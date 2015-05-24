@@ -92,7 +92,20 @@ belowcaptionskip=15pt}
 
 \begin{task}{$L_1$-Voronoi-Diagramme}
 \item[]
-Alle Möglichkeiten (Erklärungen folgen noch):
+In $L_1$-Metrik beschreiben die Punkte mit Abstand $d$ von einem Punkt ein Quadrat mit Seitenlänge $2\cdot d$ (Abb. \ref{fig:l1_1}).
+\begin{figure}[h]
+\begin{center}
+\includegraphics[width=3cm]{capture0}
+\end{center}
+\caption{Punkte mit Abständen 1,2,3 von einem Punkt liegen auf den Ränder dieser Quadrate}
+\label{fig:l1_1}
+\end{figure}
+
+Eine zwei Voronoi-Regionen trennende Kante hat nun stets eine von drei möglichen Formen, welche vom Verhältnis zwischen der X-Differenz und der Y-Differenz der Punkte bestimmt wird. Dominiert die X-Differenz, wird die Kante senkrecht ''aussehen''. Dominiert die Y-Differenz, wird die Kante waagerecht ''aussehen''.
+
+Es sind im Folgenden die drei Fälle abgebildet, dass bei zwei Punkten die Y-Differenz (Abb. \ref{fig:l1_2}), die X-Differenz (Abb. \ref{fig:l1_3}) oder keine der beiden (Abb. \ref{fig:l1_4}) dominiert.
+
+Jede Abbildung zeigt die drei untergeordneten Fälle, bei denen der in der dominanten Dimension größere Punkt in der rezesiven Dimension kleiner/gleich/größer dem anderen Punkt ist. Andere Fälle als die gezeigten sieben kann es nicht geben.
 
 \begin{figure}[h]
 \begin{center}
@@ -106,7 +119,8 @@ Alle Möglichkeiten (Erklärungen folgen noch):
 \includegraphics[width=3cm]{capture3}
 }
 \end{center}
-\caption{Fall 1: $\left|\frac{x_1-x_2}{y_1-y_2}\right| <0$}
+\caption{Fall 1: $\left|\frac{x_1-x_2}{y_1-y_2}\right| <1$}
+\label{fig:l1_2}
 \end{figure}
 
 \begin{figure}[h]
@@ -121,15 +135,19 @@ Alle Möglichkeiten (Erklärungen folgen noch):
 \includegraphics[width=3cm]{capture6}
 }
 \end{center}
-\caption{Fall 2: $\left|\frac{x_1-x_2}{y_1-y_2}\right| >0$}
+\caption{Fall 2: $\left|\frac{x_1-x_2}{y_1-y_2}\right| >1$}
+\label{fig:l1_3}
 \end{figure}
 
 \begin{figure}[h]
 \begin{center}
-\includegraphics[width=4cm]{capture7}
+\includegraphics[width=3cm]{capture7}
 \end{center}
-\caption{Fall 3: $\left|\frac{x_1-x_2}{y_1-y_2}\right| =0$}
+\caption{Fall 3: $\left|\frac{x_1-x_2}{y_1-y_2}\right| =1$}
+\label{fig:l1_4}
 \end{figure}
+
+Auffälig ist hier der letzte, entartete Fall, bei dem eine Menge von Punkten (rot) zu beiden Punkten equidistant ist und keine Kante sondern eine Fläche beschreibt. Wie dieser Fall im Kontext von Voronoi-Diagrammen behandelt werden sollte ist nicht aus deren Definition abzuleiten. In der Praxis sollte dieser Fall jedoch ohnehin nur relevant sein, wenn mit Ganzzahligen Koordinaten gerechnet wird.
 \end{task}
 
 \begin{task}{Suche in ebenen Unterteilungen - Verallgemeinerung}
