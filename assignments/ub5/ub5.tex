@@ -85,16 +85,28 @@ belowcaptionskip=15pt}
 
 \begin{task}{Suchen in ebenen Unterteilungen}
 \item[]
+Sei $G=(V,E,F)$ die ebene Unterteilung mit Knoten, Kanten und Facetten, wobei die Anzahl der Kanten und Facetten asymtotisch durch die Anzahl Knoten begrenzt ist, also $|E|,|F|\in O(n),n=|V|$.
 
-Eine ebene Unterteilung ist eine Partition von $\mathbb{R}^2$ in durch Strecken und Strahlen begrenzte Gebiete (Einbettung eines planaren Graphen $G$)\\
+Idee ist, die Ebene vertikal entlang der y-Koordinaten der Punkte und horizontal entlang der Geraden, welche die vertikalen Trennlinien schneiden, aufzuteilen. Hierzu werden in einem Array (auf dem später eine Binärsuche ausgeführt werden kann) Tupel $(z_i,X_i,f_i)$ gespeichert, wobei $z_i$ die y-Koordinate einer Trennlinie ist und $X_i$ ein Array (für spätere Binärsuche) in dem alle Strecken gespeichert werden, die zwischen $z_i$ und $z_{i+1}$ entlang einer Kante $e\in E$ verlaufen. Es kann nur $O(n)$ solche Strecken geben und aufgrund der Planarität von $G$ werden sich auch diese Strecken nie schneiden. Dadurch teilen die Strecken die ''Spalte'' zwischen $z_i$ und $z_{i+1}$ in $O(n)$ disjunkte Teilräume, für welche die zugehörige Facette $f_i\in F$ bestimmt werden kann:
 
-Wenn man durch jeden Knoten der ebenen Unterteilung eine vertikale Linie zieht und sich dann den Schnittpunkt nach oben und unten merkt, dann entstehen ganz viele Trapze, die man dann wieder in zwei Dreiecke unterteilen kann. Was man dann davon hat keine Ahnung. Und welche Datenstruktur hier Sinn macht mit ($O(log(n))$ weiß ich auch nicht. Vielleicht ein Baum? So eine ebene Unterteilung wenns dumm läuft kann doch dann ganz ganz viele Trapeze haben oder?
-
-Ich verstehe die Aufgabe nicht so richtig. Wir hatten in der VL auch das Thema Suche in Ebenen Unterteilungen, da haben wir aber triangulierte Unterteilungen betrachtet, wo die Außenfacette ein Dreieck ist, das Suchproblem dafür gelöst und dann einfach um es Allgmeiner zu machen, um ebene Unterteilungen die nicht so sind, ein ganz ganz großes Dreieck rundrum konstruiert und dann den Rest trianguliert.
-
-* einfache Datenstruktur beschreiben zum Suchen mit Anfragezeit $O(\log n)$\\
-* Vorverarbeitungszeit\\
-* Speicherplatz für Datensturktur
+\begin{algorithm}
+\caption{$INIT(V=\{ (x_1,y_1),...,(x_n,y_n)\},E,A=\{ (z_1,X_1),...,(z_n,X_n)\})$}
+\begin{algorithmic}[1]
+\STATE{sort $V$ by y-coordinate}\\
+\FOR{$\text{ \bf each }y_i\in \{y_1,...,y_n\}$}
+\STATE{$z_i:=y_i$}\\
+\ENDFOR
+\FOR{$\text{ \bf each }z_i\in\{z_1,...,z_n\}$}
+\FOR{$\text{ \bf each }e\in E$}
+\IF{$e \text{ intersects vertical line through }z_i$}
+\STATE{$X_i\leftarrow e$}\\
+\ENDIF
+\ENDFOR
+\STATE{sort $X_i$ by y-coordinate of left intersection}\\
+\STATE{copy $X_i$ to array}\\
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
 \end{task}
 
 \begin{task}{$L_1$-Voronoi-Diagramme}
