@@ -119,7 +119,6 @@ Zeitkomplexität:
 
 \newpage
 Speicherkomplexität:
-
 $O(n^2)$ für das Array, das den Rechtecken des Gitters jeweils eine Facette zuordnet.
 
 Suchen wird nun durch eine Binärsuche entlang der x-Koordinate und eine zweite entlang der y-Koordinate realisiert. Im Array findet sich die zugehörige Facette. Der Algorithmus ist trivial und die Zeitkomplexität offensichtlich $O(\log n)$.
@@ -189,62 +188,73 @@ Auffälig ist hier der letzte, entartete Fall, bei dem eine Menge von Punkten (r
 \begin{task}{Suche in ebenen Unterteilungen - Verallgemeinerung}
 \item[]
 
-Die Lokalisierungsdatenstruktur (LDS) wurde in der Vorlesung als gerichteter azyklischer Graph (ADG) beschrieben und funktioniert für Triangulierung von $G$ mit Dreieck als Außenfacette.
+Die Lokalisierungsdatenstruktur (LDS) wurde in der Vorlesung als gerichteter azyklischer Graph (DAG) beschrieben und funktioniert für ebene Unterteilungen, wo jede Facette ein Dreieck ist, auch die Außenfacette.
 
-$S_1$ entspricht $G$, also der ebenen Unterteilung  (eingebetteter Graph)
-$S_n$ ist das äußere (umschließende) Dreieck
+Wir werden nun im ersten Schritt aus der beliebigen Unterteilung der Ebene eine Triangulierung erzeugen einem Dreieck als Außenfacette. Im zweiten Schritt wenden wir darauf den in der Vorlsung vorgestellten Algorithmus zur Konstruktion der LDS an.
 
-Ich habe es so verstanden dass in jedem Schritt die unabhänige Knotenmenge bestimmt und entfert wird, dass sind dann die $S_i$'s' die zwischen 1 und n konstruiert werden.
+\begin{enumerate}
+\item Um die vorhandene Unterteilung $U$ ein großes Dreieck $D$ legen, sodass alle Strecken im Inneren des Dreicks liegen.
+\item Schnittpunkte von $D$ mit Strahlen der Unterteilung $U$ als Knoten in $U$aufnehmen.
+\item Eckpunkte des Dreiecks auch in $U$ aufnehmen.
+\item Inneres von $U$ Triangulieren $\rightarrow G$.
+\item Algorithmus zur Konstruktion der LDS($G$) anwenden.
+\end{enumerate}
 
-Eine Knotenmenge $I$ von $G$ (Teilmenge) heißt unabhängig, wenn keine zwei Knoten aus $I$ in $G$ durch eine Kante verbungen sind. Es geht wohl in linearer Zeit zu berechnen, weil warum auch immer, wurde in VL bewiesen.
+Folgendes wurde in der Vorlesung definiert:
 
-
-
-
-1. vorher das Ding Triangulieren\\
-2. großes Dreieck drumrum bauen\\
-3. wenn ein Strahl das äußerer Dreieck schneidet, dann dort einen neuen Knoten einfügen\\
-4. Eckpunkte vom Dreieck mit Punkten verbinden oder einfach nochmal Triangulieren? oder voher schon Dreicke rumbasteln
-
-die beiden algorithmen wurden in der VL vorgestellt, diese dann noch ein bischen erweitern.
+\begin{itemize}
+\item eingebetteter Graph $G$ entspricht $S_1$
+\item $S_h$ ist das äußere, umschließende Dreieck
+\item $h=O(\log n)$
+\item $I$ ist die unabhängige Knotenmenge
+\end{itemize}
 
 \begin{algorithm}
-\caption{Algorithmus zur Konstruktion}
+\caption{Algorithmus zur Konstruktion der LDS($G$)}
 \begin{algorithmic}[1]
 \STATE Sei $S_1=G$
 \STATE Für jedes $\triangle$ in $G$ erzeuge einen Knoten in LDS($G$)
 \STATE i = 1
-\WHILE{$|S_i|>3$}
-    \STATE{Berechne $I$}
+\WHILE {$|S_i|>3$}
+    \STATE {Berechne von $I$}
     \STATE {Entferne $I$ aus $S_i$}
-    \STATE {Trianguliere $S_i ohne I$, das ist dann $S_i+1$}
-    \STATE {für jedes neue $\triangle$ $t$ in $S_i+1$ erzeuge einen Knoten K($t$)in LDS($G$), füge eine Kante von K($t$) zu allen Knoten von Dreiecken von $S_i$ die von  $t$ geschnitten werden}
-    \STATE i++
+    \STATE {Trianguliere $S_i \setminus I \rightarrow S_i+1$}
+    \STATE {für jedes neue $\triangle$ $t$ in $S_i+1$ erzeuge einen Knoten K($t$)in LDS($G$) und füge eine Kante von K($t$) zu allen Knoten von Dreiecken von $S_i$ die von  $t$ geschnitten werden}
+    \STATE {i++}
 \ENDWHILE
 \end{algorithmic}
 \end{algorithm}
-
-
-h ... log(n)
 
 \begin{algorithm}
-\caption{Lokalisiere (q, LDS(G))}
+\caption{Lokalisiere ($q$, LDS($G$))}
 \begin{algorithmic}[1]
-\STATE teste ob $q \in S_h$ falls nein gib aussenfassette zurück
-\STATE $v$=Wurzel(LDS(G))
-\WHILE{$v$ hat Nachfolger}
-    \STATE { für jeden Nachfolger von $u$ von $v$ teste ob $q$ im Dreiech $u$ liegt.}
-    \STATE {Falls ja, setze $v=u$ und wiederhole}
-\RETURN {$q$ liegt im Dreieck von $v$}
+\IF {$q \not \in S_h$}
+		\RETURN {$q$ liegt in Außenfacette}
+\ENDIF
+\STATE {$v$=Wurzel(LDS($G$))}
+\WHILE {$v$ hat Nachfolger}
+		\FORALL {Nachfolger $u$ von $v$}
+    		\IF {$q$ ist in Dreieck von $u$}
+    				\STATE {$v=u$}
+    		\ENDIF
+		\ENDFOR
 \ENDWHILE
+\RETURN {$q$ liegt im Dreieck von $v$}
 \end{algorithmic}
 \end{algorithm}
 
-* Erweiterung von LDS\\
-* Algorithmen zur Suche und Konstruktion anpassen\\
-* alle Unterteilungen den Ebene sollen unterstützt werden (mehrere unbeschränkte Facetten)\\
-* Einzelheiten der Algorithmen beschreiben\\
-*Vorverarbeitungszeit, Speicherbedarf, Anfragezeit, Anhängig von Anzahl der Knoten\\ 
+\begin{description}
+\item[Vorverarbeitungszeit]
+Ich schätze das Dreieck drumrumbauen dauert $O(n)$, weil man irgendwie das min-$x$, max-$x$ finden muss um das Dreieck zu konstruieren? Das Berechnen der Schnittpunkte kann man vernachlässigen.\\
+$\rightarrow O(n)$
+\item[Speicherbedarf]
+Es kommen nur konstant viele Knoten hinzu. 3 Knoten für das Dreieck und noch ein paar Schnittpunkte. Also bleibt es bei dem was in der Vorlesung gesagt wurde.\\
+$\rightarrow O(n)$
+\item[Anfragezeit]
+Bleibt gleich, oder?\\
+$\rightarrow O(\log n)$
+\end{description}
+
 
 \end{task}
 \end{document}
