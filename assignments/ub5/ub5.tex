@@ -87,7 +87,7 @@ belowcaptionskip=15pt}
 \item[]
 Sei $G=(V,E,F)$ die ebene Unterteilung mit Knoten, Kanten und Facetten, wobei die Anzahl der Kanten und Facetten asymtotisch durch die Anzahl Knoten begrenzt ist, also $|E|,|F|\in O(n),n=|V|$.
 
-Idee ist, die Ebene vertikal entlang der y-Koordinaten der Punkte und horizontal entlang der Geraden, welche die vertikalen Trennlinien schneiden, aufzuteilen. Hierzu werden in einem Array (auf dem später eine Binärsuche ausgeführt werden kann) Tupel $(z_i,X_i,f_i)$ gespeichert, wobei $z_i$ die y-Koordinate einer Trennlinie ist und $X_i$ ein Array (für spätere Binärsuche) in dem alle Strecken gespeichert werden, die zwischen $z_i$ und $z_{i+1}$ entlang einer Kante $e\in E$ verlaufen. Es kann nur $O(n)$ solche Strecken geben und aufgrund der Planarität von $G$ werden sich auch diese Strecken nie schneiden. Dadurch teilen die Strecken die ''Spalte'' zwischen $z_i$ und $z_{i+1}$ in $O(n)$ disjunkte Teilräume, für welche die zugehörige Facette $f_i\in F$ bestimmt werden kann:
+Idee ist, die Ebene vertikal entlang der y-Koordinaten der Punkte und horizontal entlang der Geraden, welche die vertikalen Trennlinien schneiden, aufzuteilen. Hierzu werden in einem Array $A$ (auf dem später eine Binärsuche ausgeführt werden kann) Dupel $(z_i,X_i)$ gespeichert, wobei $z_i$ die y-Koordinate einer Trennlinie ist und $X_i=\{(e_1,f_1),...,(e_m,f_m)\}$ ein Array (für spätere Binärsuche) in dem alle Strecken gespeichert werden, die zwischen $z_i$ und $z_{i+1}$ entlang einer Kante $e\in E$ verlaufen. Es kann nur $O(n)$ solche Strecken geben und aufgrund der Planarität von $G$ werden sich auch diese Strecken nie schneiden. Dadurch teilen die Strecken die ''Spalte'' zwischen $z_i$ und $z_{i+1}$ in $O(n)$ disjunkte Teilräume, für welche die jeweils zugehörige Facette $f_j\in F$ bestimmt werden kann:
 
 \begin{algorithm}
 \caption{$INIT(V=\{ (x_1,y_1),...,(x_n,y_n)\},E,A=\{ (z_1,X_1),...,(z_n,X_n)\})$}
@@ -99,7 +99,8 @@ Idee ist, die Ebene vertikal entlang der y-Koordinaten der Punkte und horizontal
 \FOR{$\text{ \bf each }z_i\in\{z_1,...,z_n\}$}
 \FOR{$\text{ \bf each }e\in E$}
 \IF{$e \text{ intersects vertical line through }z_i$}
-\STATE{$X_i\leftarrow e$}\\
+\STATE{$f:=\text{ find face directly below }e\text{ and between }z_i\text{ and }z_{i+1}$}\\
+\STATE{$X_i\leftarrow (e,f)$}\\
 \ENDIF
 \ENDFOR
 \STATE{sort $X_i$ by y-coordinate of left intersection}\\
@@ -107,6 +108,24 @@ Idee ist, die Ebene vertikal entlang der y-Koordinaten der Punkte und horizontal
 \ENDFOR
 \end{algorithmic}
 \end{algorithm}
+
+Speicherkomplexität ist offensichtlich $O(n^2)$ für das Array.
+
+Zeitkomplexität ist insgesamt $O(n^3)$, gegeben durch:
+\begin{itemize}
+\item $O(n\cdot\log n)$ für Sortieren mit geeignetem Algorithmus (1-4)
+\item $n$ Ausführungen der äußeren Schleife (5)
+\item $O(n)$ Ausführungen der inneren Schleife (6)
+\item in den Schleifen:
+\begin{itemize}
+\item konstante Zeit für die Operationen (7, 9-11)
+\item $O(n)$ für das Finden der passenden Facette (8) wenn naiv alle Facetten ausprobiert werden
+\item $O(n\cdot\log n)$ für Sortieren mit geeignetem Algorithmus (12)
+\item $O(n)$ zur Umwandlung einer Liste in ein Array (13)
+\end{itemize}
+\end{itemize}
+
+Nach dieser Vorverarbeitung kann für einen gegebenen Punkt $p=(x,y)$ mittels Binärsuche auf $\{ z_1,...,z_n\}$ die passende ''Spalte'' $z_i$ gefunden werden, und mit einer zweiten Binärsuche auf $X_i=\{(e_1,f_1),...,(e_m,f_m)\}$ die passende Facette gefunden werden, indem on-the-fly geprüft wird ob $p$ ober- oder unterhalb einer Strecke $e_j$ liegt. Der Algorithmus ist trivial und die Zeitkomplexität offensichtlich $O(\log n)$.
 \end{task}
 
 \begin{task}{$L_1$-Voronoi-Diagramme}
