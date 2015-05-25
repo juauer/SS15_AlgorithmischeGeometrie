@@ -85,16 +85,44 @@ belowcaptionskip=15pt}
 
 \begin{task}{Suchen in ebenen Unterteilungen}
 \item[]
+Für eine \emph{einfache} Datenstruktur kann durch jeden Knoten eine vertikale \emph{und} eine horizontale Linie gezogen werden. Es entstehen dabei zwar $n^2$ viele Gitterzellen, da bei einer Anfrage allerdings zunächst nur entlang einer Dimension ($n$ Reihen bzw. Spalten) und danach erst entlang der anderen Dimension gesucht wird, ist eine Zeitkomplexität von schlimmstenfalls nur $2\cdot\log n$ zu erwarten.
 
-Eine ebene Unterteilung ist eine Partition von $\mathbb{R}^2$ in durch Strecken und Strahlen begrenzte Gebiete (Einbettung eines planaren Graphen $G$)\\
+Es seien im Folgenden $G=(V,E,F)$ mit $|V|=n$ eine Unterteilung der Ebene mit Knoten, Kanten und Facetten, und $A$ ein 2-dimensionales Array der Größe $n\times n$ mit Tupeln $(x_{i,j},y_{i,j},f_{i,j})$ und der Eigenschaft, dass für alle $(x,y)\in\mathbb{R}^2$ gilt $(x,y)\in f_{i,j}\Leftrightarrow x_{i,j}\le x\wedge y_{i,j}\le y\wedge x<x_{i,j+1}\wedge y<y_{i+1,j}$. Es wird beim Erstellen der Datenstruktur also jedem Rechteck des Gitters durch alle Punkte die Facette der Unterteilung zugeordnet, die dieses Rechteck vollständig enthält.
 
-Wenn man durch jeden Knoten der ebenen Unterteilung eine vertikale Linie zieht und sich dann den Schnittpunkt nach oben und unten merkt, dann entstehen ganz viele Trapze, die man dann wieder in zwei Dreiecke unterteilen kann. Was man dann davon hat keine Ahnung. Und welche Datenstruktur hier Sinn macht mit ($O(log(n))$ weiß ich auch nicht. Vielleicht ein Baum? So eine ebene Unterteilung wenns dumm läuft kann doch dann ganz ganz viele Trapeze haben oder?
+\begin{algorithm}
+\caption{$INIT(V, F, A)$}
+\begin{algorithmic}[1]
+\STATE{sort $V$ along $x$-coordinate}\\
+\STATE{$i:=0$}\\
+\FOR{$\text{ \bf each }v\in V$}
+\STATE{$x_{0,i}:=v.x$}\\
+\STATE{$i+=1$}\\
+\ENDFOR
+\STATE{sort $V$ along $y$-coordinate}\\
+\STATE{$j:=0$}\\
+\FOR{$\text{ \bf each }v\in V$}
+\STATE{$y_{j,0}:=v.y$}\\
+\STATE{$j+=1$}\\
+\ENDFOR
+\FOR{$\text{ \bf each }(x_{j,i},y_{j,i})\in A$}
+\STATE{$f_{j,i}:=f\in F:(x_{j,i},y_{j,i})\in f$}\\
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
 
-Ich verstehe die Aufgabe nicht so richtig. Wir hatten in der VL auch das Thema Suche in Ebenen Unterteilungen, da haben wir aber triangulierte Unterteilungen betrachtet, wo die Außenfacette ein Dreieck ist, das Suchproblem dafür gelöst und dann einfach um es Allgmeiner zu machen, um ebene Unterteilungen die nicht so sind, ein ganz ganz großes Dreieck rundrum konstruiert und dann den Rest trianguliert.
+Zeitkomplexität:
+\begin{itemize}
+\item Sortieren nach $x$ und ''benennen'' der Spalten (1-5) benötigt mit geeignetem Sortier-Algorithmus $O(n\cdot\log n)$
+\item Sortieren nach $y$ und ''benennen'' der Zeilen (6-8) benötigt mit geeignetem Sortier-Algorithmus $O(n\cdot\log n)$
+\item Um jedem Eintrag (naiv!) eine Facette zuzuordnen (11-13), kann jeweils über die gesamte Menge der Facetten iteriert werden und in konstanter Zeit festgestellt werden, ob ein Punkt der Facette im Rechteck liegt, das von $(x_{j,i},y_{j,i}),(x_{j+1,i+1},y_{j+1,i+1})$ aufgespannt wird. Die Anzahl Facetten ist asymptotisch begrenzt durch die Anzahl der Knoten. Insgesamt kostet diese Zuordnung somit $O(n^3)$ Zeit. Dieser Aufwand dominiert die zuvor erwähnten Kosten.
+\end{itemize}
 
-* einfache Datenstruktur beschreiben zum Suchen mit Anfragezeit $O(\log n)$\\
-* Vorverarbeitungszeit\\
-* Speicherplatz für Datensturktur
+\newpage
+Speicherkomplexität:
+
+$O(n^2)$ für das Array, das den Rechtecken des Gitters jeweils eine Facette zuordnet.
+
+Suchen wird nun durch eine Binärsuche entlang der x-Koordinate und eine zweite entlang der y-Koordinate realisiert. Im Array findet sich die zugehörige Facette. Der Algorithmus ist trivial und die Zeitkomplexität offensichtlich $O(\log n)$.
 \end{task}
 
 \begin{task}{$L_1$-Voronoi-Diagramme}
@@ -157,6 +185,7 @@ Jede Abbildung zeigt die drei untergeordneten Fälle, bei denen der in der domin
 Auffälig ist hier der letzte, entartete Fall, bei dem eine Menge von Punkten (rot) zu beiden Punkten equidistant ist und keine Kante sondern eine Fläche beschreibt. Wie dieser Fall im Kontext von Voronoi-Diagrammen behandelt werden sollte ist nicht aus deren Definition abzuleiten. In der Praxis sollte dieser Fall jedoch ohnehin nur relevant sein, wenn mit Ganzzahligen Koordinaten gerechnet wird.
 \end{task}
 
+\newpage
 \begin{task}{Suche in ebenen Unterteilungen - Verallgemeinerung}
 \item[]
 
