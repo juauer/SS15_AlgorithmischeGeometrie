@@ -85,14 +85,14 @@ belowcaptionskip=15pt}
 
 \begin{task}{Suchen in ebenen Unterteilungen}
 \item[]
-Sei $G=(V,E,F)$ die ebene Unterteilung mit Knoten, Kanten und Facetten, wobei die Anzahl der Kanten und Facetten asymtotisch durch die Anzahl Knoten begrenzt ist, also $|E|,|F|\in O(n),n=|V|$.
+Sei $G=(V,E,F)$ die ebene Unterteilung mit Knoten, Kanten und Facetten, wobei die Anzahl der Kanten und Facetten asymptotisch durch die Anzahl der Knoten begrenzt ist, also $|E|, |F|\in O(n), n=|V|$.
 
-Idee ist, die Ebene vertikal entlang der y-Koordinaten der Punkte und horizontal entlang der Geraden, welche die vertikalen Trennlinien schneiden, aufzuteilen. Hierzu werden in einem Array $A$ (auf dem später eine Binärsuche ausgeführt werden kann) Dupel $(z_i,X_i)$ gespeichert, wobei $z_i$ die y-Koordinate einer Trennlinie ist und $X_i=\{(e_1,f_1),...,(e_m,f_m)\}$ ein Array (für spätere Binärsuche) in dem alle Strecken gespeichert werden, die zwischen $z_i$ und $z_{i+1}$ entlang einer Kante $e\in E$ verlaufen. Es kann nur $O(n)$ solche Strecken geben und aufgrund der Planarität von $G$ werden sich auch diese Strecken nie schneiden. Dadurch teilen die Strecken die ''Spalte'' zwischen $z_i$ und $z_{i+1}$ in $O(n)$ disjunkte Teilräume, für welche die jeweils zugehörige Facette $f_j\in F$ bestimmt werden kann:
+Idee ist, die Ebene vertikal entlang der $y$-Koordinaten der Punkte und horizontal entlang der Geraden, welche die vertikalen Trennlinien schneiden, aufzuteilen. Hierzu werden in einem Array $A$ (auf dem später eine Binärsuche ausgeführt werden kann) Dupel $(z_i,X_i)$ gespeichert, wobei $z_i$ die $y$-Koordinate einer Trennlinie ist und $X_i=\{(e_1,f_1),...,(e_m,f_m)\}$ ein Array (für spätere Binärsuche) in dem alle Strecken gespeichert werden, die zwischen $z_i$ und $z_{i+1}$ entlang einer Kante $e\in E$ verlaufen. Es kann nur $O(n)$ solche Strecken geben und aufgrund der Planarität von $G$ werden sich auch diese Strecken nie schneiden. Dadurch teilen die Strecken die "`Spalte"' zwischen $z_i$ und $z_{i+1}$ in $O(n)$ disjunkte Teilräume, für welche die jeweils zugehörige Facette $f_j\in F$ bestimmt werden kann:
 
 \begin{algorithm}
 \caption{$INIT(V=\{ (x_1,y_1),...,(x_n,y_n)\},E,A=\{ (z_1,X_1),...,(z_n,X_n)\})$}
 \begin{algorithmic}[1]
-\STATE{sort $V$ by y-coordinate}\\
+\STATE{sort $V$ by $y$-coordinate}\\
 \FOR{$\text{ \bf each }y_i\in \{y_1,...,y_n\}$}
 \STATE{$z_i:=y_i$}\\
 \ENDFOR
@@ -125,7 +125,7 @@ Zeitkomplexität ist insgesamt $O(n^3)$, gegeben durch:
 \end{itemize}
 \end{itemize}
 
-Nach dieser Vorverarbeitung kann für einen gegebenen Punkt $p=(x,y)$ mittels Binärsuche auf $\{ z_1,...,z_n\}$ die passende ''Spalte'' $z_i$ gefunden werden, und mit einer zweiten Binärsuche auf $X_i=\{(e_1,f_1),...,(e_m,f_m)\}$ die passende Facette gefunden werden, indem on-the-fly geprüft wird ob $p$ ober- oder unterhalb einer Strecke $e_j$ liegt. Der Algorithmus ist trivial und die Zeitkomplexität offensichtlich $O(\log n)$.
+Nach dieser Vorverarbeitung kann für einen gegebenen Punkt $p=(x,y)$ mittels Binärsuche auf $\{ z_1,...,z_n\}$ die passende "`Spalte"' $z_i$ gefunden werden, und mit einer zweiten Binärsuche auf $X_i=\{(e_1,f_1),...,(e_m,f_m)\}$ die passende Facette gefunden werden, indem on-the-fly geprüft wird ob $p$ ober- oder unterhalb einer Strecke $e_j$ liegt. Der Algorithmus ist trivial und die Zeitkomplexität offensichtlich $O(\log n)$.
 \end{task}
 
 \begin{task}{$L_1$-Voronoi-Diagramme}
@@ -139,9 +139,9 @@ In $L_1$-Metrik beschreiben die Punkte mit Abstand $d$ von einem Punkt ein Quadr
 \label{fig:l1_1}
 \end{figure}
 
-Eine zwei Voronoi-Regionen trennende Kante hat nun stets eine von drei möglichen Formen, welche vom Verhältnis zwischen der X-Differenz und der Y-Differenz der Punkte bestimmt wird. Dominiert die X-Differenz, wird die Kante senkrecht ''aussehen''. Dominiert die Y-Differenz, wird die Kante waagerecht ''aussehen''.
+Eine zwei Voronoi-Regionen trennende Kante hat nun stets eine von drei möglichen Formen, welche vom Verhältnis zwischen der $X$-Differenz und der $Y$-Differenz der Punkte bestimmt wird. Dominiert die $X$-Differenz, wird die Kante senkrecht "`aussehen"'. Dominiert die $Y$-Differenz, wird die Kante waagerecht aussehen "`aussehen"'.
 
-Es sind im Folgenden die drei Fälle abgebildet, dass bei zwei Punkten die Y-Differenz (Abb. \ref{fig:l1_2}), die X-Differenz (Abb. \ref{fig:l1_3}) oder keine der beiden (Abb. \ref{fig:l1_4}) dominiert.
+Es sind im Folgenden die drei Fälle abgebildet, dass bei zwei Punkten die $Y$-Differenz (Abb. \ref{fig:l1_2}), die $X$-Differenz (Abb. \ref{fig:l1_3}) oder keine der beiden (Abb. \ref{fig:l1_4}) dominiert.
 
 Jede Abbildung zeigt die drei untergeordneten Fälle, bei denen der in der dominanten Dimension größere Punkt in der rezesiven Dimension kleiner/gleich/größer dem anderen Punkt ist. Andere Fälle als die gezeigten sieben kann es nicht geben.
 
@@ -185,7 +185,7 @@ Jede Abbildung zeigt die drei untergeordneten Fälle, bei denen der in der domin
 \label{fig:l1_4}
 \end{figure}
 
-Auffälig ist hier der letzte, entartete Fall, bei dem eine Menge von Punkten (rot) zu beiden Punkten equidistant ist und keine Kante sondern eine Fläche beschreibt. Wie dieser Fall im Kontext von Voronoi-Diagrammen behandelt werden sollte ist nicht aus deren Definition abzuleiten. In der Praxis sollte dieser Fall jedoch ohnehin nur relevant sein, wenn mit Ganzzahligen Koordinaten gerechnet wird.
+Auffälig ist hier der letzte, entartete Fall, bei dem eine Menge von Punkten (rot) zu beiden Punkten equidistant ist und keine Kante sondern eine Fläche beschreibt. Wie dieser Fall im Kontext von Voronoi-Diagrammen behandelt werden sollte ist nicht aus deren Definition abzuleiten. In der Praxis sollte dieser Fall jedoch ohnehin nur relevant sein, wenn mit ganzzahligen Koordinaten gerechnet wird.
 \end{task}
 
 \newpage
@@ -197,7 +197,7 @@ Wir werden nun im ersten Schritt aus der beliebigen Unterteilung der Ebene eine 
 
 \begin{enumerate}
 \item Um die vorhandene Unterteilung $U$ ein großes Dreieck $D$ legen, sodass alle Kanten im Inneren des Dreicks liegen.
-\item Schnittpunkte von $D$ mit Strahlen (Verlängerungen der Kanten) der Unterteilung $U$ als Knoten in $U$aufnehmen.
+\item Schnittpunkte von $D$ mit Strahlen (Verlängerungen der Kanten) der Unterteilung $U$ als Knoten in $U$ aufnehmen.
 \item Eckpunkte des Dreiecks auch in $U$ aufnehmen.
 \item Inneres von $U$ Triangulieren $\rightarrow G$.
 \item Algorithmus zur Konstruktion der LDS($G$) anwenden.
@@ -219,7 +219,7 @@ Folgendes wurde in der Vorlesung definiert:
 \STATE Für jedes $\triangle$ in $G$ erzeuge einen Knoten in LDS($G$)
 \STATE i = 1
 \WHILE {$|S_i|>3$}
-    \STATE {Berechne von $I$}
+    \STATE {Berechnen von $I$}
     \STATE {Entferne $I$ aus $S_i$}
     \STATE {Trianguliere $S_i \setminus I \rightarrow S_i+1$}
     \STATE {für jedes neue $\triangle$ $t$ in $S_i+1$ erzeuge einen Knoten K($t$)in LDS($G$) und füge eine Kante von K($t$) zu allen Knoten von Dreiecken von $S_i$ die von  $t$ geschnitten werden}
