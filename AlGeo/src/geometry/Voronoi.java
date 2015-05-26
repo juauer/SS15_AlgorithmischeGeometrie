@@ -56,7 +56,7 @@ public class Voronoi implements Drawable {
 
         @Override
         public void paint(Graphics g, Dimensions dimensions, Color color) {
-            if(vertex1 != null && vertex2 != null) {
+            if(vertex2 != null) {
                 new LineSegment(vertex1.location, vertex2.location).paint(g, dimensions, color);
                 return;
             }
@@ -65,25 +65,46 @@ public class Voronoi implements Drawable {
             Point mid = region1.location.add(l.u.multiply(
                     region2.location.substract(region1.location.toPosition()).toPosition().length() / 2));
 
-            if(vertex1 == null && vertex2 == null) {
+            if(vertex1 == null) {
                 new Line(l.u, mid).paint(g, dimensions, color);
                 return;
             }
 
-            Vertex v = vertex1 != null ? vertex1 : vertex2;
-            Point lowerSite = null;
+            Region commonRegion = null;
 
-            for(Edge e2 : v.edges)
-                if(e2 != this && e2 != null) {
-                    lowerSite = e2.region1 == region1 || e2.region1 == region2
-                            ? e2.region2.location : e2.region1.location;
+            for(Edge e : vertex1.edges) {
+                for(Region r : new Region[] { e.region1, e.region2 })
+                    if(r != region1 && r != region2) {
+                        boolean edgeTo1 = false;
+                        boolean edgeTo2 = false;
+
+                        for(Edge e2 : r.edges) {
+                            if(e2.region1 == region1 || e2.region2 == region1)
+                                edgeTo1 = true;
+                            else if(e2.region1 == region2 || e2.region2 == region2)
+                                edgeTo2 = true;
+
+                            if(edgeTo1 && edgeTo2)
+                                break;
+                        }
+
+                        if(edgeTo1 && edgeTo2) {
+                            commonRegion = r;
+                            break;
+                        }
+                    }
+
+                if(commonRegion != null)
                     break;
-                }
+            }
 
-            Vector u = vertex1.location.substract(lowerSite.toPosition()).toPosition().length()
-                    < mid.substract(lowerSite.toPosition()).toPosition().length()
-                    ? new Line(vertex1.location, mid).u : new Line(mid, vertex1.location).u;
-            new Beam(vertex1.location, vertex1.location.add(u)).paint(g, dimensions, color);
+            Vector u = new Line(vertex1.location, mid).u;
+
+            if(vertex1.location.toPosition().substract(commonRegion.location.toPosition()).length()
+            <= mid.toPosition().substract(commonRegion.location.toPosition()).length())
+                new Beam(vertex1.location, vertex1.location.add(u)).paint(g, dimensions, color);
+            else
+                new Beam(vertex1.location, vertex1.location.add(u.multiply(-1))).paint(g, dimensions, color);
         }
     }
 
