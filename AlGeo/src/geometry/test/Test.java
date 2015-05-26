@@ -17,11 +17,23 @@ import java.util.Random;
 
 public class Test {
     public static void main(String[] args) {
-        ub5();
+        ub6();
+        // ub5();
         // ub3();
         // ub2();
         // ub1();
         // fortunesSweep();
+    }
+
+    public static void ub6() {
+        Frame frame = Frame.create("", 18, 20);
+        Point[] points = new Point[] {
+                new Point(6, 14), new Point(10, 12), new Point(12, 10), new Point(12, 6) };
+
+        for(Point p : points)
+            frame.draw(p, Color.BLACK);
+
+        new FortunesSweep().fortunesSweep(frame, points);
     }
 
     public static void ub5() {
