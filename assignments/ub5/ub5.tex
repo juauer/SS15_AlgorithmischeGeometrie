@@ -191,14 +191,13 @@ Auffälig ist hier der letzte, entartete Fall, bei dem eine Menge von Punkten (r
 \newpage
 \begin{task}{Suche in ebenen Unterteilungen - Verallgemeinerung}
 \item[]
-
 Die Lokalisierungsdatenstruktur (LDS) wurde in der Vorlesung als gerichteter azyklischer Graph (DAG) beschrieben und funktioniert für ebene Unterteilungen, wo jede Facette ein Dreieck ist, auch die Außenfacette.
 
-Wir werden nun im ersten Schritt aus der beliebigen Unterteilung der Ebene eine Triangulierung erzeugen einem Dreieck als Außenfacette. Im zweiten Schritt wenden wir darauf den in der Vorlsung vorgestellten Algorithmus zur Konstruktion der LDS an.
+Wir werden nun im ersten Schritt aus der beliebigen Unterteilung der Ebene eine Triangulierung erzeugen - mit einem Dreieck als Außenfacette. Im zweiten Schritt wenden wir darauf den in der Vorlsung vorgestellten Algorithmus zur Konstruktion der LDS an.
 
 \begin{enumerate}
-\item Um die vorhandene Unterteilung $U$ ein großes Dreieck $D$ legen, sodass alle Strecken im Inneren des Dreicks liegen.
-\item Schnittpunkte von $D$ mit Strahlen der Unterteilung $U$ als Knoten in $U$aufnehmen.
+\item Um die vorhandene Unterteilung $U$ ein großes Dreieck $D$ legen, sodass alle Kanten im Inneren des Dreicks liegen.
+\item Schnittpunkte von $D$ mit Strahlen (Verlängerungen der Kanten) der Unterteilung $U$ als Knoten in $U$aufnehmen.
 \item Eckpunkte des Dreiecks auch in $U$ aufnehmen.
 \item Inneres von $U$ Triangulieren $\rightarrow G$.
 \item Algorithmus zur Konstruktion der LDS($G$) anwenden.
@@ -249,16 +248,14 @@ Folgendes wurde in der Vorlesung definiert:
 
 \begin{description}
 \item[Vorverarbeitungszeit]
-Ich schätze das Dreieck drumrumbauen dauert $O(n)$, weil man irgendwie das min-$x$, max-$x$ finden muss um das Dreieck zu konstruieren? Das Berechnen der Schnittpunkte kann man vernachlässigen.\\
+(a) dauert $O(n)$, um das min-$x$, max-$x$ zu finden. (b) benötigt ebenfalls $O(n)$ wenn naiv alle Kanten betrachtet werden.\\
 $\rightarrow O(n)$
 \item[Speicherbedarf]
-Es kommen nur konstant viele Knoten hinzu. 3 Knoten für das Dreieck und noch ein paar Schnittpunkte. Also bleibt es bei dem was in der Vorlesung gesagt wurde.\\
+Im schlimmsten Fall können $O(n)$ zusätzliche Knoten und genauso viele neue Kanten entstehen, die zusätzlichen Speicher benötigen.\\
 $\rightarrow O(n)$
 \item[Anfragezeit]
-Bleibt gleich, oder?\\
+unverändert.\\
 $\rightarrow O(\log n)$
 \end{description}
-
-
 \end{task}
 \end{document}
