@@ -72,6 +72,15 @@ public class Parabola implements Drawable {
     }
 
     public static Point midIntersection(Parabola parabola1, Parabola parabola2) {
+        if(Double.isInfinite(parabola1.a))
+            if(parabola1.e == parabola2.e)
+                return new Point(-parabola2.d, parabola1.e);
+            else
+                return intersection(parabola2, -parabola1.d);
+
+        if(Double.isInfinite(parabola2.a))
+            return intersection(parabola1, -parabola2.d);
+
         if(parabola1.e < parabola2.e)
             return rightIntersection(parabola1, parabola2);
 

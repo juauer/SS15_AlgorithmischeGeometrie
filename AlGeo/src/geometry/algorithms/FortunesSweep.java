@@ -24,6 +24,9 @@ public class FortunesSweep {
 
         @Override
         public int compareTo(Event e) {
+            if(triggeredAt.getY() == e.triggeredAt.getY())
+                return triggeredAt.getX() < e.triggeredAt.getX() ? -1 : 1;
+
             return triggeredAt.getY() < e.triggeredAt.getY() ? 1 : -1;
         }
 
@@ -52,6 +55,19 @@ public class FortunesSweep {
                             new Parabola(left.region.location, triggeredAt.getY()),
                             new Parabola(left.right.region.location, triggeredAt.getY())).getX())
                 left = left.right;
+
+            // edge case: there are several points with y=y_max
+            if(isDegenerated)
+                if(left.region.location.getY() > region.location.getY()
+                        || (left.right != null && left.right.region.location.getY() > region.location.getY()))
+                    isDegenerated = false;
+                else {
+                    Arc right = new Arc(region, left, null);
+                    left.right = right;
+                    left.edge2 = voronoi.new Edge(left.region, region);
+                    right.edge1 = left.edge2;
+                    return;
+                }
 
             Arc right = new Arc(left.region);
             right.right = left.right;
@@ -140,9 +156,10 @@ public class FortunesSweep {
         }
     }
 
-    protected Voronoi              voronoi = new Voronoi();
-    protected PriorityQueue<Event> queue   = new PriorityQueue<Event>();
-    protected Arc                  root    = null;
+    protected Voronoi              voronoi       = new Voronoi();
+    protected PriorityQueue<Event> queue         = new PriorityQueue<Event>();
+    protected Arc                  root          = null;
+    protected boolean              isDegenerated = true;
 
     public Voronoi fortunesSweep(Frame frame, Point... points) {
         for(Point p : points)
@@ -191,7 +208,7 @@ public class FortunesSweep {
         }
 
         for(Arc a = root; a.right != null; a = a.right)
-            if(a.edge2 != null && a.right.edge1 != null) {
+            if(a.edge2 != null && a.right.edge1 != null && a.edge2 != a.right.edge1) {
                 double y = -2.0d * (Math.abs(a.region.location.getY()) + Math.abs(a.right.region.location.getY()));
                 voronoi.new Vertex(Parabola.midIntersection(
                         new Parabola(a.region.location, y),
