@@ -1,3 +1,45 @@
+Begriffe:
+\begin{description}
+http://cgm.cs.mcgill.ca/~mcleish/644/Projects/DerekJohns/Sweep.htm
+
+\item[site] ist ein Punkt in der Ebene.
+\item[beach line] teilt die Ebene in zwei Bereiche. Oberhalb der beach line sind alle Bereiche die potentiell zu den Voronoi Regionen der jeweiligen Punkte gehören werden. Unterhalb der beach line alle Punkte Punkte zu denen noch keine Aussage getroffen werden kann. Die Punkte auf der beach line sind equidistant zum zugehörigen Punkt und zur sweep line.
+\item[breakpoint] sind die Schnittpunkte der Parabeln.
+\item[site Event] tritt auf, wenn die Sweepline einen Punkt ("`site"') trifft.
+\item[circle Event] tritt auf, wenn Kreisbögen verschwinden.
+\end{description}
+
+Datenstruktur:
+\begin{description}
+\item[sweep line status (SLS)] ...
+\item[event point schedule (EPS)] ...
+
+\item[priority queue] enthält site events und circle events. Die Priorität ist durch die $X$-Koordinate gegeben, d.h. tritt das Event weiter links auf, so ist die Priorität höher. Initialisiert wird die priority queue mit allen zu Beginn gegebenen Punkten.
+\item[edge vertex list] speichert das entstehende Voronio Diagramm. Durch ein site event entsteht eine neue Voronoi Kante. Durch ein circle event (zwei oder mehr treffen sich) entsteht ein Voronoi Knoten und zusätzlich eine Kante die an diesem Knoten beginnt.
+\item[balanced binary search tree] erhält die Topologie der beach line. So richtig einfach ist das nicht mit dem Baum, verstehe nicht wie ein Knoten 3 Blätter haben kann, wenn es doch ein Binärbaum ist.
+\end{description}
+
+INIT:\\
+EPS: $p_1={0,0}$, $p_2={1,2}$, $p_3={2,3}$, $p_4={4,3}$\\
+beachline: $\emptyset$\\
+VD: $\emptyset$\\
+
+EVENT1: $p_1$ - site event\\
+EPS: $p_2={1,2}$, $p_3={2,3}$, $p_4={4,3}$\\
+beachline: $p_1$ mit Parabel (keine Breakpoints yet) wird Wurzel (hm, malen oder so)\\
+VD: $\emptyset$\\
+
+EVENT2: $p_2={1,2}$ - site event\\
+EPS: $p_3={2,3}$, $p_4={4,3}$\\
+beachline: bild mit binärbaum, irgendwie verstehe ich nicht warum es Knoten mit 3 leaves gibt, drei Parabelstücke, wie auch immer die heißen werden, mal schauenw as das Wörterbuch sagt\\
+VD: eine Kante, bzw. naja so richtig ist es ja noch keine Kante, gibt ja noch keine zwei breakpoints wo sich ne Kante malen lassen würde\\
+kommt kein Kreisevent dazu\\
+
+EVENT3: $p_3={2,3}$ - site event
+
+
+
+
 Super, wenn Du das machst. Ich habe mal nur die Bilder produziert. Einige interne Anmerkungen:
 \begin{itemize}
 \item Im Code läuft die Sweep-Line von oben nach unten, weil es so einfacher ist mit Parabeln zu rechnen. In der Vorlesung wurde die Sweep-Line von links nach rechts gezogen, weswegen ich beim Produzieren der Bilder die Punkte um $45^\circ$ gedreht, den Algo angewendet, zurückgedreht habe. Wir wollen ja die Aufgabe so lösen, wie sie auch gedacht ist :) Zusätzlich habe ich absolut verschoben und - für bessere Bilder - etwas nach oben skaliert
