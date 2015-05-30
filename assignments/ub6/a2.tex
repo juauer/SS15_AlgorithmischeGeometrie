@@ -1,73 +1,30 @@
-Begriffe:
-\begin{description}
-http://cgm.cs.mcgill.ca/~mcleish/644/Projects/DerekJohns/Sweep.htm
+Die Sweepline sweept von links nach rechts, also entlang er $x$-Achse.
 
+\begin{description}
 \item[site] ist ein Punkt in der Ebene.
-\item[beach line] teilt die Ebene in zwei Bereiche. Oberhalb der beach line sind alle Bereiche die potentiell zu den Voronoi Regionen der jeweiligen Punkte gehören werden. Unterhalb der beach line alle Punkte Punkte zu denen noch keine Aussage getroffen werden kann. Die Punkte auf der beach line sind equidistant zum zugehörigen Punkt und zur sweep line.
-\item[breakpoint] sind die Schnittpunkte der Parabeln.
+\item[beach line] teilt die Ebene in zwei Bereiche. Oberhalb der beach line sind alle Bereiche die potentiell zu den Voronoi Regionen der jeweiligen Punkte gehören werden. Unterhalb der beach line alle Punkte zu denen noch keine Aussage getroffen werden kann. Die Punkte auf der beach line sind equidistant zum zugehörigen Punkt und zur sweep line.
+\item[spikes] zukünftige Voronoi Kanten. An Schnittpunkten von Spikes entstehen zukünftige Voronoi Knoten.
+\item[breakpoint] sind die Schnittpunkte der Parabeln, dort befinden sich auch die Spikes, also durch die zwei Schnittpunkte verläuft genau ein Spike.
 \item[site Event] tritt auf, wenn die Sweepline einen Punkt ("`site"') trifft.
-\item[circle Event] tritt auf, wenn Kreisbögen verschwinden.
+\item[circle Event] tritt auf, wenn Kreisbögen verschwinden. D.h. ein circle event entsteht aus einem site event. Wenn sich zwei Spikes schneien, der Kreis durch die zugehörigen Punkte und dann ganz unten auf dem Kreis ist eine neues circle event.
+\item[sweep line status (SLS)] enthält die Topologie der Beachline in Form einer Liste, sozusagen die Kreisbögen und die dazugehörigen Punkte und eine Information darüber, durch welches Event ein Kreisbogen verschwindet.
+\item[event point schedule (EPS)] enthält site events und circle events. Die Priorität ist durch die $x$-Koordinate gegeben, d.h. tritt das Event weiter links auf, so ist die Priorität höher. Initialisiert wird die priority queue mit allen zu Beginn gegebenen Punkten.
 \end{description}
 
-Datenstruktur:
+Die Idee mit dem Binärensuchbaum leuchtet mir zwar ein, habe es aber nicht so doll verstanden, als dass ich es hier umsetzen könnte.
+
+
+\paragraph*{Initialisierung}
 \begin{description}
-\item[sweep line status (SLS)] ...
-\item[event point schedule (EPS)] ...
-
-\item[priority queue] enthält site events und circle events. Die Priorität ist durch die $X$-Koordinate gegeben, d.h. tritt das Event weiter links auf, so ist die Priorität höher. Initialisiert wird die priority queue mit allen zu Beginn gegebenen Punkten.
-\item[edge vertex list] speichert das entstehende Voronio Diagramm. Durch ein site event entsteht eine neue Voronoi Kante. Durch ein circle event (zwei oder mehr treffen sich) entsteht ein Voronoi Knoten und zusätzlich eine Kante die an diesem Knoten beginnt.
-\item[balanced binary search tree] erhält die Topologie der beach line. So richtig einfach ist das nicht mit dem Baum, verstehe nicht wie ein Knoten 3 Blätter haben kann, wenn es doch ein Binärbaum ist.
+\item[EPS] $(0,0)[\text{se1}]$, $(1,2)[\text{se2}]$, $(2,3)[\text{se3}]$, $(4,3)[\text{se4}]$
+\item[beachline] $\emptyset$
 \end{description}
 
-INIT:\\
-EPS: $p_1={0,0}$, $p_2={1,2}$, $p_3={2,3}$, $p_4={4,3}$\\
-beachline: $\emptyset$\\
-VD: $\emptyset$\\
-
-EVENT1: $p_1$ - site event\\
-EPS: $p_2={1,2}$, $p_3={2,3}$, $p_4={4,3}$\\
-beachline: $p_1$ mit Parabel (keine Breakpoints yet) wird Wurzel (hm, malen oder so)\\
-VD: $\emptyset$\\
-
-EVENT2: $p_2={1,2}$ - site event\\
-EPS: $p_3={2,3}$, $p_4={4,3}$\\
-beachline: bild mit binärbaum, irgendwie verstehe ich nicht warum es Knoten mit 3 leaves gibt, drei Parabelstücke, wie auch immer die heißen werden, mal schauenw as das Wörterbuch sagt\\
-VD: eine Kante, bzw. naja so richtig ist es ja noch keine Kante, gibt ja noch keine zwei breakpoints wo sich ne Kante malen lassen würde\\
-kommt kein Kreisevent dazu\\
-
-EVENT3: $p_3={2,3}$ - site event
-
-
-
-
-Super, wenn Du das machst. Ich habe mal nur die Bilder produziert. Einige interne Anmerkungen:
-\begin{itemize}
-\item Im Code läuft die Sweep-Line von oben nach unten, weil es so einfacher ist mit Parabeln zu rechnen. In der Vorlesung wurde die Sweep-Line von links nach rechts gezogen, weswegen ich beim Produzieren der Bilder die Punkte um $45^\circ$ gedreht, den Algo angewendet, zurückgedreht habe. Wir wollen ja die Aufgabe so lösen, wie sie auch gedacht ist :) Zusätzlich habe ich absolut verschoben und - für bessere Bilder - etwas nach oben skaliert
-\item Solltest Du in den Code gucken: Ich benutze als Datenstruktur für die Beachline derzeit nur eine Liste anstatt eines Suchbaumes (ich ändere das noch bei Gelegenheit), weil das einfacher zu implementieren war. Auf die Bilder hat das keine Auswirkung, es ist aber wichtig zu verstehen das man nur bei Verwendung einer $\log n$-Such-Datenstruktur eine Laufzeit von $O(n\cdot\log n)$ erreichen kann.
-\item Für jeden Schritt muss m.E. erklärt werden:
-\begin{itemize}
-\item Immer: Was alles in der Datenstruktur steht, welche die Beachline verwaltet
-\item Immer: Wie bestehende Voronoi-Kanten umgelegt werden
-\item Bei Site-Events: Welche Circle-Events und warum hinzugefügt/entfernt werden
-\item Bei Site-Events: Welche neuen Voronoi-Kanten hinzukommen
-\item Bei Kreis-Events: Welche neuen Circle-Events warum hinzugefügt/entfernt werden
-\item Bei Kreis-Events: Welche Voronoi-Knoten entstehen
-\end{itemize}
-\item Am Ende muss erklärt werden, wie in einem Postprocessing mit Kanten verfahren wird, die nur an einem oder gar keinem Knoten hängen 
-\end{itemize}
-
-Erklärung - Farben:
-\begin{itemize}
-\item Blaue Punkte: noch abzuarbeitende Punkte (''Site-Events'')
-\item Schwarze Punkte: bereits erledigte Punkte
-\item Schwarze Geraden: Voronoi-Kanten ''under construction''
-\item Große schwarze Gerade mit Pfeil: Sweep-Line
-\item Blaue Parabeln: ''Beachline'' aka. ''Wellenfront''
-\item Grüne Kreise: noch abzuarbeitende ''Circle-Events''
-\item Roter Punkt: Site-Event, das gerade abgearbeitet wird
-\item Orangener Kreis mit orangenem Base-Point: Circle-Event, das gerade abgearbeitet wird
-\item Cyan-Linien: Zeiger auf Parabel-Segmente die zu einem Punkt gehören
-\end{itemize}
+\paragraph*{EVENT 1 - site event $(0,0)$}
+\begin{description}
+\item[EPS] $(1,2)[\text{se2}]$, $(2,3)[\text{se3}]$, $(4,3)[\text{se4}]$
+\item[beachline] $a_1 \rightarrow (0,0)$
+\end{description}
 
 \begin{figure}[h]
 \begin{center}
@@ -77,6 +34,19 @@ Erklärung - Farben:
 \label{fig:c1}
 \end{figure}
 
+Keine circle event und keine neuen Kanten.
+
+\newpage
+
+\paragraph*{EVENT 2 - site event $(1,2)$}
+\begin{description}
+\item[EPS] $(2,3)[\text{se3}]$, $(4,3)[\text{se4}]$
+\item[beachline]
+$a_{1.1} \rightarrow (0,0)$,\\
+$a_2 \rightarrow (1,2)$,\\
+$a_{1.2} \rightarrow (0,0)$\\
+\end{description}
+
 \begin{figure}[h]
 \begin{center}
 \includegraphics[width=7cm]{capture2}
@@ -84,6 +54,21 @@ Erklärung - Farben:
 \caption{Schritt 2}
 \label{fig:c2}
 \end{figure}
+
+Keine circle event, zwei Spikes, werden noch zu Kanten, wenn die Position der Knoten bekannt ist.
+
+\newpage
+
+\paragraph*{EVENT 3 - site event $(2,3)$}
+\begin{description}
+\item[EPS] $(4,3)[\text{se4}], (11 + \sqrt{130}, -3)[\text{ce1}]$
+\item[beachline]
+$a_{1.1} \rightarrow (0,0)$\\
+$a_{2.1} \rightarrow (1,2)$\\
+$a_3 \rightarrow (2,3) [\text{delete at ce1}]$\\
+$a_{2.2} \rightarrow (1,2)$\\
+$a_{1.2} \rightarrow (0,0)$
+\end{description}
 
 \begin{figure}[h]
 \begin{center}
@@ -93,6 +78,29 @@ Erklärung - Farben:
 \label{fig:c3}
 \end{figure}
 
+Der Schnittpunkt $(11, -3)$ der beiden Spikes ist ein evtl. zukünftiger Voronoi Knoten. Der Fußpunkt des grünen Kreises wird als neues circle event $(11 + \sqrt{130}, -3)[ce1]$ der EPS hinzugefügt.
+
+\newpage
+
+\paragraph*{EVENT 4 - site event $(4,3)$}
+\begin{description}
+\item[EPS] $(6 + \sqrt{20}, 2)[\text{ce2}], (7 + \sqrt{50}, -1)[\text{ce3}]$
+\item[beachline]
+$a_{1.1} \rightarrow (0,0)$\\
+$a_{2.1} \rightarrow (1,2)$\\
+$a_{3.1} \rightarrow (2,3)$\\
+$a_4 \rightarrow (4,3)[\text{delete at ce2} (7 + \sqrt{50}, -1)]$\\
+$a_{3.2} \rightarrow (2,3)$\\
+$a_{2.2} \rightarrow (1,2)$\\
+$a_{1.2} \rightarrow (0,0)$
+\end{description}
+
+Der Schnittpunkt der beiden letzen Spikes $(6,2)$ ist ein evtl. zukünftiger Voronoi Knoten. Der Fußpunkt dieses Kreises wird als neues circle event  $(6 + \sqrt{20}, 2)[\text{ce2}]$ der EPS hinzugefügt und rutsch in der priority queue ganz nach vorne.
+
+Das alte circle event $(11 + \sqrt{130}, -3)$ wird aus der EPS gelöscht.
+
+Der Schnittpunkt $(7, -1)$ des neuen Spikes und des Nachbarspike ist wieder in potentieller neuer Knoten im Voronoi Diagramm. Ein neues circle event kommt also hinzu $(7 + \sqrt{50}, -1)[\text{ce3}]$.
+
 \begin{figure}[h]
 \begin{center}
 \includegraphics[width=7cm]{capture4}
@@ -100,6 +108,21 @@ Erklärung - Farben:
 \caption{Schritt 4}
 \label{fig:c4}
 \end{figure}
+
+\newpage
+
+\paragraph*{EVENT 5 - circle event $(6 + \sqrt{20}, 2)$}
+\begin{description}
+\item[EPS] $(7 + \sqrt{50}, -1)[\text{ce3}]$
+\item[beachline]
+$a_{1.1} \rightarrow (0,0)$\\
+$a_{2.1} \rightarrow (1,2)$\\
+$a_{3.1} \rightarrow (2,3)$\\
+$a_4 \rightarrow (4,3)[\text{delete at ce3} (7 + \sqrt{50}, -1)]$\\
+$a_{3.2} \rightarrow (2,3)$\\
+$a_{2.2} \rightarrow (1,2)$\\
+$a_{1.2} \rightarrow (0,0)$
+\end{description}
 
 \begin{figure}[h]
 \begin{center}
@@ -109,6 +132,22 @@ Erklärung - Farben:
 \label{fig:c5}
 \end{figure}
 
+Ein Parabelbogen verschwindet, der Voronoi Knoten ist nun fest, sowie die beiden Voronoi-Kanten.
+
+\newpage
+
+\paragraph*{EVENT 6 - circle event $(7 + \sqrt{50}, -1)$}
+\begin{description}
+\item[EPS] $\emptyset$
+\item[beachline]
+$a_{1.1} \rightarrow (0,0)$\\
+$a_{2.1} \rightarrow (1,2)$\\
+$a_{3.1} \rightarrow (2,3)$\\
+$a_{3.2} \rightarrow (2,3)$\\
+$a_{2.2} \rightarrow (1,2)$\\
+$a_{1.2} \rightarrow (0,0)$
+\end{description}
+
 \begin{figure}[h]
 \begin{center}
 \includegraphics[width=7cm]{capture6}
@@ -117,6 +156,10 @@ Erklärung - Farben:
 \label{fig:c6}
 \end{figure}
 
+Ein Parabelbogen verschwindet, der Voronoi Knoten ist nun fest, sowie die beiden Voronoi-Kanten.
+
+\newpage
+
 \begin{figure}[h]
 \begin{center}
 \includegraphics[width=7cm]{capture7}
@@ -124,3 +167,7 @@ Erklärung - Farben:
 \caption{Schritt 7}
 \label{fig:c7}
 \end{figure}
+
+Am Ende muss erklärt werden, wie in einem Postprocessing mit Kanten verfahren wird, die nur an einem oder gar keinem Knoten hängen 
+
+
