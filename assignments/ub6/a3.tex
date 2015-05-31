@@ -1,2 +1,58 @@
-* Sweep-Line-Algorithmus für Durchschnitt zweier einfacher Polygone $P$ und $Q$\\
-* Laufzeit (Gesamtzahl $n$ der Ecken von $P$ und $Q$ und der Anzahl $k$ der Ecken des Durchschnitts)\\
+Das Verfahren ähnelt ein wenig dem in der Vorlesung virgestellten zur Berechnung der Triangulierung einer Punktwolke mit einem Sweep-Line Verfahren: die Front besteht aus Intervallen die innerhalb von keinem, einem oder beiden Polygonen liegen. An Ereignispunkten werden Kanten des Schnitts hinzugefügt und Intervalle hinzugefügt/entfernt. Die bereits zu Beginn des Algorithmus bekannten Ereignispunkte sind die Koordinaten der Ecken der Polygone (Punktereignisse), die dynamischen Ereignispunkte sind Schnittpunkte zwischen Kanten der beiden Polygone (Schnittereignisse).
+
+Es ist viel anschaulicher (wirklich :) ) und rechnet sich oft leichter (siehe Parabeln bei Fortune) die Sweepline ''von oben nach unten'' laufen zu lassen und die Front ''von links nach rechts'' zu organisieren. Als totale Ordnung der Punkte der Ebene sei hier deshalb eine Sortierung vorgeschlagen, die zunächst absteigend nach Y-Koordinate und danach aufsteigend nach X-Koordinate sortiert.
+
+Es seien im Folgenden $P=(V_p,E_p),R=(V_q,E_q)$ zwei Polygone für die $S=P\cap Q$ berechnet werden soll. Benötigt werden auch hier eine Prioritätswarteschlange $Q$ und eine geeignete Datenstruktur (z.B. binärer Suchbaum) um die Front $F$ zu verwalten.
+
+Ein Intervall $i=(l,r,e_l,e_r,o)$ besteht aus Verweisen $l$/$r$ auf das linke/rechte Nachbar-Intervall, den Kanten $e_l$/$e_r$ die das Intervall nach links/rechts abgrenzen (eine würde reichen, beide zu haben erleichert aber das Aufschreiben ...) und einem Hinweis $o\in\{ 0,P,Q,S\}$ ob das Intervall zu keinem Polygon / nur $P$ / nur $Q$ / $S$ gehört.
+
+Für ein Schnittereignis $s=(p,e_l,e_r)$ werden neben der Position $p$ an der es auftritt auch die Kanten $e_l,e_r$ gespeichert, die sich geschnitten haben.
+
+Algorithmus:\\
+(1) Füge alle Ecken aus $P,R$ zur Prioritätswarteschlange $Q$ hinzu\\
+(2) Solange $Q$ nicht leer ist: bearbeite \& entferne das erste Ereignis aus $Q$\\
+(3) Gebe Ergebnis $S$ zurück
+
+Mit Punktereignissen bzw. Schnittereignissen wird nun wie folgt verfahren:
+
+Punktereignis $p$:\\
+Zu $p$ gehören stets zwei ausgehende Kanten $e_1=(p,(x_l,y_l)),e_2=(p,(x_r,y_r))$ wobei $x_l<x_r$, sowie ein Polygon $P(p)$.\\
+(P1) Suche das Intervall $i=(l,r,e_l,e_r,o)$ in $F$, für das die X-Koordinate von $p$ zwischen den X-Koordinaten der Knoten von $e_l,e_r$ liegt, welche die größere Y-Koordinate haben.\\
+(P2): Prüfe ob ein Schnittpunkt $s$ zwischen $e_1$ und $e_l$ existiert. Wenn ja, setzte $e_1=(p,s)$ und füge das Schnittereignis $e=(s,e_l,e_1)$ zu $Q$ hinzu.\\
+Es muss ebenfalls geprüft werden, ob ein Schnittpunkt zwischen $e_1$ und $e_r$ existiert. Ebenso müssen Schnitte mit $e_2$ berücksichtigt werden - in allen Fällen wird analog verfahren.\\
+(P3):
+\begin{itemize}
+\item Fall 1: $F$ ist leer\\
+Füge zu $F$ das Intervall $j=(null,null,e_1,e_2,P(p))$ hinzu
+\item Fall 2: Die Endpunkte von $e_1$ und $e_2$ liegen beide unterhalb von $p$:\\
+Dann wird $i$ aufgespalten und ein neues Intervall $j=(i,i,e_1,e_2,o_j)$ zwischen die aufgespaltenen Teile eingefügt (Zeiger werden entsprechend umgelegt).
+$$o_j=\begin{cases}
+0&\text{, falls }o=P(p)\\
+P(p)&\text{, falls }o=0\\
+S&\text{, sonst} 
+\end{cases}$$
+Falls $o_j=S$ werden $e_1,e_2$ mit den dazugehörigen Kanten zu $S$ hinzugefügt.
+\item Fall 3: Die Endpunkte von $e_1$ und $e_2$ liegen beide oberhalb von $p$:\\
+Dann wird der Polygonzug an dieser Stelle geschlossen. Falls $o_j=S$ werden $e_1,e_2$ mit den dazugehörigen Kanten zu $S$ hinzugefügt. $i$ wird aus $F$ entfernt und $l$ mit $r$ vereinigt (es sollten bzgl. der Polygonzugehörigkeit hier keine Uneindeutigkeiten auftreten). Für die begrenzenden Kanten des vereinigten Intervalls muss nun erneut auf Schnittereignisse geprüft werden.
+\item Fall 4:\\
+Es handelt sich um eine ''Durchgangskante''. Die Kante $e\in\{ e_l,e_r\}$ die mit $p$ verbunden ist wird durch die ''nach unten zeigende'' Kante ersetzt. Es muss auf Schnittereignisse geprüft werden und falls $o=S$ die neue Kante zu $S$ hinzugefügt werden.
+\end{itemize}
+
+Schnittereignis $s$:\\
+(S1): Es wird verfahren wie bei (P1)-(P3), wobei $e_1,e_2$ die Kanten sind, bei denen ein Endpunkt eine kleinere Y-Komponente hat als $s$. In (P3) greift somit Fall 2 - es unterscheidet sich hier nun aber die Belegung von $o_j$:
+$$o_j=\begin{cases}
+0&\text{, falls }o=S\\
+S&\text{, falls }o=0\\
+P&\text{, falls }o=Q\\
+Q&\text{, sonst} 
+\end{cases}$$
+
+Zeitkomplexität:\\
+\begin{itemize}
+\item Sortieren in (1) benötigt $O(n\cdot\log n)$
+\item Jeder Schnittpunkt zwischen $P$ und $R$ ist immer auch Ecke von $S$ (Berührpunkte zählen nicht als Schnitt). Es gibt insgesamt also genau $k$ Schnittereignisse. Die Schleife in (2) wird folglich $\Theta (n+k)$ mal ausgeführt.
+\item Jedes Mal wenn ein Intervall zur Front hinzugefügt wird, wird ein bestehendes aufgespalten. Im entarteten Fall kann dies $O(n+k)$ mal erforderlich sein, es können also maximal $2\cdot (n+k)$ Elemente in $F$ vorhanden sein. Steht für $F$ eine passende DS (Baum) zur Verfügung, kann somit bei (P1) in $O(\log (n+k))$ gesucht werden (amortisiert vermutlich besser).
+\item (P2) kann $O(\log (n+k))$ erfordern, um neue Ereignisse einzusortieren.
+\item (P3) kann $O(\log (n+k))$ erfordern, um neue Intervalle abzulegen.
+\end{itemize}
+$$\rightarrow O((n+k)\cdot\log (n+k))$$
