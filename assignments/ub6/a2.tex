@@ -11,14 +11,13 @@ Die Sweepline sweept von links nach rechts, also entlang er $x$-Achse.
 \item[event point schedule (EPS)] enthält site events und circle events. Die Priorität ist durch die $x$-Koordinate gegeben, d.h. tritt das Event weiter links auf, so ist die Priorität höher. Initialisiert wird die priority queue mit allen zu Beginn gegebenen Punkten.
 \end{description}
 
-Die Idee mit dem Binärensuchbaum leuchtet mir zwar ein, habe es aber nicht so doll verstanden, als dass ich es hier umsetzen könnte.
-
-
 \paragraph*{Initialisierung}
 \begin{description}
 \item[EPS] $(0,0)[\text{se1}]$, $(1,2)[\text{se2}]$, $(2,3)[\text{se3}]$, $(4,3)[\text{se4}]$
 \item[beachline] $\emptyset$
 \end{description}
+
+\newpage
 
 \paragraph*{EVENT 1 - site event $(0,0)$}
 \begin{description}
@@ -34,7 +33,7 @@ Die Idee mit dem Binärensuchbaum leuchtet mir zwar ein, habe es aber nicht so d
 \label{fig:c1}
 \end{figure}
 
-Keine circle event und keine neuen Kanten.
+Kein circle event und keine neuen Kanten.
 
 \newpage
 
@@ -55,7 +54,7 @@ $a_{1.2} \rightarrow (0,0)$\\
 \label{fig:c2}
 \end{figure}
 
-Keine circle event, zwei Spikes, werden noch zu Kanten, wenn die Position der Knoten bekannt ist.
+Kein circle event, eine neue Kante, die $(0,0)$ von $(1,2)$ trennt.
 
 \newpage
 
@@ -65,8 +64,8 @@ Keine circle event, zwei Spikes, werden noch zu Kanten, wenn die Position der Kn
 \item[beachline]
 $a_{1.1} \rightarrow (0,0)$\\
 $a_{2.1} \rightarrow (1,2)$\\
-$a_3 \rightarrow (2,3) [\text{delete at ce1}]$\\
-$a_{2.2} \rightarrow (1,2)$\\
+$a_3 \rightarrow (2,3)$\\
+$a_{2.2} \rightarrow (1,2)[\text{delete at ce1}]$\\
 $a_{1.2} \rightarrow (0,0)$
 \end{description}
 
@@ -78,28 +77,28 @@ $a_{1.2} \rightarrow (0,0)$
 \label{fig:c3}
 \end{figure}
 
-Der Schnittpunkt $(11, -3)$ der beiden Spikes ist ein evtl. zukünftiger Voronoi Knoten. Der Fußpunkt des grünen Kreises wird als neues circle event $(11 + \sqrt{130}, -3)[ce1]$ der EPS hinzugefügt.
+Der Schnittpunkt $(11, -3)$ der beiden Spikes ist ein evtl. zukünftiger Voronoi Knoten. Der Fußpunkt des grünen Kreises wird als neues circle event $(11 + \sqrt{130}, -3)[ce1]$ für $a_{2.2}$ der EPS hinzugefügt.
+
+Für $a_{2.1}$ ensteht kein valides circle event, da der Kreis keine ''Rechtsdrehung'' beschreibt.
 
 \newpage
 
 \paragraph*{EVENT 4 - site event $(4,3)$}
 \begin{description}
-\item[EPS] $(6 + \sqrt{20}, 2)[\text{ce2}], (7 + \sqrt{50}, -1)[\text{ce3}]$
+\item[EPS] $(6 + \sqrt{20}, 2)[\text{ce2}], (11 + \sqrt{130}, -3)[\text{ce1}]$
 \item[beachline]
 $a_{1.1} \rightarrow (0,0)$\\
 $a_{2.1} \rightarrow (1,2)$\\
 $a_{3.1} \rightarrow (2,3)$\\
-$a_4 \rightarrow (4,3)[\text{delete at ce2} (7 + \sqrt{50}, -1)]$\\
-$a_{3.2} \rightarrow (2,3)$\\
-$a_{2.2} \rightarrow (1,2)$\\
+$a_4 \rightarrow (4,3)$\\
+$a_{3.2} \rightarrow (2,3)[\text{delete at ce2}]$\\
+$a_{2.2} \rightarrow (1,2)[\text{delete at ce1}]$\\
 $a_{1.2} \rightarrow (0,0)$
 \end{description}
 
-Der Schnittpunkt der beiden letzen Spikes $(6,2)$ ist ein evtl. zukünftiger Voronoi Knoten. Der Fußpunkt dieses Kreises wird als neues circle event  $(6 + \sqrt{20}, 2)[\text{ce2}]$ der EPS hinzugefügt und rutsch in der priority queue ganz nach vorne.
+Der Schnittpunkt der beiden letzen Spikes $(6,2)$ ist ein evtl. zukünftiger Voronoi Knoten. Der Fußpunkt dieses Kreises wird als neues circle event  $(6 + \sqrt{20}, 2)[\text{ce2}]$ der EPS hinzugefügt und rutscht in der priority queue ganz nach vorne.
 
-Das alte circle event $(11 + \sqrt{130}, -3)$ wird aus der EPS gelöscht.
-
-Der Schnittpunkt $(7, -1)$ des neuen Spikes und des Nachbarspike ist wieder in potentieller neuer Knoten im Voronoi Diagramm. Ein neues circle event kommt also hinzu $(7 + \sqrt{50}, -1)[\text{ce3}]$.
+Für $a_{3.1}$ ensteht kein valides circle event.
 
 \begin{figure}[h]
 \begin{center}
@@ -113,14 +112,13 @@ Der Schnittpunkt $(7, -1)$ des neuen Spikes und des Nachbarspike ist wieder in p
 
 \paragraph*{EVENT 5 - circle event $(6 + \sqrt{20}, 2)$}
 \begin{description}
-\item[EPS] $(7 + \sqrt{50}, -1)[\text{ce3}]$
+\item[EPS] $(11 + \sqrt{130}, -3)[\text{ce3}]$
 \item[beachline]
 $a_{1.1} \rightarrow (0,0)$\\
 $a_{2.1} \rightarrow (1,2)$\\
-$a_{3.1} \rightarrow (2,3)$\\
-$a_4 \rightarrow (4,3)[\text{delete at ce3} (7 + \sqrt{50}, -1)]$\\
-$a_{3.2} \rightarrow (2,3)$\\
-$a_{2.2} \rightarrow (1,2)$\\
+$a_{3} \rightarrow (2,3)$\\
+$a_4 \rightarrow (4,3)$\\
+$a_{2.2} \rightarrow (1,2)[\text{delete at ce3}]$\\
 $a_{1.2} \rightarrow (0,0)$
 \end{description}
 
@@ -132,7 +130,7 @@ $a_{1.2} \rightarrow (0,0)$
 \label{fig:c5}
 \end{figure}
 
-Ein Parabelbogen verschwindet, der Voronoi Knoten ist nun fest, sowie die beiden Voronoi-Kanten.
+Ein Parabelbogen verschwindet, der Voronoi Knoten bei $(6,2)$ ist nun fest. Für $a_{2.2}$ wird ein neues circle event mit Mittelpunkt $(7,-1)$ bei $(7 + \sqrt{50}, -1)[\text{ce3}]$ erzeugt, das $ce1$ obsolet macht.
 
 \newpage
 
@@ -141,10 +139,9 @@ Ein Parabelbogen verschwindet, der Voronoi Knoten ist nun fest, sowie die beiden
 \item[EPS] $\emptyset$
 \item[beachline]
 $a_{1.1} \rightarrow (0,0)$\\
-$a_{2.1} \rightarrow (1,2)$\\
-$a_{3.1} \rightarrow (2,3)$\\
-$a_{3.2} \rightarrow (2,3)$\\
-$a_{2.2} \rightarrow (1,2)$\\
+$a_{2} \rightarrow (1,2)$\\
+$a_{3} \rightarrow (2,3)$\\
+$a_4 \rightarrow (4,3)$\\
 $a_{1.2} \rightarrow (0,0)$
 \end{description}
 
@@ -156,7 +153,7 @@ $a_{1.2} \rightarrow (0,0)$
 \label{fig:c6}
 \end{figure}
 
-Ein Parabelbogen verschwindet, der Voronoi Knoten ist nun fest, sowie die beiden Voronoi-Kanten.
+Ein Parabelbogen verschwindet, der Voronoi Knoten bei $(7,-1)$ ist nun fest.
 
 \newpage
 
@@ -168,6 +165,6 @@ Ein Parabelbogen verschwindet, der Voronoi Knoten ist nun fest, sowie die beiden
 \label{fig:c7}
 \end{figure}
 
-Am Ende muss erklärt werden, wie in einem Postprocessing mit Kanten verfahren wird, die nur an einem oder gar keinem Knoten hängen 
+Abschließend wird geprüft, ob mit den Parabelsegmenten in der beachline noch ungebundene Kanten verknüpft sind, die sich zwischen den Segmenten schneiden. Dies ist hier nicht der Fall, womit das Voronoi-Diagramm feststeht.
 
-
+Btw: die Bilder sind aus unserer \emph{Implementierung} ;)
