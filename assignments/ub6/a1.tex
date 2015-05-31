@@ -1,6 +1,6 @@
 Wir betrachten als erstes Voronoi Kanten zwischen Punkt $P$ und Strecke $s$, diese bestehen grundsätzlich aus 3 Abschnitten. (i) und (iii) sind Strecken bzw. Strahlen. Es ist die Voronoi Kante zwischen dem Punkt $P$ und dem linken $A$ bzw. rechten Streckenende $B$. (ii) ist eine Parabel, deren Form ist abhängig vom Abstand zwischen $P$ und $s$. In welchem Abschnitt $P$ liegt ist egal, denn die Zusammensetzung der Voronoi Kante bleibt gleich.
 
-\begin{figure}[h]
+\begin{figure}[h!]
 \begin{center}
 \includegraphics[width=7cm]{img/punkt-strecke.png}
 \end{center}
@@ -25,7 +25,7 @@ Im Fall (2) und (3) entstehen 5 Bereiche:\\
 (iv) Parabel: $t$ und $B$\\
 (v) Gerade: Bisektor von den rechtesten Punkten $B$ und $D$\\
 
-\begin{figure}[h]
+\begin{figure}[h!]
 \begin{center}
 \includegraphics[width=7cm]{img/ssp1.png}
 \end{center}
@@ -33,17 +33,17 @@ Im Fall (2) und (3) entstehen 5 Bereiche:\\
 \label{fig:a1}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[h!]
 \begin{center}
-\includegraphics[width=7cm]{img/ssp2.png}
+\includegraphics[width=5cm]{img/ssp2.png}
 \end{center}
 \caption{(2) Bisektor von zwei parallelen Geraden, keine Überschneidung.}
 \label{fig:a2}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[h!]
 \begin{center}
-\includegraphics[width=7cm]{img/ss3.png}
+\includegraphics[width=5cm]{img/ss3.png}
 \end{center}
 \caption{(3) Bisektor von zwei parallelen Geraden, Überschneidung.}
 \label{fig:a3}
@@ -51,11 +51,13 @@ Im Fall (2) und (3) entstehen 5 Bereiche:\\
 
 \begin{figure}[h]
 \begin{center}
-\includegraphics[width=7cm]{img/ss4.png}
+\includegraphics[width=5cm]{img/ss4.png}
 \end{center}
 \caption{(3) Bisektor von zwei parallelen Geraden, komplett innerhalb.}
 \label{fig:a4}
 \end{figure}
+
+\newpage
 
 \paragraph*{(b): nicht parallele Strecken}
 
@@ -72,9 +74,9 @@ Erster Fall: wenn sie sich nicht überschneiden:\\
 (iii) Parabel\\
 (iv) Gerade\\
 
-\begin{figure}[h]
+\begin{figure}[h!]
 \begin{center}
-\includegraphics[width=7cm]{img/ssnpout.png}
+\includegraphics[width=5cm]{img/ssnpout.png}
 \end{center}
 \caption{(3) Bisektor von zwei nicht parallelen Geraden, keine Überschneidung.}
 \label{fig:a5}
@@ -88,22 +90,10 @@ Zweiter Fall: wenn sie sich überschneiden:\\
 (vi) Parabel\\
 (vii) Gerade\\
 
-\begin{figure}[h]
+\begin{figure}[h!]
 \begin{center}
-\includegraphics[width=7cm]{img/ssnpin.png}
+\includegraphics[width=5cm]{img/ssnpin.png}
 \end{center}
 \caption{(3) Bisektor von zwei nicht parallelen Geraden, mit Überschneidung.}
 \label{fig:a5}
 \end{figure}
-
-
-Anzahl der Ecken: vielleicht wenn ich die Ecken weiß dann kommt man auch auf die Kanten.\\
-Anzahl der Kanten: hm das weiß ich nicht.\\
-Anzahl der Zellen: ist gleich Anzahl der Strecken.\\
-
-Ich würde so wie bei den normalen Voronoi Diagrammen schauen was für Knoten es gibt und was die für einen maximalen Grad haben können und dann kann man das sicherlich irgendwie ausrechnen und die Kanten ergeben sich dann automatisch aus dem Gesamtdegree des Graphen oder so.
-
-
-* Wie sehen die Voronoi-Kanten aus $\rightarrow$ Bilder von allen Fällen\\
-* Aus wie vielen Ecken, Kanten und Zellen kann $VD(S)$ höchstens bestehen?\\
-* Zeigen Sie dazu, dass die Voronoi-Regionen zusammenhängend sind.
