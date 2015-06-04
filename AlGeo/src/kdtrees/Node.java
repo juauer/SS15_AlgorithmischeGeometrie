@@ -8,11 +8,13 @@ public class Node {
     Node  leftChild;
     Node  rightChild;
     Node  middleChild;
+    Point original;
     Point value;
 
-    protected void add(Point point, int depth) {
+    protected void add(Point point, Point original, int depth) {
         if(value == null) {
             this.value = point;
+            this.original = original;
             this.leftChild = new Node();
             this.rightChild = new Node();
             this.middleChild = new Node();
@@ -25,19 +27,19 @@ public class Node {
             switch(pointValue.compareTo(actualValue)) {
                 case -1:
                     // smaller:
-                    leftChild.add(point, depth + 1);
+                    leftChild.add(point, original, depth + 1);
                     break;
 
                 case 1:
                     // bigger:
-                    rightChild.add(point, depth + 1);
+                    rightChild.add(point, original, depth + 1);
                     break;
 
                 default:
                     // actualValues same as pointValue, at same dimension
                     Point tmp = (Point) point.clone();
                     tmp.removeValueAtDimension(depth);
-                    middleChild.add(tmp, 0);
+                    middleChild.add(tmp, point, 0);
                     break;
             }
         }
@@ -86,7 +88,7 @@ public class Node {
             if(a.compareTo(left) >= 0 && a.compareTo(right) <= 0) {
 
                 if(value.isInRange(range) == true) {
-                    result.add(value);
+                    result.add(original);
                 }
 
                 if(a.compareTo(left) > 0) {
