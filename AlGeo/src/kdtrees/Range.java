@@ -10,14 +10,6 @@ public class Range {
         this.right = right;
     }
     
-    public boolean isElement(Comparable value) {
-        if(value.compareTo(left) >= 0 && value.compareTo(right) <= 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
     @Override
     public String toString() {
         return "[" + left + "," + right + "]" ;

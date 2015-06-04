@@ -1,5 +1,8 @@
 package kdtrees;
 
+import java.util.Collection;
+import java.util.HashSet;
+
 public class Node {
 
     Node  leftChild;
@@ -70,50 +73,49 @@ public class Node {
 
     }
 
-    protected void search(int depth, Range... range) {
-
-        if (value != null) {
+    protected Collection<Point> search(int depth, Range... range) {
+        Collection<Point> result = new HashSet<Point>();
+        if(value != null) {
 
             Comparable a = value.getActualValueAtDimension(depth);
-            Range r = range[depth%range.length];
+            Range r = range[depth % range.length];
             Comparable left = r.left;
             Comparable right = r.right;
 
             // a is inside the actual range
-            if(a.compareTo(left) >= 0 && a.compareTo(right) <= 0 ){
+            if(a.compareTo(left) >= 0 && a.compareTo(right) <= 0) {
 
                 if(value.isInRange(range) == true) {
-                    System.out.println(value);
+                    result.add(value);
                 }
 
                 if(!isLeafe()) {
-                    if(a.compareTo(left) > 0 ) {
-                        leftChild.search(depth + 1, range);
+                    if(a.compareTo(left) > 0) {
+                        result.addAll(leftChild.search(depth + 1, range));
                     }
-                    middleChild.search(depth + 1, range);
+                    result.addAll(middleChild.search(depth + 1, range));
                     if(a.compareTo(right) < 0) {
-                        rightChild.search(depth + 1, range);
+                        result.addAll(rightChild.search(depth + 1, range));
                     }
-
                 }
-            } else {
+            }
+            else {
                 // if "a" is outside the given range look in left or right child
                 if(a.compareTo(left) < 0) {
-                    rightChild.search( depth + 1, range);
-                } else {
-                    if (a.compareTo(right) > 0) {
-                        leftChild.search(depth +1, range);
+                    result.addAll(rightChild.search(depth + 1, range));
+                }
+                else {
+                    if(a.compareTo(right) > 0) {
+                        result.addAll(leftChild.search(depth + 1, range));
                     }
                 }
             }
         }
+        return result;
     }
 
     private boolean isLeafe() {
-        if (leftChild.value == null && rightChild.value == null) {
-            return true;
-        }
-        return false;
+        return leftChild.value == null && rightChild.value == null && middleChild.value == null;
     }
 
     @Override
