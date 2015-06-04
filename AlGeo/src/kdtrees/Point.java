@@ -29,9 +29,9 @@ public class Point {
         values.remove(depth % values.size());
     }
     
-    public boolean isInRange(Range... range) {
+    public boolean isInRange(Range range) {
         for (int i = 0; i < values.size(); i++) {
-            if(!(values.get(i).compareTo(range[i].left ) >= 0 && values.get(i).compareTo(range[i].right) <= 0)) return false;
+            if(!(values.get(i).compareTo(range.values.get(i).left ) >= 0 && values.get(i).compareTo(range.values.get(i).right) <= 0)) return false;
         }
         return true;
     }

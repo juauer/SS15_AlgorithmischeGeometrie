@@ -50,7 +50,7 @@ public class KDTree {
         return root.contains(p, 0);
     }
     
-    private Collection<Point> search(Range... range) {
+    private Collection<Point> search(Range range) {
       return  root.search(0, range);
     }
 
@@ -62,6 +62,7 @@ public class KDTree {
     public static void main(String[] args) {
         Point[] points = new Point[]{new Point(1,1), new Point(3,3), new Point(4,1), new Point(4,4), new Point(5,2), new Point(7,1),new Point(4,6),new Point(3,6)};
         KDTree kd = new KDTree(2, points);
-        System.out.println(kd.search(new Range(3,4), new Range(2,5)));
+        System.out.println(kd);
+        System.out.println(kd.search(new Range(new Tupel(0,50), new Tupel(0,50))));
     }
 }

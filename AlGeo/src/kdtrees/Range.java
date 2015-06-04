@@ -1,17 +1,25 @@
 package kdtrees;
 
-public class Range {
-    
-    public Comparable left;
-    public Comparable right;
+import java.util.Vector;
 
-    public Range(Comparable left, Comparable right) {
-        this.left = left;
-        this.right = right;
+public class Range {
+
+    Vector<Tupel> values = new Vector<Tupel>();
+
+    public Range(Tupel... list) {
+        for (Tupel r : list) {
+            this.values.add(r);
+        }
     }
-    
+
+    public void removeValueAtDimension(int depth) {
+        values.remove(depth % values.size());
+    }
+
     @Override
-    public String toString() {
-        return "[" + left + "," + right + "]" ;
+    protected Object clone() {
+        Range newRange = new Range();
+        newRange.values = new Vector<Tupel>(this.values);
+        return newRange;
     }
 }
