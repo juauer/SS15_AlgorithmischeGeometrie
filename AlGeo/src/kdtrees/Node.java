@@ -10,7 +10,8 @@ public class Node {
     Node  middleChild;
     Point value;
 
-    protected void add(Point point, Point original, int depth) {
+    protected void add(Point point, int depth) {
+        System.out.println(point + " " + depth);
         if(value == null) {
             this.value = point;
             this.leftChild = new Node();
@@ -25,19 +26,22 @@ public class Node {
             switch(pointValue.compareTo(actualValue)) {
                 case -1:
                     // smaller:
-                    leftChild.add(point, original, depth + 1);
+                    leftChild.add(point, depth + 1);
                     break;
 
                 case 1:
                     // bigger:
-                    rightChild.add(point, original, depth + 1);
+                    rightChild.add(point, depth + 1);
                     break;
 
                 default:
                     // actualValues same as pointValue, at same dimension
-                    Point tmp = (Point) point.clone();
-                    tmp.removeValueAtDimension(depth);
-                    middleChild.add(tmp, point, 0);
+                    // do not remove if it is the last dimension already
+                    if(point.values.size() > 1) {
+                        Point tmp = (Point) point.clone();
+                        tmp.removeValueAtDimension(depth);
+                        middleChild.add(tmp, 0);
+                    }
                     break;
             }
         }

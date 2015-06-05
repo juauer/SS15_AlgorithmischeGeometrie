@@ -36,7 +36,7 @@ public class Frame extends JFrame implements Runnable {
     protected boolean             keyboardControlled = false;
     protected Point               mousePosition      = null;
 
-    private Frame(String title, Dimensions dimensions) {
+    private Frame(String title, final Dimensions dimensions) {
         this.dimensions = dimensions;
         setTitle(title);
         image_base = new BufferedImage(dimensions.width + 100, dimensions.height + 100, BufferedImage.TYPE_INT_RGB);

@@ -40,8 +40,9 @@ public class KDTree {
     }
 
     private void add(Point point) {
+        System.out.println("add " + point);
         Point p = (Point) point.clone();
-        root.add(p, p, 0);
+        root.add(p, 0);
     }
 
     private boolean contains(Point point) {
