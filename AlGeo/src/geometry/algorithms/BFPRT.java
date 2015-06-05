@@ -2,11 +2,12 @@ package geometry.algorithms;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
 public class BFPRT {
-    public static <T extends Comparable<T>> T bfprt(List<T> list, int k) {
+    public static <T> T bfprt(List<T> list, int k, Comparator<T> comparator) {
         if(list.isEmpty())
             return null;
 
@@ -25,21 +26,21 @@ public class BFPRT {
             ++i;
 
             if(i == size_list || i % 5 == 0) {
-                Collections.sort(l);
+                Collections.sort(l, comparator);
                 medians.add(l.get(l.size() / 2));
                 l.clear();
             }
         }
 
-        T median = bfprt(medians, size_medians / 2);
+        T median = bfprt(medians, size_medians / 2, comparator);
         LinkedList<T> list_left = new LinkedList<T>();
         LinkedList<T> list_mid = new LinkedList<T>();
         LinkedList<T> list_right = new LinkedList<T>();
 
         for(T t : list)
-            if(t.compareTo(median) < 0)
+            if(comparator.compare(t, median) < 0)
                 list_left.add(t);
-            else if(t.compareTo(median) == 0)
+            else if(comparator.compare(t, median) == 0)
                 list_mid.add(t);
             else
                 list_right.add(t);
@@ -48,11 +49,25 @@ public class BFPRT {
         int size_mid = list_mid.size();
 
         if(k < size_left)
-            return bfprt(list_left, k);
+            return bfprt(list_left, k, comparator);
         else if(k < size_left + size_mid)
-            return bfprt(list_mid, k - size_left);
+            return bfprt(list_mid, k - size_left, comparator);
         else
-            return bfprt(list_right, k - size_left - size_mid);
+            return bfprt(list_right, k - size_left - size_mid, comparator);
+    }
+
+    public static <T extends Comparable<T>> T bfprt(List<T> list, int k) {
+        return bfprt(list, k, new Comparator<T>() {
+
+            @Override
+            public int compare(T t1, T t2) {
+                return t1.compareTo(t2);
+            }
+        });
+    }
+
+    public static <T> T median(List<T> list, Comparator<T> comparator) {
+        return bfprt(list, list.size() / 2, comparator);
     }
 
     public static <T extends Comparable<T>> T median(List<T> list) {
