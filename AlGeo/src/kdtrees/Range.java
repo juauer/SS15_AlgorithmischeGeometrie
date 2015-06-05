@@ -14,7 +14,7 @@ public class Range {
 
     public void removeValueAtDimension(int depth) {
         values.remove(depth % values.size());
-    }
+     }
 
     @Override
     protected Object clone() {

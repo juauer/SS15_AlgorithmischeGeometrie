@@ -6,7 +6,7 @@ import java.util.Collection;
 public class KDTree {
 
     private Node root = new Node();
-    private int dimension;
+   private int dimension;
     
     public KDTree(int dimension, Point... points) {
         this.dimension = dimension;

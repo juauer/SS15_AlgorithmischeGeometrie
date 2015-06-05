@@ -60,4 +60,9 @@ public class Point {
     public int hashCode() {
         return values.hashCode();
     }
+
+    public void addValueAtDimension(Comparable a, int depth) {
+       values.add((values.size())%depth, a);
+        
+    }
 }

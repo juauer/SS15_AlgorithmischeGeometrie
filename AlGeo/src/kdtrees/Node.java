@@ -8,13 +8,11 @@ public class Node {
     Node  leftChild;
     Node  rightChild;
     Node  middleChild;
-    Point original;
     Point value;
 
     protected void add(Point point, Point original, int depth) {
         if(value == null) {
             this.value = point;
-            this.original = original;
             this.leftChild = new Node();
             this.rightChild = new Node();
             this.middleChild = new Node();
@@ -84,11 +82,14 @@ public class Node {
             Comparable left = r.left;
             Comparable right = r.right;
 
+           
+            
+            
             // if "a" is inside the actual range
             if(a.compareTo(left) >= 0 && a.compareTo(right) <= 0) {
 
                 if(value.isInRange(range) == true) {
-                    result.add(original);
+                    result.add(value);
                 }
 
                 if(a.compareTo(left) > 0) {
@@ -101,7 +102,13 @@ public class Node {
                 // handle middleChild, remove a range
                 Range tmp = (Range) range.clone();
                 tmp.removeValueAtDimension(depth);
-                result.addAll(middleChild.search(depth + 1, tmp));
+           
+                Collection<Point> temp = middleChild.search(depth + 1, tmp); 
+                for(Point p: temp){
+                    p.addValueAtDimension(a,depth+1);
+                }
+                result.addAll(temp);
+                
             }
             else {
                 // if "a" is outside the given range look in left or right child
