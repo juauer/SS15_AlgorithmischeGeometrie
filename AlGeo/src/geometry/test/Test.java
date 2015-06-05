@@ -11,18 +11,86 @@ import geometry.algorithms.ConvexHull;
 import geometry.algorithms.FortunesSweep;
 
 import java.awt.Color;
+import java.awt.Graphics;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Random;
 
 public class Test {
     public static void main(String[] args) {
-        ub6();
+        ub7();
+        // ub6();
         // ub5();
         // ub3();
         // ub2();
         // ub1();
         // fortunesSweep();
+    }
+
+    public static void ub7() {
+        class Dot extends Point {
+            public Dot(double x, double y) {
+                super(x, y);
+            }
+
+            @Override
+            public void paint(Graphics g, Dimensions dimensions, Color color) {
+                g.setColor(color);
+                g.fillOval(dimensions.xToInt(getX()) - 1, dimensions.yToInt(getY()) - 1, 3, 3);
+            }
+        }
+
+        class Settlement {
+            double[] latLong;
+            Dot      latLong_transformed;
+
+            Settlement(double latitude, double longitude) {
+                latLong = new double[] { latitude, longitude };
+                latLong_transformed = new Dot((latitude - 47) * 5, (longitude - 8) * 5);
+            }
+        }
+
+        LinkedList<Settlement> settlements = new LinkedList<Settlement>();
+
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(
+                    new FileInputStream("../assignments/ub7/orte_deutschland.txt"), "ISO-8859-1"));
+            String line;
+
+            while((line = reader.readLine()) != null) {
+                String[] cols = line.split("\t");
+                settlements.add(new Settlement(Double.parseDouble(cols[4]), Double.parseDouble(cols[5])));
+            }
+
+            reader.close();
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
+
+        Frame frame = Frame.create("", 40, 35);
+
+        for(Settlement s : settlements)
+            frame.draw(s.latLong_transformed, Color.BLACK);
+
+        double[] query = new double[] { 50, 53, 10, 12 };
+
+        // KDTree kdtree = ...
+        // for(Settlement s : kdtree.query(query))
+        // frame.draw(s.latLong_transformed, Color.GREEN);
+
+        frame.draw(new LineSegment(new Point((query[0] - 47) * 5, (query[2] - 8) * 5),
+                new Point((query[0] - 47) * 5, (query[3] - 8) * 5)), Color.RED);
+        frame.draw(new LineSegment(new Point((query[0] - 47) * 5, (query[3] - 8) * 5),
+                new Point((query[1] - 47) * 5, (query[3] - 8) * 5)), Color.RED);
+        frame.draw(new LineSegment(new Point((query[1] - 47) * 5, (query[3] - 8) * 5),
+                new Point((query[1] - 47) * 5, (query[2] - 8) * 5)), Color.RED);
+        frame.draw(new LineSegment(new Point((query[1] - 47) * 5, (query[2] - 8) * 5),
+                new Point((query[0] - 47) * 5, (query[2] - 8) * 5)), Color.RED);
     }
 
     public static void ub6() {
