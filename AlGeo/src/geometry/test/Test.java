@@ -20,6 +20,10 @@ import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Random;
 
+import kdtrees.KDTree;
+import kdtrees.Range;
+import kdtrees.Tupel;
+
 public class Test {
     public static void main(String[] args) {
         ub7();
@@ -44,11 +48,12 @@ public class Test {
             }
         }
 
-        class Settlement {
+        class Settlement extends kdtrees.Point {
             double[] latLong;
             Dot      latLong_transformed;
 
             Settlement(double latitude, double longitude) {
+                super(latitude, longitude);
                 latLong = new double[] { latitude, longitude };
                 latLong_transformed = new Dot((latitude - 47) * 5, (longitude - 8) * 5);
             }
@@ -78,10 +83,10 @@ public class Test {
             frame.draw(s.latLong_transformed, Color.BLACK);
 
         double[] query = new double[] { 50, 53, 10, 12 };
+        KDTree kdtree = new KDTree(2, settlements.toArray(new Settlement[settlements.size()]));
 
-        // KDTree kdtree = ...
-        // for(Settlement s : kdtree.query(query))
-        // frame.draw(s.latLong_transformed, Color.GREEN);
+        for(kdtrees.Point s : kdtree.search(new Range(new Tupel(query[0], query[1]), new Tupel(query[2], query[3]))))
+            frame.draw(((Settlement) s).latLong_transformed, Color.GREEN);
 
         frame.draw(new LineSegment(new Point((query[0] - 47) * 5, (query[2] - 8) * 5),
                 new Point((query[0] - 47) * 5, (query[3] - 8) * 5)), Color.RED);
