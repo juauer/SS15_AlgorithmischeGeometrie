@@ -1,18 +1,16 @@
 package kdtrees;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Node<T extends Point> {
-    Node leftChild   = null;
-    Node rightChild  = null;
-    Node middleChild = null;
-    T    median;
-    int  d;
+public class Node<T extends KDKey> {
+    Node<T> leftChild  = null;
+    Node<T> rightChild = null;
+    Node<T> midChild   = null;
+    T       median;
+    int     d;
 
     protected Node(List<T> points, LinkedList<Integer> dimensions) {
         if(dimensions.isEmpty()) {
@@ -35,26 +33,26 @@ public class Node<T extends Point> {
         });
 
         median = points.get(points.size() / 2);
-        LinkedList<Point> left = new LinkedList<Point>();
-        LinkedList<Point> mid = new LinkedList<Point>();
-        LinkedList<Point> right = new LinkedList<Point>();
+        LinkedList<T> points_left = new LinkedList<T>();
+        LinkedList<T> points_mid = new LinkedList<T>();
+        LinkedList<T> points_right = new LinkedList<T>();
 
-        for(Point p : points)
+        for(T p : points)
             if(p.getKey(d).compareTo(median.getKey(d)) < 0)
-                left.add(p);
+                points_left.add(p);
             else if(p.getKey(d).compareTo(median.getKey(d)) == 0)
-                mid.add(p);
+                points_mid.add(p);
             else
-                right.add(p);
+                points_right.add(p);
 
-        if(!left.isEmpty())
-            leftChild = new Node(left, dimensions);
+        if(!points_left.isEmpty())
+            leftChild = new Node<T>(points_left, dimensions);
 
-        if(!mid.isEmpty())
-            middleChild = new Node(mid, dimensions_mid);
+        if(!points_mid.isEmpty())
+            midChild = new Node<T>(points_mid, dimensions_mid);
 
-        if(!right.isEmpty())
-            rightChild = new Node(right, dimensions_right);
+        if(!points_right.isEmpty())
+            rightChild = new Node<T>(points_right, dimensions_right);
     }
 
     protected boolean contains(T point) {
@@ -67,49 +65,33 @@ public class Node<T extends Point> {
         if(point.getKey(d) > median.getKey(d))
             return rightChild == null ? false : rightChild.contains(point);
 
-        return middleChild == null ? false : middleChild.contains(point);
+        return midChild == null ? false : midChild.contains(point);
     }
 
-    protected Collection<T> search(Range range) {
-        Collection<T> result = new HashSet<T>();
-        Comparable a = median.getKey(d);
-        Tupel r = range.values.get(d);
-        Comparable left = r.left;
-        Comparable right = r.right;
+    protected LinkedList<T> search(double[][] range) {
+        LinkedList<T> result = new LinkedList<T>();
 
         // if "a" is inside the actual range
-        if(a.compareTo(left) >= 0 && a.compareTo(right) <= 0) {
+        if(median.getKey(d).compareTo(range[d][0]) >= 0 && median.getKey(d).compareTo(range[d][1]) <= 0) {
             result.add(median);
 
-            if(middleChild != null)
-                result.addAll(middleChild.search(range));
+            if(midChild != null)
+                result.addAll(midChild.search(range));
 
-            if(leftChild != null && a.compareTo(left) > 0)
+            if(leftChild != null && median.getKey(d).compareTo(range[d][0]) > 0)
                 result.addAll(leftChild.search(range));
 
-            if(rightChild != null && a.compareTo(right) < 0)
+            if(rightChild != null && median.getKey(d).compareTo(range[d][1]) < 0)
                 result.addAll(rightChild.search(range));
         }
+        // if "a" is outside the given range look in left or right child
         else {
-            // if "a" is outside the given range look in left or right child
-            if(rightChild != null && a.compareTo(left) < 0)
+            if(rightChild != null && median.getKey(d).compareTo(range[d][0]) < 0)
                 result.addAll(rightChild.search(range));
-            else if(leftChild != null && a.compareTo(right) > 0)
+            else if(leftChild != null && median.getKey(d).compareTo(range[d][1]) > 0)
                 result.addAll(leftChild.search(range));
         }
 
         return result;
-    }
-
-    @Override
-    public String toString() {
-        StringBuffer sb = new StringBuffer();
-        if(median == null)
-            return "";
-        sb.append("VALUE : " + median + "\n");
-        sb.append("LEFT : " + leftChild.toString() + "\n");
-        sb.append("Middle : " + middleChild.toString() + "\n");
-        sb.append("RIGHT : " + rightChild.toString() + "\n");
-        return sb.toString();
     }
 }

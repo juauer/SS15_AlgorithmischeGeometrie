@@ -20,9 +20,8 @@ import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Random;
 
+import kdtrees.KDKey;
 import kdtrees.KDTree;
-import kdtrees.Range;
-import kdtrees.Tupel;
 
 public class Test {
     public static void main(String[] args) {
@@ -36,30 +35,25 @@ public class Test {
     }
 
     public static void ub7() {
-        class Dot extends Point {
-            public Dot(double x, double y) {
-                super(x, y);
-            }
-
-            @Override
-            public void paint(Graphics g, Dimensions dimensions, Color color) {
-                g.setColor(color);
-                g.fillOval(dimensions.xToInt(getX()) - 1, dimensions.yToInt(getY()) - 1, 3, 3);
-            }
-        }
-
-        class Settlement implements kdtrees.Point {
+        class Settlement implements KDKey, Drawable {
             double[] latLong;
-            Dot      latLong_transformed;
+            Point    latLong_transformed;
 
             Settlement(double latitude, double longitude) {
                 latLong = new double[] { latitude, longitude };
-                latLong_transformed = new Dot((latitude - 47) * 5, (longitude - 8) * 5);
+                latLong_transformed = new Point((latitude - 47) * 5, (longitude - 8) * 5);
             }
 
             @Override
             public Double getKey(int d) {
                 return latLong[d];
+            }
+
+            @Override
+            public void paint(Graphics g, Dimensions dimensions, Color color) {
+                g.setColor(color);
+                g.fillOval(dimensions.xToInt(latLong_transformed.getX()) - 1,
+                        dimensions.yToInt(latLong_transformed.getY()) - 1, 3, 3);
             }
         }
 
@@ -81,25 +75,27 @@ public class Test {
             e.printStackTrace();
         }
 
+        KDTree<Settlement> kdtree = new KDTree<Settlement>(2, settlements);
+        double[][] query1 = new double[][] { { 51.0, 53.0 }, { 11.0, 12.0 } };
+        double[][] query2 = new double[][] { { 49.0, 50.0 }, { 9.0, 11.0 } };
         Frame frame = Frame.create("", 40, 35);
 
         for(Settlement s : settlements)
-            frame.draw(s.latLong_transformed, Color.BLACK);
+            frame.draw(s, Color.BLACK);
 
-        double[] query = new double[] { 50, 53, 10, 12 };
-        KDTree kdtree = new KDTree(2, settlements);
+        for(double[][] query : new double[][][] { query1, query2 }) {
+            for(Settlement s : kdtree.search(query))
+                frame.draw(s, Color.GREEN);
 
-        for(Object s : kdtree.search(new Range(new Tupel(query[0], query[1]), new Tupel(query[2], query[3]))))
-            frame.draw(((Settlement) s).latLong_transformed, Color.GREEN);
-
-        frame.draw(new LineSegment(new Point((query[0] - 47) * 5, (query[2] - 8) * 5),
-                new Point((query[0] - 47) * 5, (query[3] - 8) * 5)), Color.RED);
-        frame.draw(new LineSegment(new Point((query[0] - 47) * 5, (query[3] - 8) * 5),
-                new Point((query[1] - 47) * 5, (query[3] - 8) * 5)), Color.RED);
-        frame.draw(new LineSegment(new Point((query[1] - 47) * 5, (query[3] - 8) * 5),
-                new Point((query[1] - 47) * 5, (query[2] - 8) * 5)), Color.RED);
-        frame.draw(new LineSegment(new Point((query[1] - 47) * 5, (query[2] - 8) * 5),
-                new Point((query[0] - 47) * 5, (query[2] - 8) * 5)), Color.RED);
+            frame.draw(new LineSegment(new Point((query[0][0] - 47) * 5, (query[1][0] - 8) * 5),
+                    new Point((query[0][0] - 47) * 5, (query[1][1] - 8) * 5)), Color.RED);
+            frame.draw(new LineSegment(new Point((query[0][0] - 47) * 5, (query[1][1] - 8) * 5),
+                    new Point((query[0][1] - 47) * 5, (query[1][1] - 8) * 5)), Color.RED);
+            frame.draw(new LineSegment(new Point((query[0][1] - 47) * 5, (query[1][1] - 8) * 5),
+                    new Point((query[0][1] - 47) * 5, (query[1][0] - 8) * 5)), Color.RED);
+            frame.draw(new LineSegment(new Point((query[0][1] - 47) * 5, (query[1][0] - 8) * 5),
+                    new Point((query[0][0] - 47) * 5, (query[1][0] - 8) * 5)), Color.RED);
+        }
     }
 
     public static void ub6() {

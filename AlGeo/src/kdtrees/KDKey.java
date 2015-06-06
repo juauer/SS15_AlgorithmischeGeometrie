@@ -1,5 +1,5 @@
 package kdtrees;
 
-public interface Point {
+public interface KDKey {
     public Double getKey(int dimension);
 }
