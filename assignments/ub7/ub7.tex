@@ -83,13 +83,41 @@ belowcaptionskip=15pt}
 \end{center}
 \hrule
 
-\begin{task}{Anfragezeit bei kd-Baumen}
+\begin{task}{Anfragezeit bei kd-Bäumen}
 \item[]
 
 \end{task}
 
 \begin{task}{Implementierung}
 \item[]
+Zum Ausführen des Codes muss bitte \emph{orte\_deutschland.txt} im selben Verzeichnis wie das Jar liegen, oder wahlweise das Jar mit Angabe des Pfads gestartet werden:\\
+\emph{java -jar UB7.jar ./<path>/orte\_deutschland.txt}
 
+Um einen kd-Baum in $O(n\cdot (k+\log n))$ konstruieren zu können, benötigt man einen $O(n)$-Median Algorithmus. Wir haben zu diesem Zweck der Vollständigkeit halber einen \emph{BFPRT} implementiert - dieser ist in der Praxis aber deutlich langsamer als das mittlere Element nach Sortieren mit \emph{Timsort} zu ermitteln. Deshalb wird für den kd-Baum letztgenannter Ansatz verwendet. 
+
+Da für das Erstellen eines ausgeglichenen kd-Baums alle Elemente zur Konstruktions-Zeit bekannt sein müssen, wurde auf eine \emph{insert}-Methode verzichtet.
+
+Der kd-Baum akzeptiert als Elemente alle Objekte, die \emph{KDKey} implementieren - über diese Schnittstelle kann für jedes Objekt auf das $i$-te Element des $k$-dimensionalen Schlüssels zugegriffen werden:
+
+\lstinputlisting[language=Java, firstline=3]{../../AlGeo/src/kdtrees/KDKey.java}
+
+Alle übrigen Details sollten den Kommentaren zu entnehmen sein. Es folgt der vollständige Code:
+
+\lstinputlisting[language=Java, firstline=6]{../../AlGeo/src/kdtrees/KDTree.java}
+\lstinputlisting[language=Java, firstline=8]{../../AlGeo/src/kdtrees/Node.java}
+
+Ein Test mit der großen \emph{orte\_welt.txt}-Datei wurde nicht durchgeführt, weil der File das Filesize-Limit von Github überschreitet - damit passt er nicht in unseren Workflow :)
+
+Für deutsche Orte wurden alle Orte als schwarze Punkte eingezeichnet und die Orte aus der Ergebnismenge von Beispiel-Anfragen (markiert durch rote Boxen um den Anfrage-Bereich) als grüne Punkte (Abb. \ref{fig:2.1}).
+
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[width=8cm]{capture1}
+\end{center}
+\caption{Zwei Beispielanfragen}
+\label{fig:2.1}
+\end{figure}
+
+Im Moment scheint es irgendwo noch einen Bug zu geben - grüne Orte außerhalb des Anfragebereichs sollten eigentlich nicht auftreten.
 \end{task}
 \end{document}
