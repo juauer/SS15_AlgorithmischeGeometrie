@@ -48,14 +48,18 @@ public class Test {
             }
         }
 
-        class Settlement extends kdtrees.Point {
+        class Settlement implements kdtrees.Point {
             double[] latLong;
             Dot      latLong_transformed;
 
             Settlement(double latitude, double longitude) {
-                super(latitude, longitude);
                 latLong = new double[] { latitude, longitude };
                 latLong_transformed = new Dot((latitude - 47) * 5, (longitude - 8) * 5);
+            }
+
+            @Override
+            public Double getKey(int d) {
+                return latLong[d];
             }
         }
 
@@ -83,9 +87,9 @@ public class Test {
             frame.draw(s.latLong_transformed, Color.BLACK);
 
         double[] query = new double[] { 50, 53, 10, 12 };
-        KDTree kdtree = new KDTree(2, settlements.toArray(new Settlement[settlements.size()]));
+        KDTree kdtree = new KDTree(2, settlements);
 
-        for(kdtrees.Point s : kdtree.search(new Range(new Tupel(query[0], query[1]), new Tupel(query[2], query[3]))))
+        for(Object s : kdtree.search(new Range(new Tupel(query[0], query[1]), new Tupel(query[2], query[3]))))
             frame.draw(((Settlement) s).latLong_transformed, Color.GREEN);
 
         frame.draw(new LineSegment(new Point((query[0] - 47) * 5, (query[2] - 8) * 5),

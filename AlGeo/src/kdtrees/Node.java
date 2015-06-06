@@ -1,143 +1,115 @@
 package kdtrees;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 
-public class Node {
+public class Node<T extends Point> {
+    Node leftChild   = null;
+    Node rightChild  = null;
+    Node middleChild = null;
+    T    median;
+    int  d;
 
-    Node  leftChild;
-    Node  rightChild;
-    Node  middleChild;
-    Point value;
-
-    protected void add(Point point, int depth) {
-        System.out.println(point + " " + depth);
-        if(value == null) {
-            this.value = point;
-            this.leftChild = new Node();
-            this.rightChild = new Node();
-            this.middleChild = new Node();
+    protected Node(List<T> points, LinkedList<Integer> dimensions) {
+        if(dimensions.isEmpty()) {
+            median = points.get(0);
             return;
         }
-        else {
-            Comparable actualValue = value.getActualValueAtDimension(depth);
-            Comparable pointValue = point.getActualValueAtDimension(depth);
 
-            switch(pointValue.compareTo(actualValue)) {
-                case -1:
-                    // smaller:
-                    leftChild.add(point, depth + 1);
-                    break;
+        d = dimensions.removeFirst();
+        LinkedList<Integer> dimensions_mid = new LinkedList<Integer>();
+        LinkedList<Integer> dimensions_right = new LinkedList<Integer>();
+        dimensions_mid.addAll(dimensions);
+        dimensions.addLast(d);
+        dimensions_right.addAll(dimensions);
+        Collections.sort(points, new Comparator<T>() {
 
-                case 1:
-                    // bigger:
-                    rightChild.add(point, depth + 1);
-                    break;
-
-                default:
-                    // actualValues same as pointValue, at same dimension
-                    // do not remove if it is the last dimension already
-                    if(point.values.size() > 1) {
-                        Point tmp = (Point) point.clone();
-                        tmp.removeValueAtDimension(depth);
-                        middleChild.add(tmp, 0);
-                    }
-                    break;
+            @Override
+            public int compare(T p1, T p2) {
+                return p1.getKey(d).compareTo(p2.getKey(d));
             }
-        }
+        });
+
+        median = points.get(points.size() / 2);
+        LinkedList<Point> left = new LinkedList<Point>();
+        LinkedList<Point> mid = new LinkedList<Point>();
+        LinkedList<Point> right = new LinkedList<Point>();
+
+        for(Point p : points)
+            if(p.getKey(d).compareTo(median.getKey(d)) < 0)
+                left.add(p);
+            else if(p.getKey(d).compareTo(median.getKey(d)) == 0)
+                mid.add(p);
+            else
+                right.add(p);
+
+        if(!left.isEmpty())
+            leftChild = new Node(left, dimensions);
+
+        if(!mid.isEmpty())
+            middleChild = new Node(mid, dimensions_mid);
+
+        if(!right.isEmpty())
+            rightChild = new Node(right, dimensions_right);
     }
 
-    protected boolean contains(Point point, int depth) {
-        if(point.equals(value)) {
+    protected boolean contains(T point) {
+        if(point.equals(median))
             return true;
-        }
-        else if(value == null) {
-            return false;
-        }
-        else
 
-        {
-            Comparable actualValue = value.getActualValueAtDimension(depth);
-            Comparable pointValue = point.getActualValueAtDimension(depth);
+        if(point.getKey(d) < median.getKey(d))
+            return leftChild == null ? false : leftChild.contains(point);
 
-            switch(pointValue.compareTo(actualValue)) {
-                case -1:
-                    // smaller: point is smaller that value
-                    return leftChild.contains(point, depth + 1);
-                case 1:
-                    // bigger:
-                    return rightChild.contains(point, depth + 1);
-                default:
-                    // actualValueis same as pointValue, so same dimension
-                    Point tmp = (Point) point.clone();
-                    tmp.removeValueAtDimension(depth);
-                    return middleChild.contains(tmp, 0);
-            }
-        }
+        if(point.getKey(d) > median.getKey(d))
+            return rightChild == null ? false : rightChild.contains(point);
 
+        return middleChild == null ? false : middleChild.contains(point);
     }
 
-    protected Collection<Point> search(int depth, Range range) {
-        Collection<Point> result = new HashSet<Point>();
-        if(value != null) {
+    protected Collection<T> search(Range range) {
+        Collection<T> result = new HashSet<T>();
+        Comparable a = median.getKey(d);
+        Tupel r = range.values.get(d);
+        Comparable left = r.left;
+        Comparable right = r.right;
 
-            Comparable a = value.getActualValueAtDimension(depth);
-            Tupel r = range.values.get(depth % range.values.size());
-            Comparable left = r.left;
-            Comparable right = r.right;
+        // if "a" is inside the actual range
+        if(a.compareTo(left) >= 0 && a.compareTo(right) <= 0) {
+            result.add(median);
 
-           
-            
-            
-            // if "a" is inside the actual range
-            if(a.compareTo(left) >= 0 && a.compareTo(right) <= 0) {
+            if(middleChild != null)
+                result.addAll(middleChild.search(range));
 
-                if(value.isInRange(range) == true) {
-                    result.add(value);
-                }
+            if(leftChild != null && a.compareTo(left) > 0)
+                result.addAll(leftChild.search(range));
 
-                if(a.compareTo(left) > 0) {
-                    result.addAll(leftChild.search(depth + 1, range));
-                }
-                if(a.compareTo(right) < 0) {
-                    result.addAll(rightChild.search(depth + 1, range));
-                }
-
-                // handle middleChild, remove a range
-                Range tmp = (Range) range.clone();
-                tmp.removeValueAtDimension(depth);
-           
-                Collection<Point> temp = middleChild.search(depth + 1, tmp); 
-                for(Point p: temp){
-                    p.addValueAtDimension(a,depth+1);
-                }
-                result.addAll(temp);
-                
-            }
-            else {
-                // if "a" is outside the given range look in left or right child
-                if(a.compareTo(left) < 0) {
-                    result.addAll(rightChild.search(depth + 1, range));
-                }
-                else {
-                    if(a.compareTo(right) > 0) {
-                        result.addAll(leftChild.search(depth + 1, range));
-                    }
-                }
-            }
+            if(rightChild != null && a.compareTo(right) < 0)
+                result.addAll(rightChild.search(range));
         }
+        else {
+            // if "a" is outside the given range look in left or right child
+            if(rightChild != null && a.compareTo(left) < 0)
+                result.addAll(rightChild.search(range));
+            else if(leftChild != null && a.compareTo(right) > 0)
+                result.addAll(leftChild.search(range));
+        }
+
         return result;
     }
 
     @Override
     public String toString() {
         StringBuffer sb = new StringBuffer();
-        if(value == null)
+        if(median == null)
             return "";
-        sb.append("VALUE : " + value + "\n");
-        sb.append("LEFT : " + leftChild.toString() +"\n");
-        sb.append("Middle : " + middleChild.toString()+"\n");
-        sb.append("RIGHT : " + rightChild.toString() +"\n");
+        sb.append("VALUE : " + median + "\n");
+        sb.append("LEFT : " + leftChild.toString() + "\n");
+        sb.append("Middle : " + middleChild.toString() + "\n");
+        sb.append("RIGHT : " + rightChild.toString() + "\n");
         return sb.toString();
     }
 }
