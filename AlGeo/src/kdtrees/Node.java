@@ -73,7 +73,14 @@ public class Node<T extends KDKey> {
 
         // if "a" is inside the actual range
         if(median.getKey(d).compareTo(range[d][0]) >= 0 && median.getKey(d).compareTo(range[d][1]) <= 0) {
-            result.add(median);
+            boolean inRange = true;
+
+            for(int i = 0; i < range.length; ++i)
+                if(median.getKey(i) < range[i][0] || median.getKey(i) > range[i][1])
+                    inRange = false;
+
+            if(inRange)
+                result.add(median);
 
             if(midChild != null)
                 result.addAll(midChild.search(range));
