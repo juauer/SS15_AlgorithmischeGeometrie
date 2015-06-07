@@ -25,7 +25,7 @@ import kdtrees.KDTree;
 
 public class Test {
     public static void main(String[] args) {
-        ub7();
+        ub7(args);
         // ub6();
         // ub5();
         // ub3();
@@ -34,7 +34,7 @@ public class Test {
         // fortunesSweep();
     }
 
-    public static void ub7() {
+    public static void ub7(String[] args) {
         class Settlement implements KDKey, Drawable {
             double[] latLong;
             Point    latLong_transformed;
@@ -45,7 +45,7 @@ public class Test {
             }
 
             @Override
-            public Double getKey(int d) {
+            public double getKey(int d) {
                 return latLong[d];
             }
 
@@ -61,7 +61,8 @@ public class Test {
 
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    new FileInputStream("../assignments/ub7/orte_deutschland.txt"), "ISO-8859-1"));
+                    new FileInputStream(args.length > 0 ? args[0] :
+                            "./orte_deutschland.txt"), "ISO-8859-1"));
             String line;
 
             while((line = reader.readLine()) != null) {
@@ -73,6 +74,7 @@ public class Test {
         }
         catch(IOException e) {
             e.printStackTrace();
+            System.exit(1);
         }
 
         KDTree<Settlement> kdtree = new KDTree<Settlement>(2, settlements);
