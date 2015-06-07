@@ -85,7 +85,41 @@ belowcaptionskip=15pt}
 
 \begin{task}{Anfragezeit bei kd-Bäumen}
 \item[]
+Die Argumentation ist die Selbe wie für $k=2$:\\
+(1) Seien für einen Knoten $v$, dessen Region $R_v$ und eine Suchregion $U$ mit einer beliebigen, festen Kante $L$ zunächst $R_v\cap L\ne\emptyset$. Für $k=2$ war zu beobachten, dass von den 4 primären Enkelregionen von $v$ maximal 2 von $L$ geschnitten werden können. Diese Beobachtung lässt sich alternativ auch so interpretieren, dass in der Dimension in der $L$ eine Kante ist, auf jeden Fall ein Kind nicht betrachtet wird. Auch für $k>2$ wird in dieser einen Dimension ein Kind nicht betrachtet - in allen $k-1$ anderen können beide Pfade im Baum verfolgt werden. Die Rekursion für die Anzahl besuchter Primärknoten $p_s$ in Tiefe $s$ ergibt sich somit zu:
+$$p_{s+k}\le 2\cdot (k-1)\cdot p_s$$
+mit $k-1$ Rekursionsankern. Für $k=2$ und $k=3$ erhält man exemplarisch:
+\begin{align*}
+p_0&=1&p_0&=1\\
+p_2&\le 2&p_3&\le 4\\
+p_4&\le 4&p_6&\le 16\\
+p_6&\le 8&p_9&\le 64\\
+p_8&\le 16&p_{12}&\le 256\\
+...&&...\\
+p_s&\le 2^{\lceil\frac{s}{2}\rceil}&p_s&\le 2^{\lceil\frac{2}{3}\cdot s \rceil}
+\end{align*} 
+Oder im Allgemeinen für beliebiges $k$:
+$$p_s\le 2^{\lceil\left(1-\frac{1}{k}\right)\cdot s \rceil}$$
+Diese Beobachtung verbleibt - wie auch in der Vorlesung im Fall $k=2$ gesehen - ohne Beweis.
 
+Alles Weitere verhält sich wie für den Fall $k=2$ in der Vorlesung betrachtet und sei im Folgenden nur kurz zusammengefasst:
+
+Neben dem oben geschilderten Fall können noch zwei weitere auftreten:
+
+(2) $R_v\subset U$: ist durch $O(m)$ abgedeckt.
+
+(3) Suchen in einem $=$-Teilbaum benötigt höchstens (wenn die Region nicht ganz in $L$ liegt) $2\cdot (\log n-s)$ Schritte.
+
+Somit erhält man insgesamt für die Anzahl besuchter Knoten:
+\begin{align*}
+=&\sum_{s=0}^{\lceil\log n\rceil}\overbrace{2^{\lceil 1-\frac{1}{k}\rceil\cdot s}}^{(1)}\cdot\left(\overbrace{1}^{v}+\overbrace{2\cdot (\log n-s)}^{(3)}\right)\\
+\le&2\cdot\sum_{s=0}^{(\log n)+1}2^{(1-\frac{1}{k})\cdot s}\cdot (1+2\cdot (\log n-s))\\
+=&2\cdot\sum_{s=0}^{(\log n)+1}\left(2^{1-\frac{1}{k}}\right)^{\log n}\cdot\frac{\left(2^{1-\frac{1}{k}}\right)^s}{\left(2^{1-\frac{1}{k}}\right)^{\log n}}\cdot (1+2\cdot (\log n-s))\\
+=&2\cdot n^{1-\frac{1}{k}}\cdot\sum_{s=0}^{(\log n)+1}\left(2^{1-\frac{1}{k}}\right)^{s-\log n}\cdot (1+2\cdot (\log n-s))\\
+=&2\cdot n^{1-\frac{1}{k}}\cdot\sum_{s=0}^{(\log n)+1}\frac{1+2\cdot (\log n-s)}{\left(2^{1-\frac{1}{k}}\right)^{\log n-s}}
+\end{align*}
+Der Term in der Summe konvergiert und unter Berücksichtigung von (2) ergibt sich die Anzahl ingesamt besuchter Knoten zu:
+$$O\left(n^{1-\frac{1}{k}}+m\right)$$
 \end{task}
 
 \begin{task}{Implementierung}
