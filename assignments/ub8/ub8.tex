@@ -85,7 +85,35 @@ belowcaptionskip=15pt}
 
 \begin{task}{Vorverarbeitungszeit für Bereichsbäume}
 \item[]
+Der Algorithmus zur Konstruktion - der $T(n)$ Zeit benötigt - ist straight-forward:
 
+(1) Lege Knoten an und konstruiere sekundäre Struktur - im 2D-Fall ist die sekundäre Struktur ein ''einfacher'' binärer Baum mit $n$ Knoten, der in $O(n\cdot\log n)$ Zeit konstruiert werden kann.\\
+(2) Finde Median der Punkte und teile deren Menge in zwei möglichst gleich große Teile. Mit geeignetem Median-Algorithmus (z.B. BFPRT) ist das in $O(n)$ möglich.\\
+(3) Konstruiere die beiden resultierenden Teilbäume rekursiv in $O(T(\lfloor\frac{n}{2}\rfloor)+T(\lceil\frac{n}{2}\rceil))$.
+
+Der Einfachheit halber sei $n$ im Folgenden eine 2er-Potenz. Dass
+$$T(1)=1$$
+ist klar. Somit ergibt sich für die Laufzeit: 
+
+\begin{align*}
+T(n)&=\overbrace{2\cdot T\left(\frac{n}{2}\right)}^{(3)}+\overbrace{n\cdot\log n}^{(1)}+\overbrace{n}^{(2)}\\
+&=2\cdot T\left(\frac{n}{2}\right)+n\cdot (\log n+1)\\
+&=2\cdot\left(2\cdot T\left(\frac{n}{4}\right)+\frac{n}{2}\cdot\left(\log\frac{n}{2}+1\right)\right)+n\cdot (\log n+1)\\
+&=2\cdot\left(2\cdot\left(2\cdot T\left(\frac{n}{8}\right)+\frac{n}{4}\cdot\left(\log\frac{n}{4}+1\right)\right)+\frac{n}{2}\cdot\left(\log\frac{n}{2}+1\right)\right)+n\cdot (\log n+1)\\
+&...\\
+&=2^k\cdot T\left(\frac{n}{2^k}\right)+n\cdot\sum_{i=0}^{k-1}\left(\log\frac{n}{2^i}+1\right)
+\end{align*}
+
+Die Primärstruktur hat natürlich eine Höhe von maximal $\log n$:
+
+\begin{align*}
+T(n)&=2^{\log n}\cdot T\left(\frac{n}{2^{\log n}}\right)+n\cdot\sum_{i=0}^{\log n-1}\left(\log\frac{n}{2^i}+1\right)\\
+&=n+n\cdot\left(\log\frac{n}{n-1}+\log n-1\right)\\
+&=n\cdot\log\frac{n}{n-1}+n\cdot\log n\\
+&\in n\cdot O(1)+n\cdot\log n\\
+&\in O(n\cdot\log n)
+\end{align*}
+\qed
 \end{task}
 
 \begin{task}{dynamische Segmentsbäume}
