@@ -116,11 +116,84 @@ T(n)&=2^{\log n}\cdot T\left(\frac{n}{2^{\log n}}\right)+n\cdot\sum_{i=0}^{\log 
 \qed
 \end{task}
 
+\newpage
 \begin{task}{dynamische Segmentsbäume}
 \item[]
+Um die Ausgeglichenheit eines Segmentbaums zu gewährleisten, sind unterschiedliche Ansätze denkbar (habe vergessen ob/welcher Ansatz in der Vorlesung vorgeschlagen wurde). Z.B. könnte man eine andere ausgeglichene, binäre Baumstruktur Zugrunde legen (z.B. einen AVL-Baum) und die Rebalancierungs-Operationen (ehm... ich meine natürlich ''Ausgleichungs-Operationen'') derart anpassen, dass die Knotenlisten insbesondere der inneren Knoten valide bleiben.
 
+Ein einfacherer Ansatz - der sich zumindest bzgl. der asymptotischen Laufzeit nicht von eben genanntem unterscheidet - wäre, die Anzahl Knoten des ''Skeletts'' des Segmentbaums zu verdoppeln, sobald ein Intervall eingefügt werden soll, dessen Grenzen außerhalb des bislang größten Intervalls des Baums liegen. Es wird hierzu mit einem Skelett initialisiert, dessen Anzahl an Elementarintervallen eine 2er-Potenz ist. Sobald ein Intervall eingefügt werden soll, bei dem zumindest eine der Grenzen in einem $\infty$-Intervall liegt, wird der Baum zur linken/rechten Seite hin verdoppelt (wenn eine Grenze im linken/rechten $\infty$-Intervall liegt) und eine neue Wurzel erzeugt. Der bestehende Baum muss hierbei nicht angepasst werden. Da nicht gefragt (?) wird die Initialisierung des Baum-Skeletts hier keiner genaueren Betrachtung unterzogen.
+
+Es bleibt, das Einfügen/Streichen in einen bestehenden Baum anzugeben. Hierfür seien $i=(l,r)$ ein Intervall das eingefügt/gelöscht werden soll, $root$ die Wurzel des Baumes, $w(v)$ der Vergleichswert in einem Knoten $v$, $leaf(v)$ die Eigenschaft eines Knotens $v$ ein Blatt zu sein, $left(v)$/$right(v)$ das linke/rechte Kind eines Knoten $v$ und $I(v)$ die Knotenliste für den Knoten $v$. Der Einfachheit halber seien die Knotenlisten als Sets implementiert, die keine Duplikate erlauben.
+
+Zum Einfügen wird zunächst der passende Pfad verfolgt, solange das einzufügende Intervall vollständig links oder rechts des betrachteten Knoten liegt. Anschließend wird der Baum einmal mit der linken Grenze des Intervalls durchlaufen wobei den Knotenlisten aller rechten Teilbäume das Intervall hinzugefügt wird, und einmal mit der rechten Grenze wobei den Knotenlisten aller linken Teilbäume das Intervall hinzugefügt wird. Löschen geschiet analog:
+
+\begin{algorithm}
+\caption{INSERT(i=(l,r))}
+\begin{algorithmic}[1]
+\STATE{$v\leftarrow root$}
+\WHILE{$l\le w(v)$ \AND $r\le w(v)$ \OR $l>w(v)$ \AND $r>w(v)$}
+\IF{$isLeaf(v)$}
+\STATE{$I(v)\leftarrow i$}
+\RETURN
+\ENDIF
+\IF{$l\le w(v)$ \AND $r\le w(v)$}
+\STATE{$v:=left(v)$}
+\ELSE
+\STATE{$v:=right(v)$}
+\ENDIF
+\ENDWHILE
+\STATE{$v_l:=v$}\\
+\STATE{$v_r:=v$}
+\WHILE{\NOT $isLeaf(v_l)$}
+\STATE{$I(right(v_l))\leftarrow i$}
+\IF{$l\le w(v_l)$}
+\STATE{$v_l:=left(v_l)$}
+\ELSE
+\STATE{$v_l:=right(v_l)$}
+\ENDIF
+\ENDWHILE
+\STATE{$I(v_l)\leftarrow i$}
+\WHILE{\NOT $isLeaf(v_r)$}
+\STATE{$I(left(v_r))\leftarrow i$}
+\IF{$r\le w(v_r)$}
+\STATE{$v_r:=left(v_r)$}
+\ELSE
+\STATE{$v_r:=right(v_r)$}
+\ENDIF
+\ENDWHILE
+\STATE{$I(v_r)\leftarrow i$}
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}
+\caption{DELETE(i=(l,r))}
+\begin{algorithmic}[1]
+\STATE{$v_l:=root$}\\
+\STATE{$v_r:=root$}
+\WHILE{\NOT $isLeaf(v_l)$}
+\STATE{$I(right(v_l)):=I(right(v_l))\setminus i$}
+\IF{$l\le w(v_l)$}
+\STATE{$v_l:=left(v_l)$}
+\ELSE
+\STATE{$v_l:=right(v_l)$}
+\ENDIF
+\ENDWHILE
+\STATE{$I(v_l):=I(v_l)\setminus i$}
+
+\WHILE{\NOT $isLeaf(v_r)$}
+\STATE{$I(left(v_r)):=I(left(v_r))\setminus i$}
+\IF{$l\le w(v_r)$}
+\STATE{$v_r:=left(v_r)$}
+\ELSE
+\STATE{$v_r:=right(v_r)$}
+\ENDIF
+\ENDWHILE
+\STATE{$I(v_r):=I(v_r)\setminus i$}
+\end{algorithmic}
+\end{algorithm}
 \end{task}
 
+\newpage
 \begin{task}{Punkt-Rechteck-Anfragen}
 \item[]
 
