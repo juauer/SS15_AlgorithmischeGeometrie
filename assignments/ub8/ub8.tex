@@ -196,6 +196,32 @@ Zum Einfügen wird zunächst der passende Pfad verfolgt, solange das einzufügen
 \newpage
 \begin{task}{Punkt-Rechteck-Anfragen}
 \item[]
-Wie vorgeschlagen bietet es sich an, als Primärstruktur einen Segmentbaum zu verwenden, in dem die Rechtecke gemäß des durch sie bschriebenen x-Intervalls abgelegt werden. Es seien im Folgenden $U\subset\mathbb{N}$ die Elementarintervalle des Intervalls, das alle Rechtecke umschließt und $n$ die Anzahl Rechtecke. Ein Segmentbaum hat einen Platzbedarf von
+Gegeben ist eine Menge $R$ von $n$ Rechtecken. Jedes Rechteck $r$ besteht aus einem $x$- und einem $y$-Intervall. Wie in der Aufgabenstellung vorgeschlagen, wird als Primärstruktur ein Segmentbaum $S$ auf Grundlage der $x$-Intervalle der Rechtecke aufgebaut. Ein Knoten in $S$ wird, wie in der Vorlesung beschrieben, mit den Intervallen markiert, zusäzlich mit den zugehörigen Rechtecken. Somit wird pro Knoten $k$ die Menge der potentiell in Frage kommenden Rechtecke $R_k$ gespeichert (Knotenliste).
+
+Pro Knoten $k$ wird eine Sekundärstruktur aufgebaut. Diese ist wiederum ein Segmentbaum, welcher auf Grundlage der $y$-Intervalle der Recheckte $R_k$ aufgebaut wird. Jeder Knoten wird wieder mit Intervallen und zugehörigen Rechtecken markiert.
+
+Für einen Anfragepunkt $p=(x,y) \in \mathbb{R}^2$ wird nun folgendermaßen vorgegangen:
+
+(1) Suche in der Primärstruktur nach $x$. Sammele auf dem Weg alle Knotenlisten ein.\\
+(2) Für jede gefundene Knotenliste:\\
+(2.1) suche in der Sekundärstruktur nach $y$\\
+(2.2) vereinige alle Knotenlisten (Liste von Rechtecken), die die Suche durchläuft\\
+(3) Vereinige alle Listen von Rechtecken, dies ist die Lösung.\\
+
+\paragraph*{Vorverarbeitungszeit Primärstruktur $S$}
+Das Universum $U_x$ min $|U_x|=N$ liegt sortiert vor. Der binäre Suchbaum für $U_x$ kann in $O(N)$ aufgebaut werden. Das Einfügen der $n$ Intervalle benötigt $O(n\log N)$ Zeit. Das Aufbauen der Primärstruktur benötigt also ingesamt $O(n \cdot \log N + N)$.
+
+\paragraph*{Vorverarbeitungszeit Sekundärstruktur} 
+Die Frage ist jetzt, wie lang ist eine Knotenliste im Durchschnitt? Ich denke in der VL wurde $O(\log N)$ angegeben, da in jeder Ebene des Segmentbaumes jedes Intervall nur zu höchstens zwei Knotenlisten geören kann. Das zugehörige Universum $U_y$ hat nun nur noch maximal $2 \cdot \log N$ Elemente. Der zugehörige Binärbaum wird also in $O(\log N)$ aufgebaut. Das Einfügen der neuen Intervalle benötigt $\log N \cdot \log(\log N)$ Zeit. Das Aufbauen der Sekundärstruktur benötig damit ingesamt $O(\log N \cdot \log(\log N ) + \log N)$ (hm naja das sieht komisch aus, keien Ahnung was man mit den $\log$s machen muss)
+
+\paragraph*{Vorverarbeitungszeit insgesamt}
+Für jeden Knoten in $S$, wird eine Sekundärstruktur aufgebaut. In einem vollständigen Baum ist die Anzahl der Blätter gleich der Anzahl der inneren Knoten minus 1. D.h in unserem Baum $S$ gibt es $2N+1$ Blätter (nach Definition des Segmentbaumes), damit insgesamt $4N+1$ Knoten, also $O(N)$. Insgesamt ergibt sich: $O(n \cdot \log N + N + N \cdot (\log N  \cdot \log(\log N) + \log(N))$ (oha!)
+
+\paragraph*{Speicherbedarf}
+Eigentlich ist ja nur der zusätzliche Speicherbedarf interessant.
+(TODO)
+
+\paragraph*{Anfragezeit}
+Suche in der Primärstruktur in $O(\log N)$. Für jeden Knoten auf dem Suchpfad muss nocheinmal in der Sekundärstruktur gesucht werden, also $O(\log N \cdot \log (\log N) ) + k)$. $k$ ist dabei die Ausgabe der Liste der Rechtecke.  
 \end{task}
 \end{document}
