@@ -87,13 +87,11 @@ belowcaptionskip=15pt}
 \item[]
 Der Algorithmus zur Konstruktion - der $T(n)$ Zeit benötigt - ist straight-forward:
 
-(1) Lege Knoten an und konstruiere sekundäre Struktur - im 2D-Fall ist die sekundäre Struktur ein ''einfacher'' binärer Baum mit $n$ Knoten, der in $O(n\cdot\log n)$ Zeit konstruiert werden kann.\\
+(1) Lege Knoten an und konstruiere sekundäre Struktur - im 2D-Fall ist die sekundäre Struktur ein "`einfacher"' binärer Baum mit $n$ Knoten, der in $O(n\cdot\log n)$ Zeit konstruiert werden kann.\\
 (2) Finde Median der Punkte und teile deren Menge in zwei möglichst gleich große Teile. Mit geeignetem Median-Algorithmus (z.B. BFPRT) ist das in $O(n)$ möglich.\\
 (3) Konstruiere die beiden resultierenden Teilbäume rekursiv in $O(T(\lfloor\frac{n}{2}\rfloor)+T(\lceil\frac{n}{2}\rceil))$.
 
-Der Einfachheit halber sei $n$ im Folgenden eine 2er-Potenz. Dass
-$$T(1)=1$$
-ist klar. Somit ergibt sich für die Laufzeit: 
+Der Einfachheit halber sei $n$ im Folgenden eine 2er-Potenz. Es gilt: $$T(1)=1$$ Somit ergibt sich für die Laufzeit: 
 
 \begin{align*}
 T(n)&=\overbrace{2\cdot T\left(\frac{n}{2}\right)}^{(3)}+\overbrace{n\cdot\log n}^{(1)}+\overbrace{n}^{(2)}\\
@@ -104,7 +102,7 @@ T(n)&=\overbrace{2\cdot T\left(\frac{n}{2}\right)}^{(3)}+\overbrace{n\cdot\log n
 &=2^k\cdot T\left(\frac{n}{2^k}\right)+n\cdot\sum_{i=0}^{k-1}\left(\log\frac{n}{2^i}+1\right)
 \end{align*}
 
-Die Primärstruktur hat natürlich eine Höhe von maximal $\log n$:
+Die Primärstruktur hat eine Höhe von maximal $\log n$:
 
 \begin{align*}
 T(n)&=2^{\log n}\cdot T\left(\frac{n}{2^{\log n}}\right)+n\cdot\sum_{i=0}^{\log n-1}\left(\log\frac{n}{2^i}+1\right)\\
@@ -119,9 +117,10 @@ T(n)&=2^{\log n}\cdot T\left(\frac{n}{2^{\log n}}\right)+n\cdot\sum_{i=0}^{\log 
 \newpage
 \begin{task}{dynamische Segmentsbäume}
 \item[]
-Um die Ausgeglichenheit eines Segmentbaums zu gewährleisten, sind unterschiedliche Ansätze denkbar (habe vergessen ob/welcher Ansatz in der Vorlesung vorgeschlagen wurde). Z.B. könnte man eine andere ausgeglichene, binäre Baumstruktur Zugrunde legen (z.B. einen AVL-Baum) und die Rebalancierungs-Operationen (ehm... ich meine natürlich ''Ausgleichungs-Operationen'') derart anpassen, dass die Knotenlisten insbesondere der inneren Knoten valide bleiben.
+Um die Ausgeglichenheit eines Segmentbaums zu gewährleisten, sind unterschiedliche Ansätze denkbar (habe vergessen ob/welcher Ansatz in der Vorlesung vorgeschlagen wurde). Z.B. könnte man eine andere ausgeglichene, binäre Baumstruktur Zugrunde legen (z.B. einen AVL-Baum) und die Rebalancierungs-Operationen (ehm... ich meine natürlich "`
+Ausgleichungs-Operationen"') derart anpassen, dass die Knotenlisten insbesondere der inneren Knoten valide bleiben.
 
-Ein einfacherer Ansatz - der sich zumindest bzgl. der asymptotischen Laufzeit nicht von eben genanntem unterscheidet - wäre, die Anzahl Knoten des ''Skeletts'' des Segmentbaums zu verdoppeln, sobald ein Intervall eingefügt werden soll, dessen Grenzen außerhalb des bislang größten Intervalls des Baums liegen. Es wird hierzu mit einem Skelett initialisiert, dessen Anzahl an Elementarintervallen eine 2er-Potenz ist. Sobald ein Intervall eingefügt werden soll, bei dem zumindest eine der Grenzen in einem $\infty$-Intervall liegt, wird der Baum zur linken/rechten Seite hin verdoppelt (wenn eine Grenze im linken/rechten $\infty$-Intervall liegt) und eine neue Wurzel erzeugt. Der bestehende Baum muss hierbei nicht angepasst werden. Da nicht gefragt (?) wird die Initialisierung des Baum-Skeletts hier keiner genaueren Betrachtung unterzogen.
+Ein einfacherer Ansatz - der sich zumindest bzgl. der asymptotischen Laufzeit nicht von eben genanntem unterscheidet - wäre, die Anzahl Knoten des "`Skeletts"'' des Segmentbaums zu verdoppeln, sobald ein Intervall eingefügt werden soll, dessen Grenzen außerhalb des bislang größten Intervalls des Baums liegen. Es wird hierzu mit einem Skelett initialisiert, dessen Anzahl an Elementarintervallen eine 2er-Potenz ist. Sobald ein Intervall eingefügt werden soll, bei dem zumindest eine der Grenzen in einem $\infty$-Intervall liegt, wird der Baum zur linken/rechten Seite hin verdoppelt (wenn eine Grenze im linken/rechten $\infty$-Intervall liegt) und eine neue Wurzel erzeugt. Der bestehende Baum muss hierbei nicht angepasst werden. Da nicht gefragt (?) wird die Initialisierung des Baum-Skeletts hier keiner genaueren Betrachtung unterzogen.
 
 Es bleibt, das Einfügen/Streichen in einen bestehenden Baum anzugeben. Hierfür seien $i=(l,r)$ ein Intervall das eingefügt/gelöscht werden soll, $root$ die Wurzel des Baumes, $w(v)$ der Vergleichswert in einem Knoten $v$, $leaf(v)$ die Eigenschaft eines Knotens $v$ ein Blatt zu sein, $left(v)$/$right(v)$ das linke/rechte Kind eines Knoten $v$ und $I(v)$ die Knotenliste für den Knoten $v$. Der Einfachheit halber seien die Knotenlisten als Sets implementiert, die keine Duplikate erlauben.
 
@@ -203,23 +202,22 @@ Pro Knoten $k$ wird eine Sekundärstruktur aufgebaut. Diese ist wiederum ein Seg
 Für einen Anfragepunkt $p=(x,y) \in \mathbb{R}^2$ wird nun folgendermaßen vorgegangen:
 
 (1) Suche in der Primärstruktur nach $x$. Sammele auf dem Weg alle Knotenlisten ein.\\
-(2) Für jede gefundene Knotenliste:\\
-(2.1) suche in der Sekundärstruktur nach $y$\\
-(2.2) vereinige alle Knotenlisten (Liste von Rechtecken), die die Suche durchläuft\\
+(2) Für jede gefundene Knotenliste: suche in der Sekundärstruktur nach $y$ und vereinige alle Knotenlisten (Liste von Rechtecken), die die Suche durchläuft.\\
 (3) Vereinige alle Listen von Rechtecken, dies ist die Lösung.\\
 
-\paragraph*{Vorverarbeitungszeit Primärstruktur $S$}
-Das Universum $U_x$ min $|U_x|=N$ liegt sortiert vor. Der binäre Suchbaum für $U_x$ kann in $O(N)$ aufgebaut werden. Das Einfügen der $n$ Intervalle benötigt $O(n\log N)$ Zeit. Das Aufbauen der Primärstruktur benötigt also ingesamt $O(n \cdot \log N + N)$.
+\paragraph*{Vorverarbeitungszeit Primärstruktur $P$}
+Das Universum $U_x$ min $|U_x|=N$ liegt sortiert vor. Der binäre Suchbaum für $U_x$ kann in $O(N)$ aufgebaut werden. Das Einfügen der $n$ Intervalle benötigt $O(n\cdot \log N)$ Zeit. Das Aufbauen der Primärstruktur benötigt also insgesamt $$O(n \cdot \log N + N)$$.
 
-\paragraph*{Vorverarbeitungszeit Sekundärstruktur} 
-Die Frage ist jetzt, wie lang ist eine Knotenliste im Durchschnitt? Ich denke in der VL wurde $O(\log N)$ angegeben, da in jeder Ebene des Segmentbaumes jedes Intervall nur zu höchstens zwei Knotenlisten geören kann. Das zugehörige Universum $U_y$ hat nun nur noch maximal $2 \cdot \log N$ Elemente. Der zugehörige Binärbaum wird also in $O(\log N)$ aufgebaut. Das Einfügen der neuen Intervalle benötigt $\log N \cdot \log(\log N)$ Zeit. Das Aufbauen der Sekundärstruktur benötig damit ingesamt $O(\log N \cdot \log(\log N ) + \log N)$ (hm naja das sieht komisch aus, keien Ahnung was man mit den $\log$s machen muss)
+\paragraph*{Vorverarbeitungszeit Sekundärstruktur $S$} 
+Stellt sich die Frage, wie lange eine Knotenliste ist. In der VL wurde $O(\log N)$ angegeben, da in jeder Ebene des Segmentbaumes jedes Intervall nur zu höchstens zwei Knotenlisten gehören kann. Das zugehörige Universum $U_y$ hat nun nur noch maximal $2 \cdot \log N$ Elemente. Der zugehörige Binärbaum wird also in $O(\log N)$ aufgebaut. Das Einfügen der neuen Intervalle benötigt $\log N \cdot \log(\log N)$ Zeit. Das Aufbauen der Sekundärstruktur benötig damit insgesamt $$O(\log N \cdot \log(\log N ) + \log N)$$
+
+Das kann man bestimmt irgendwie vereinfach oder besser abschätzen, evtl. ist das $$O(\log^3 N  + \log N)$$, nein ist es leider nicht.
 
 \paragraph*{Vorverarbeitungszeit insgesamt}
-Für jeden Knoten in $S$, wird eine Sekundärstruktur aufgebaut. In einem vollständigen Baum ist die Anzahl der Blätter gleich der Anzahl der inneren Knoten minus 1. D.h in unserem Baum $S$ gibt es $2N+1$ Blätter (nach Definition des Segmentbaumes), damit insgesamt $4N+1$ Knoten, also $O(N)$. Insgesamt ergibt sich: $O(n \cdot \log N + N + N \cdot (\log N  \cdot \log(\log N) + \log(N))$ (oha!)
+Für jeden Knoten in $P$, wird eine Sekundärstruktur aufgebaut. In einem vollständigen Baum ist die Anzahl der Blätter gleich der Anzahl der inneren Knoten minus 1. D.h in unserem Baum $P$ gibt es $2N+1$ Blätter (nach Definition des Segmentbaumes), damit insgesamt $4N+1$ Knoten, also $O(N)$. Insgesamt ergibt sich: $$O(n \cdot \log N + N + N \cdot (\log N  \cdot \log(\log N) + \log(N))$$
 
 \paragraph*{Speicherbedarf}
-Eigentlich ist ja nur der zusätzliche Speicherbedarf interessant.
-(TODO)
+Hier ist nur der Platzbedarf für die zusätzliche Sekundärstruktur interessant.
 
 \paragraph*{Anfragezeit}
 Suche in der Primärstruktur in $O(\log N)$. Für jeden Knoten auf dem Suchpfad muss nocheinmal in der Sekundärstruktur gesucht werden, also $O(\log N \cdot \log (\log N) ) + k)$. $k$ ist dabei die Ausgabe der Liste der Rechtecke.  
