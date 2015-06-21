@@ -167,11 +167,10 @@ Offenbar entstehen so stets $d+1$ viele Facetten (der ''Boden'' und $d$ viele, d
 
 \begin{task}{Konvexe Hülle}
 \item[]
-
 Wir gehen davon aus, dass keine 4 Punkte auf einer Ebene liegen. Die Punkte $p_1, \dots, p_n$ werden nacheinader hinzugefügt. In jedem Schritt wird die konvexe Hülle aktualisiert. Wir nehmen nun an, dass die konvexte Hülle der ersten $k$ Punkte bekannt ist. $p_{k+1}$ kann nun entweder (1) Teil der konvexen Hülle sein, $p_{k+1} \in CH(p_1, \dots, p_n)$ oder (2) außerhalb der konvexen Hülle liegen, $p_{k+1} \not \in CH(p_1, \dots, p_n)$.
 
+\newpage
 Von Punkt $p_{k+1}$ aus gesehen wird $CH(p_1, \dots, p_k)$ in die Ebene projiziert. Es werden Flächen einfügen zwischen allen Kanten die auf dem entstanden Rand $R$ liegen und $p_{k+1}$. Es werden Kanten zwischen allen Knoten auf dem Rand und $p_{k+1}$ hinzufügen. Alle von $p_{k+1}$ sichbaren Flächen werden entfernt.
-
 
 \begin{algorithm}
 \caption{$CH3D(P = \{p_1, p_2, \dots, p_n\})$}
@@ -189,7 +188,18 @@ Von Punkt $p_{k+1}$ aus gesehen wird $CH(p_1, \dots, p_k)$ in die Ebene projizie
 \end{algorithmic}
 \end{algorithm}
 
+Für diesen Ansatz muss man allerdings:
+\begin{itemize}
+\item Projizieren können
+\item Das Sichtbarkeitsproblem lösen können
+\end{itemize}
+was vermutlich nicht als Brute-Force-Ansatz durchgeht ...
 
+Zweiter Versuch - naiv, einfach zu beschreiben, Brute-Force:
 
+(1) Für jedes Tupel $(p_1,p_2,p_3)$ paarweise ungleicher $p_1,p_2,p_3\in S$:\\
+(2) Prüfe ob alle Punkte $p\in S$ auf der selben Seite der Ebene liegen, die von  $(p_1,p_2,p_3)$ aufgespannt wird. Wenn dem so ist gehören $(p_1,p_2,p_3)$ zur konvexen Hülle (wenn keine 4 Punkte auf einer Ebene liegen definieren sie außerdem eine Facette).
+
+Es gibt $|S|^3$ Tupel die in (1) betrachtet werden müssen. Für (2) müssen wiederum alle $|S|$ Elemente geprüft werden. Insgesamt ist folglich $O(|S|^4)$ Zeit erforderlich.
 \end{task}
 \end{document}
