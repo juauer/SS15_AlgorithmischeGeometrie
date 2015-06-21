@@ -89,17 +89,39 @@ Platonische Körper sind volkommen regelmäßige konvexe Polyeder. Polyeder sind
 
 
 \subtask{a}
-Beweisen Sie, dass es in 3 Dimensionen höchstens 5 platonische Körper gibt.
+Die Summe aller zusammentreffender Innenwinkel muss $< 360^\circ$ sein. Ist die Summe genau $360^\circ$ so entsteht eine Fläche in der Ebene, bei $>360^\circ$ ist die Ecke nicht mehr konvex.
 
-Wenn die Summe der Innenwinkel der Flächen die an einer Ecke zusammentreffen $360 \circ$ ergibt, so entsteht eine Fläche in einer Ebene. Damit es eine Ecke wird müssen mindestens 3 Flächen zusammentreffen.
+Ein regelmäßiges Dreieck hat einen Innenwinkel von $60^\circ$, ein Viereck von $90^\circ$, ein Fünfeck von $108^\circ$, ein Sechseck von $120^\circ$. Ein Sechseck als Facette kann es damit nicht geben ($3\cdot120^\circ = 360^\circ$).
 
-D.h ein gleichseitiges Dreieck hat einen Innenwinkel von $60\dirc$.
-das gleich für 4 eck, 5 eck, bei 6-eck geht es schon nicht mehr. Dh, also nur 3, 4, 5 Eck als geometrische Dinger kommen in frage. 
+Somit kann es nur regelmäßige $m$-Ecke mit $m \in \{3,4,5\}$ geben.
 
-...
+An einer Ecke müssen $\geq 3$ Facetten zusammentreffen damit eine Ecke entsteht. So können höchstens 5 regelmäßige Dreiecke an einer Ecke zusammenstoßen ($360^\circ / 60^\circ = 6$), höchstens 3 regelmäßige Vierecke ($360^\circ / 90^\circ = 4$) und höchstens 3 regelmäßige Fünfecke ($360^\circ / 108^\circ = 3.3$). Damit ergibt sich für $k = \{3,4,5\}$, und die folgenden Kombinationen für $k$ und $m$:
+$$m=3, k=3$$
+$$m=3, k=4$$
+$$m=3, k=5$$
+$$m=4, k=3$$
+$$m=5, k=3$$
+
 
 \subtask{b}
-Zeichnen Sie den Ikosaeder und Dodekaeder als geometrischen Graphen.
+Ikosaeder und Dodekaeder als geometrische Graphen 
+
+\begin{figure}[htpb]
+\begin{center}
+\includegraphics[width=7cm]{iko}
+\end{center}
+\caption{Der Ikosaeder hat 20 Facetten (gleichseitige Dreiecken), 30 Kanten und 12 Ecken.}
+\end{figure}
+
+\begin{figure}[htpb]
+\begin{center}
+\includegraphics[width=7cm]{dode}
+\end{center}
+\caption{Der Dodekaeder hat 12 Facetten (regelmäßiges Fünfeck), 30 Kanten und 20 Ecken.}
+\end{figure}
+
+
+
 
 \end{task}
 
@@ -145,10 +167,29 @@ Offenbar entstehen so stets $d+1$ viele Facetten (der ''Boden'' und $d$ viele, d
 
 \begin{task}{Konvexe Hülle}
 \item[]
-Punkte einen nach dem anderen hinzuzufügen und konvexe Hülle aktualisieren klingt gut: Wenn der hinzukommende Punkt innerhalb bzw. auf dem Rand der kovexen Hülle liegt, dann muss man nichts tun, nur wenn er außerhalb liegt wird es interessant.
 
-Von dem Punkt aus gesehen, würde ich das Ding in die Ebene projizieren. Flächen einfügen zwischen allen Kanten die auf dem entstanden Rand liegen und dem Punkt. Kanten zwischen allen Knoten auf Rand und Punkt hinzufügen
+Wir gehen davon aus, dass keine 4 Punkte auf einer Ebene liegen. Die Punkte $p_1, \dots, p_n$ werden nacheinader hinzugefügt. In jedem Schritt wird die konvexe Hülle aktualisiert. Wir nehmen nun an, dass die konvexte Hülle der ersten $k$ Punkte bekannt ist. $p_{k+1}$ kann nun entweder (1) Teil der konvexen Hülle sein, $p_{k+1} \in CH(p_1, \dots, p_n)$ oder (2) außerhalb der konvexen Hülle liegen, $p_{k+1} \not \in CH(p_1, \dots, p_n)$.
 
-Der ganze Rest der nun verdeckt wird wegschmeißen.
+Von Punkt $p_{k+1}$ aus gesehen wird $CH(p_1, \dots, p_k)$ in die Ebene projiziert. Es werden Flächen einfügen zwischen allen Kanten die auf dem entstanden Rand $R$ liegen und $p_{k+1}$. Es werden Kanten zwischen allen Knoten auf dem Rand und $p_{k+1}$ hinzufügen. Alle von $p_{k+1}$ sichbaren Flächen werden entfernt.
+
+
+\begin{algorithm}
+\caption{$CH3D(P = \{p_1, p_2, \dots, p_n\})$}
+\begin{algorithmic}[1]
+\STATE $C \leftarrow CH(p_1, p_2, p_3, p_4)$
+\FOR {$i=5$ \TO $n$}
+    \IF{$p_i$ liegt außerhalb von $C$}
+    \STATE{$R\rightarrow$ Rand durch Projiktion in die Ebene von $p_i$ aus.}
+    \FOR {alle Kanten $e \in R$}
+        \STATE erzeuge eine neue Facette($e, p_i$)\\
+        \STATE erzeuge eine neue Kante(Startpunkt von $e$, $p_i$)\\
+    \ENDFOR 
+    \ENDIF
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+
+
 \end{task}
 \end{document}
