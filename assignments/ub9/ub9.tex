@@ -89,14 +89,19 @@ Platonische Körper sind volkommen regelmäßige konvexe Polyeder. Polyeder sind
 
 
 \subtask{a}
-Beweisen Sie, dass es in 3 Dimensionen höchstens 5 platonische Körper gibt.
+Die Summe aller zusammentreffender Innenwinkel muss $< 360^\circ$ sein. Ist die Summe genau $360^\circ$ so entsteht eine Fläche in der Ebene, bei $>360^\circ$ ist die Ecke nicht mehr konvex.
 
-Wenn die Summe der Innenwinkel der Flächen die an einer Ecke zusammentreffen $360 \circ$ ergibt, so entsteht eine Fläche in einer Ebene. Damit es eine Ecke wird müssen mindestens 3 Flächen zusammentreffen.
+Ein regelmäßiges Dreieck hat einen Innenwinkel von $60^\circ$, ein Viereck von $90^\circ$, ein Fünfeck von $108^\circ$, ein Sechseck von $120^\circ$. Ein Sechseck als Facette kann es damit nicht geben ($3\cdot120^\circ = 360^\circ$).
 
-D.h ein gleichseitiges Dreieck hat einen Innenwinkel von $60\dirc$.
-das gleich für 4 eck, 5 eck, bei 6-eck geht es schon nicht mehr. Dh, also nur 3, 4, 5 Eck als geometrische Dinger kommen in frage. 
+Somit kann es nur regelmäßige $m$-Ecke mit $m \in \{3,4,5\}$ geben.
 
-...
+An einer Ecke müssen $\geq 3$ Facetten zusammentreffen damit eine Ecke entsteht. So können höchstens 5 regelmäßige Dreiecke an einer Ecke zusammenstoßen ($360^\circ / 60^\circ = 6$), höchstens 3 regelmäßige Vierecke ($360^\circ / 90^\circ = 4$) und höchstens 3 regelmäßige Fünfecke ($360^\circ / 108^\circ = 3.3$). Damit ergibt sich für $k = \{3,4,5\}$, und die folgenden Kombinationen für $k$ und $m$:
+$$m=3, k=3$$
+$$m=3, k=4$$
+$$m=3, k=5$$
+$$m=4, k=3$$
+$$m=5, k=3$$
+
 
 \subtask{b}
 Ikosaeder und Dodekaeder als geometrische Graphen 
