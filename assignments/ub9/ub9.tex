@@ -148,10 +148,29 @@ Zeichnen Sie den $S_4$ dh. seine Ecken und Kanten möglichst anschaulich.
 
 \begin{task}{Konvexe Hülle}
 \item[]
-Punkte einen nach dem anderen hinzuzufügen und konvexe Hülle aktualisieren klingt gut: Wenn der hinzukommende Punkt innerhalb bzw. auf dem Rand der kovexen Hülle liegt, dann muss man nichts tun, nur wenn er außerhalb liegt wird es interessant.
 
-Von dem Punkt aus gesehen, würde ich das Ding in die Ebene projizieren. Flächen einfügen zwischen allen Kanten die auf dem entstanden Rand liegen und dem Punkt. Kanten zwischen allen Knoten auf Rand und Punkt hinzufügen
+Wir gehen davon aus, dass keine 4 Punkte auf einer Ebene liegen. Die Punkte $p_1, \dots, p_n$ werden nacheinader hinzugefügt. In jedem Schritt wird die konvexe Hülle aktualisiert. Wir nehmen nun an, dass die konvexte Hülle der ersten $k$ Punkte bekannt ist. $p_{k+1}$ kann nun entweder (1) Teil der konvexen Hülle sein, $p_{k+1} \in CH(p_1, \dots, p_n)$ oder (2) außerhalb der konvexen Hülle liegen, $p_{k+1} \not \in CH(p_1, \dots, p_n)$.
 
-Der ganze Rest der nun verdeckt wird wegschmeißen.
+Von Punkt $p_{k+1}$ aus gesehen wird $CH(p_1, \dots, p_k)$ in die Ebene projiziert. Es werden Flächen einfügen zwischen allen Kanten die auf dem entstanden Rand $R$ liegen und $p_{k+1}$. Es werden Kanten zwischen allen Knoten auf dem Rand und $p_{k+1}$ hinzufügen. Alle von $p_{k+1}$ sichbaren Flächen werden entfernt.
+
+
+\begin{algorithm}
+\caption{$CH3D(P = \{p_1, p_2, \dots, p_n\})$}
+\begin{algorithmic}[1]
+\STATE $C \leftarrow CH(p_1, p_2, p_3, p_4)$
+\FOR {$i=5$ \TO $n$}
+    \IF{$p_i$ liegt außerhalb von $C$}
+    \STATE{$R\rightarrow$ Rand durch Projiktion in die Ebene von $p_i$ aus.}
+    \FOR {alle Kanten $e \in R$}
+        \STATE erzeuge eine neue Facette($e, p_i$)\\
+        \STATE erzeuge eine neue Kante(Startpunkt von $e$, $p_i$)\\
+    \ENDFOR 
+    \ENDIF
+\ENDFOR
+\end{algorithmic}
+\end{algorithm}
+
+
+
 \end{task}
 \end{document}
