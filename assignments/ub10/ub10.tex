@@ -1,0 +1,138 @@
+% !TEX TS-program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+
+\documentclass[a4paper, titlepage=false, parskip=full-, 10pt]{scrartcl}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english, ngerman]{babel}
+\usepackage{babelbib}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{framed}
+\usepackage{color}
+\usepackage{graphicx}
+\usepackage[normalem]{ulem}
+\usepackage{cancel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{geometry}
+\usepackage{subfigure}
+\geometry{a4paper, top=20mm, left=35mm, right=25mm, bottom=40mm}
+
+\newcounter{tasknbr}
+\setcounter{tasknbr}{1}
+\newenvironment{task}[1]{{\bf Aufgabe \arabic {tasknbr}\stepcounter{tasknbr}} (#1):\begin{enumerate}}{\end{enumerate}}
+\newcommand{\subtask}[1]{\item[#1)]}
+
+% Listings -----------------------------------------------------------------------------
+\definecolor{red}{rgb}{.8,.1,.2}
+\definecolor{blue}{rgb}{.2,.3,.7}
+\definecolor{lightyellow}{rgb}{1.,1.,.97}
+\definecolor{gray}{rgb}{.7,.7,.7}
+\definecolor{darkgreen}{rgb}{0,.5,.1}
+\definecolor{darkyellow}{rgb}{1.,.7,.3}
+\lstloadlanguages{C++,[Objective]C,Java}
+\lstset{
+escapeinside={§§}{§§},
+basicstyle=\ttfamily\footnotesize\mdseries,
+columns=fullflexible, % typewriter font look better with fullflex
+keywordstyle=\bfseries\color{blue},
+% identifierstyle=\bfseries,
+commentstyle=\color{darkgreen},      
+stringstyle=\color{red},
+numbers=left,
+numberstyle=\ttfamily\scriptsize\color{gray},
+% stepnumber=5,
+% numberfirstline=true,
+breaklines=true,
+% prebreak=\\,
+showstringspaces=false,
+tabsize=4,
+captionpos=b,
+% framexrightmargin=-.2\textwidth,
+float=htb,
+frame=tb,
+frameshape={RYR}{y}{y}{RYR},
+rulecolor=\color{black},
+xleftmargin=15pt,
+xrightmargin=4pt,
+aboveskip=\bigskipamount,
+belowskip=\bigskipamount,
+backgroundcolor=\color{lightyellow},
+extendedchars=true,
+belowcaptionskip=15pt}
+
+%% Enter current values here: %%
+\newcommand{\lecture}{Algorithmische Geometrie SS15}
+\newcommand{\tutor}{}
+\newcommand{\assignmentnbr}{10}
+\newcommand{\students}{Julius Auer, Alexa Schlegel}
+%%-------------------------------------%%
+
+\begin{document}  
+{\small \textsl{\lecture \hfill \tutor}}
+\hrule
+\begin{center}
+\textbf{Übungsblatt \assignmentnbr}\\
+[\bigskipamount]
+{\small \students}
+\end{center}
+\hrule
+
+\begin{task}{Wieviele Punkte liegen auf einer Geraden?}
+\item[]
+* effizienten Algorithmus an, der für eine Menge $n$ Punkten ${p_1, p_2, \dots, p_n} \in \mathbb{R}$ die maximale Zahl dieser Punkte bestimmt, die auf einer Geraden liegen\\
+* Hinweis: Dualisierung. $O(n^2 \log n$) ist akzeptabel aber noch nicht optimal\\
+
+Total ganz naiver Ansatz:\\
+* stelle alle möglichen Geraden auf, das sind wie viele? bestimmt: $O(n^2)$\\
+* pro Gerade schaue wie viele Punkte drauf liegen, d.h teste für jeden Punkt und jede Gerade (oha das ist viel) $O(n^2 \cdot n) = O(n^3)$\\
+* und dann das maximum nehmen, hm.\\
+
+Dualisierung - Was ist das?\\
+$$p=(p_x,p_y) \rightarrow p^* : b = p_x \cdot a - p_y$$
+$$l : y = m \cdot x + c \rightarrow l^* = (m, -c)$$
+
+Wenn $p$ liegt auf $l$, dann $p^*$ liegt auf $l^*$\\
+Punkte $q, r, s$ sind kolinear, dann $q^*, r^*, s^*$ schneiden sich in gemeinsamen Punkt.\\
+
+Was macht man damit? Man dualisiert alle Punkte ${p_1^*, \dots, p_n^*}$ und schaut wo sich die meisten Geraden schneiden? Die Anzahl der Geraden ist dann das, was wir wohl gesucht haben.\\
+Jetzt muss man erstmal alle Schnittpunkte finden, oder?\\
+
+TODO\\
+
+\end{task}
+
+\begin{task}{Geben Sie für beliebiges $n \in \mathbb{N}$ eine Punktmenge der Größe $n \in \mathbb{R}^4$ an, deren konvexe Hülle die Größe (=Anzahl der Facetten) $\Omega(n^2)$ hat.}
+\item[]
+
+* 4D Punktmenge\\
+* brauch ich wohl mindestens 5 Punkte damit das Sinn macht\\
+* kann man das nicht auch irgendwie mit der Dualisierung umdrehen, sodass man eigentlich (anstelle der Facetten), die Anzahl der Ecken oder sowas in $\Omega(n^2)$ sucht?\\
+
+TODO\\
+
+\end{task}
+
+\begin{task}{inkementelle Kontruktion}
+\item[]
+
+Eingaben, Einfügereihenfolgen, sodass Laufzeit $\Omega(n^2)$\\
+
+\subtask{a}
+konvexe Hülle einer Punktmenge in $\mathbb{R}^3$\\
+
+TODO\\
+
+\subtask{b}
+Trapezzerlegung eines Arrangements von Strecken im $\mathbb{R}^2$\\
+
+TODO\\
+
+\end{task}
+
+\end{document}
