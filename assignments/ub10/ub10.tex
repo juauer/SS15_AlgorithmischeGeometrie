@@ -83,39 +83,28 @@ belowcaptionskip=15pt}
 \end{center}
 \hrule
 
-\begin{task}{Wieviele Punkte liegen auf einer Geraden?}
+\begin{task}{}
 \item[]
-* effizienten Algorithmus an, der für eine Menge $n$ Punkten ${p_1, p_2, \dots, p_n} \in \mathbb{R}$ die maximale Zahl dieser Punkte bestimmt, die auf einer Geraden liegen\\
-* Hinweis: Dualisierung. $O(n^2 \log n$) ist akzeptabel aber noch nicht optimal\\
+\begin{itemize}
+\item Eingabe: Menge von $n$ Punkten $P=\{(x_1,y_1),...,(x_n,y_n)\}$
+\item Für jedes Paar von Punkten $((x_i,y_i),(x_j,y_j))$ mit $i<j$ interpretiere die Punkte als Geraden $g_1=x_i\cdot x-y_i$ und $g_2=x_j\cdot x-y_j$ und finde den Schnittpunkt $s$ zwischen $g_1$ und $g_2$. Die duale Gerade zu $s$ ist nun genau die Gerade auf der $(x_i,y_i)$ und $(x_j,y_j)$ liegen.
+\item Speichere in einer geeigneten Datenstruktur, wie oft ein und derselbe Schnittpunkt bei unterschiedlichen Punkt-Paaren gefunden wurde - der größte Wert repräsentiert schlußendlich die Gerade (im Dualen) auf der die meisten Punkte liegen.
+\end{itemize}
 
-Total ganz naiver Ansatz:\\
-* stelle alle möglichen Geraden auf, das sind wie viele? bestimmt: $O(n^2)$\\
-* pro Gerade schaue wie viele Punkte drauf liegen, d.h teste für jeden Punkt und jede Gerade (oha das ist viel) $O(n^2 \cdot n) = O(n^3)$\\
-* und dann das maximum nehmen, hm.\\
+Als einfache Datenstruktur zum Ablegen der Schnittpunkte können binäre Suchbäume o.ä. verwendet werden - bei $n^2$ vielen Punkten-Paaren benötigt man für das Einfügen der Schnittpunkte in die Datenstruktur insgesamt $O(n^2\cdot\log n)$ Zeit.
 
-Dualisierung - Was ist das?\\
-$$p=(p_x,p_y) \rightarrow p^* : b = p_x \cdot a - p_y$$
-$$l : y = m \cdot x + c \rightarrow l^* = (m, -c)$$
+Der $\log n$-Faktor lässt sich einsparen, wenn in konstanter Zeit verwaltet werden kann, wie oft ein Schnittpunkt errechnet wurde. Da die maximale Anzahl an Schnittpunkten bekannt ist ($n^2$) kann hier bei Verwendung einer Hashtabelle - die $O(n^2)$ Platz benötigt - perfektes Hashing garantiert werden. Schließlich wird für jeden Key nur ein Zähler inkrementiert (es sind also keine Listen erforderlich) und die maximale Anzahl Keys steht vorher fest.
 
-Wenn $p$ liegt auf $l$, dann $p^*$ liegt auf $l^*$\\
-Punkte $q, r, s$ sind kolinear, dann $q^*, r^*, s^*$ schneiden sich in gemeinsamen Punkt.\\
-
-Was macht man damit? Man dualisiert alle Punkte ${p_1^*, \dots, p_n^*}$ und schaut wo sich die meisten Geraden schneiden? Die Anzahl der Geraden ist dann das, was wir wohl gesucht haben.\\
-Jetzt muss man erstmal alle Schnittpunkte finden, oder?\\
-
-TODO\\
-
+Zum Einfügen wird so nur $O(1)$ Zeit benötigt und der $\log n$-Faktor entfällt. Als Hashfunktion können die x- und y-Koordinaten der Punkte z.B. als String interpretiert und konkateniert werden. Ggf. sollte allerdings ein gewisser Aufwand betrieben werden um Rundungsfehler sinnvoll zu behandeln ^^
 \end{task}
 
-\begin{task}{Geben Sie für beliebiges $n \in \mathbb{N}$ eine Punktmenge der Größe $n \in \mathbb{R}^4$ an, deren konvexe Hülle die Größe (=Anzahl der Facetten) $\Omega(n^2)$ hat.}
+\begin{task}{}
 \item[]
-
-* 4D Punktmenge\\
-* brauch ich wohl mindestens 5 Punkte damit das Sinn macht\\
-* kann man das nicht auch irgendwie mit der Dualisierung umdrehen, sodass man eigentlich (anstelle der Facetten), die Anzahl der Ecken oder sowas in $\Omega(n^2)$ sucht?\\
-
-TODO\\
-
+Die größtmögliche Anzahl an Ecken und Facetten der konvexen Hülle einer Punktmenge $P$ mit $|P|=n$ findet man bei zyklischen Polytopen. Ein passendes Polytop kann z.B. die Form:
+$$P=\{m(1),...,m(n)\}$$
+haben, wobei $m:\mathbb{R}\rightarrow\mathbb{R}^4$ eine Momentfunktion ist:
+$$m(x)=(x,x^2,x^3,x^4)$$
+Keine $d+1$ Punkte aus $P$ sind affin abhängig und alle Facetten somit Simplices. Jede 2-Teilmenge aus $P$ bestimmt ein solches Simplex. Es lassen sich $\begin{pmatrix}n\\2\end{pmatrix}\in\Omega (n^2)$ solcher Teilmengen bilden.
 \end{task}
 
 \begin{task}{inkementelle Kontruktion}
@@ -134,5 +123,4 @@ Trapezzerlegung eines Arrangements von Strecken im $\mathbb{R}^2$\\
 TODO\\
 
 \end{task}
-
 \end{document}
