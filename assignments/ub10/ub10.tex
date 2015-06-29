@@ -130,9 +130,15 @@ $$m(x)=(x,x^2,x^3)$$
 \emph{Laufzeit:} $\sum\limits_{i=1}^n O(i) = \frac{n^2 + n}{2} = O(n^2)$
 
 \subtask{b}
-Trapezzerlegung eines Arrangements von Strecken im $\mathbb{R}^2$\\
+Gegeben ist der folgende Algorithmus zur Trapezzerlegung eines Arrangements von Strecken im $\mathbb{R}^2$: Für jede neu eingefügte Strecke wird geschaut in welcher Facette der Anfangspunkt liegt.Nun werden die Nachbarfacetten gesucht die die neue Strecke alles schneidet (mittles lineares durchsuchen des Rands).
 
-TODO\\
+Wir müssen also nun eine Menge von Strecken finden, sodass in jedem Schritt $i$ genau $i-1$ Schnittpunkte entstehen.
+
+\emph{Eingabe:} $S=\{\overline{(0,0)(1,n)}, \overline{(1,0)(2,n)}, \dots, \overline{(0,n-1)(n,n)}\}$
+
+\emph{Einfügereihenfolgen:} genau die Reihenfolge wie oben
+
+\emph{Laufzeit:} $\sum\limits_{i=1}^n O(i) = \frac{n^2 + n}{2} = O(n^2)$
 
 \end{task}
 \end{document}
