@@ -110,12 +110,24 @@ Keine $d+1$ Punkte aus $P$ sind affin abhängig und alle Facetten somit Simplice
 \begin{task}{inkementelle Kontruktion}
 \item[]
 
-Eingaben, Einfügereihenfolgen, sodass Laufzeit $\Omega(n^2)$\\
-
 \subtask{a}
-konvexe Hülle einer Punktmenge in $\mathbb{R}^3$\\
+Gegeben ist der folgende Algorithmus zur Berechnung der konvexen Hülle $CH(P)$ einer gegeben $n$-elementige Punktmenge $P=\{p_1,\dots, p_n\}$ in $\mathbb{R}^3$.
 
-TODO\\
+(1) Initialisiere mit $CH(p_1, p_2, p_3, p_4)$\\
+(2) Füge Punkte nacheinander hinzu und aktualisiere die konveke Hülle in jedem Schritt: Für einen Punkt $p_i$ der einzufügen ist, wird $CH(p_1, \dotsm, p_{i-1})$ von $p_i$ aus gesehen in die Ebene projiziert und der Rand bestimmt. $p_i$ wird nun mit allen Punkten auf dem Rand verbunden, das sind die neuen Kanten der CH, Facetten werden neu bestimmt. Alle Facetten und Kanten die jetzt verdeckt werden, werden gelöscht.
+
+Wir müssen nun eine Menge von Punkten finden, die alle zur konvexen Hülle gehören werden. In jedem Schritt $i$ muss also der Rand aus allen Punkten der konvexen Hülle bestehen (also aus $p_1, \dots, p_{i-1}$. Das hat zur Folge, dass in jedem Schritt alle $i-2$ Kanten entfernt werden und $i-1$ Kanten hinzugefügt werden.
+
+Hier bietet sich wie in Aufgabe 2 die folgende Momentfunktion an:
+$$m(x)=(x,x^2,x^3)$$
+
+\emph{Eingabe:} $P=\{(1,1,1), (2,4,8), (3,9,27), \dots, (n,n^2, n^3)\}$
+
+
+\emph{Einfügereihenfolgen:} aufsteigend
+
+
+\emph{Laufzeit:} $\sum\limits_{i=1}^n O(i) = \frac{n^2 + n}{2} = O(n^2)$
 
 \subtask{b}
 Trapezzerlegung eines Arrangements von Strecken im $\mathbb{R}^2$\\
