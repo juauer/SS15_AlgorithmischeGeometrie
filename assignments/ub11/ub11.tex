@@ -94,6 +94,7 @@ Beschreiben Sie in Einzelheiten die Initialisierung der Konfliktstruktur beim ra
 Geben Sie randomisiert inkrementelle Algorithmen an zur Konstruktion folgender Strukturen für endliche Punktmengen im $\mathbb{R}^2$
 
 \subtask{a} konvexe Hülle
+Hier könnte eigentlich der Algo hin den wir auch in der VL besprochen haben. Man startet mit 3 Punten und bestimmt einen Punkt im Inneren. Dann zieht man von ihm aus gesehen Strahlen zu den 3 äußeren Punkten und hat somit Kegel. Wenn nun ein neuer Punkt hinzukommt wird der Kegel bestimmt in dem der neue Punkt liegt. Verbinen und immer überprüfen ob es eine links bzw. rechtskurve ist, d.h im bzw. gegen den Urzeigersinn bestehende konvexe Hülle durchsuchen. Falls falsche Kurve dann geht man weiter und nimmt den nächsten Punkt. (TODO schöner aufschreiben)
 
 \subtask{b} Voronoi-Diagramm
 Gegeben ist die Punktmenge $P=\{p_1, \dots, p_n\} \in \mathbb{R}^2$. Der folgende randomisierte inkrementelle Algorithmus konstuiert das Voronoi-Diagramm $VD(P)$.
@@ -101,9 +102,38 @@ Gegeben ist die Punktmenge $P=\{p_1, \dots, p_n\} \in \mathbb{R}^2$. Der folgend
 Im $i-$ten Schritt ist $VD(p_1, \dots, p_i)$ gegeben, der Punkt $p_{i+1}$ möchte eingefügt werden:
 
 (1) Bestimme die Voronio Region für den Punkt~$p_{i+1}$, also $VR(p_{i+1})$ (das geht in $O(n)$). Die Region heiß~$r$ und der zugehörige Punkt~$p_r$.\\
-(2) Konstruiere neue Voronoi Kante bzw. ersteinmal Gerade, zwischen $p_{i+1}$ und $p_r$\\
-(3) Bestimme die Schnittpunkte $s_1$ und $s_2$ der Gerade mit allen Voronio Kanten der Region~$r$. Da gibt es höchstens 2 Stück.\\
-(4) TODO weiterschreiben\\
+
+
+(2) Konstruiere orthogonale Gerade zu $\overline{p_{i+1}, p_r}$ \\
+
+(3) Bestimme die Schnittpunkte der Gerade mit allen Voronio Kanten der Region~$r$. Da gibt es 0, 1 oder 2 Stück. Vielleicht kann man die in eine Liste packen.\\
+
+Solange die Liste der Schnittpunkte nicht leer ist:\\
+
+
+(4) $s$ wird neue Voronoi Ecke\\
+
+(5) durch $s$ getroffene Voronoi Kante wird bestimmt. der eine Punkt davon wird weggeschmissen, die Kante verkürzt\\
+(6) rausfinden welche Voronio Region zu der Kante noch gehört, den Punkt davon bestimmen\\
+(7) Orthogonale Gerade zwischen diesem Punkt und $p_i+1$ aufstellen und Schnittpunkte mit der Region bestimmen, Schnittpunkt zur Liste hinzufügen und bei (4) weitermachen. Voronio Kante zwischen dem neu gefunden Schnittpunkt und altem einfügen.
+
+Irgendwie kann man die nicht sofort wegschmeißen und kürzen, einfach hinterher machen.
+
+Laufzeit:\\
+(1) $O(n)$\\
+(2) $O(1)$\\
+(3) wie viele Kanten gibts denn?\\
+insgesamt $O(n)$\\
+
+(Todo so formulieren, dass man es versteht.)
+
+\begin{figure}[htpb]
+\begin{center}
+\includegraphics[width=7cm]{vd.png}
+\end{center}
+\caption{TODO}
+\end{figure}
+
 
 \end{task}
 
