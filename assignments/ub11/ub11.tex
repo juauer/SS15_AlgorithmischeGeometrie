@@ -96,7 +96,14 @@ Geben Sie randomisiert inkrementelle Algorithmen an zur Konstruktion folgender S
 \subtask{a} konvexe Hülle
 
 \subtask{b} Voronoi-Diagramm
+Gegeben ist die Punktmenge $P=\{p_1, \dots, p_n\} \in \mathbb{R}^2$. Der folgende randomisierte inkrementelle Algorithmus konstuiert das Voronoi-Diagramm $VD(P)$.
 
+Im $i-$ten Schritt ist $VD(p_1, \dots, p_i)$ gegeben, der Punkt $p_{i+1}$ möchte eingefügt werden:
+
+(1) Bestimme die Voronio Region für den Punkt~$p_{i+1}$, also $VR(p_{i+1})$ (das geht in $O(n)$). Die Region heiß~$r$ und der zugehörige Punkt~$p_r$.\\
+(2) Konstruiere neue Voronoi Kante bzw. ersteinmal Gerade, zwischen $p_{i+1}$ und $p_r$\\
+(3) Bestimme die Schnittpunkte $s_1$ und $s_2$ der Gerade mit allen Voronio Kanten der Region~$r$. Da gibt es höchstens 2 Stück.\\
+(4) TODO weiterschreiben\\
 
 \end{task}
 
