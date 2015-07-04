@@ -85,7 +85,23 @@ belowcaptionskip=15pt}
 
 \begin{task}{Konfliktecken}
 \item[]
-Beschreiben Sie in Einzelheiten die Initialisierung der Konfliktstruktur beim randomisierten inkrementellen Algorithmus zur Berechnung des Schnitts von Halbräumen in $\mathbb{R}^3$.
+\emph{Beschreiben Sie in Einzelheiten die Initialisierung der Konfliktstruktur beim randomisierten inkrementellen Algorithmus zur Berechnung des Schnitts von Halbräumen $S_1, \dots, S_n$ in $\mathbb{R}^3$.}
+
+
+$H(S^i)$ ist dabei der Schnitt der ersten $i$ Halbräume $S_1 \cap S_2 \cap S_i$. $H(S^{i+1})$ wird aus $H(S^i)$ und $S^{i+1}$ konstuiert.
+
+Die Konfliktstruktur die während der Schritte aufrechterhalten werden muss ist ein bipartiter Graph mit $S_1, \dots, S_n$ als erster Knotentyp. Zweiter Knotentyp sind alle Kanten des Polygons $H(S^i)$, welches zu diesem Schritt gerade aktuell ist. Zwei Knoten $S \in \{S_1, \dots, S_n\}$ und $e \in H(S^i)$ werden verbunden, wenn die Kante $e$ nicht im Halbraum $S$ enthalten ist.
+
+Der Algorithmus startet mit 4 Halbräumen, welche als Schnitt einen Tetraeder bilden. Diese müssen ersteinmal gefunden werden. Die Konfliktstruktur hat also zu Beginn schon einmal alle Halbräume als Knoten und alle 6 Kanten als Knoten. Ein Halbraum "`sieht"' genau 3 Kanten nicht.
+, weil 3 muss er ja schneiden, dann bleiben noch 3 über.
+
+\begin{figure}[htpb]
+\begin{center}
+\includegraphics[width=7cm]{init.png}
+\end{center}
+\caption{TODO}
+\end{figure}
+
 \end{task}
 
 
