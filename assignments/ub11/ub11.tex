@@ -90,11 +90,25 @@ Beschreiben Sie in Einzelheiten die Initialisierung der Konfliktstruktur beim ra
 
 
 \begin{task}{randomisiert inkrementelle Kontruktionen}
-\item[]
-Geben Sie randomisiert inkrementelle Algorithmen an zur Konstruktion folgender Strukturen für endliche Punktmengen im $\mathbb{R}^2$
+\subtask{a}
+Eingabe ist eine Punktmenge $S_n\subset\mathbb{R}^2$ aus $n$ Punkten, von denen der Einfachheit halber keine 3 kolinear sind. Die konvexe Hülle $ch(S_n)$ sei im Uhrzeigersinn gegeben als zyklische, doppelt verkettete Liste von Strecken und kann folgenderweise berechnet werden:
 
-\subtask{a} konvexe Hülle
-Hier könnte eigentlich der Algo hin den wir auch in der VL besprochen haben. Man startet mit 3 Punten und bestimmt einen Punkt im Inneren. Dann zieht man von ihm aus gesehen Strahlen zu den 3 äußeren Punkten und hat somit Kegel. Wenn nun ein neuer Punkt hinzukommt wird der Kegel bestimmt in dem der neue Punkt liegt. Verbinen und immer überprüfen ob es eine links bzw. rechtskurve ist, d.h im bzw. gegen den Urzeigersinn bestehende konvexe Hülle durchsuchen. Falls falsche Kurve dann geht man weiter und nimmt den nächsten Punkt. (TODO schöner aufschreiben)
+(1) Wähle drei beliebige Punkte und konstruiere $ch(S_3)$. Wähle einen Punkt $p_m$ dieser Punkte als festen Referenzpunkt innerhalb der konvexen Hülle. (konstante Zeit)
+
+(2) Prüfe für jeden Punkt $p\in S\setminus S_3$ welche Strecke aus $ch(S_3)$ die Strecke $\overline{p_mp}$ schneidet. Jeder Strecke der konvexen Hülle werden (als Liste) alle entsprechenden Punkte zugeordnet - jeder Punkt hat seinerseits einen Zeiger auf die entsprechende Strecke. Diese Struktur wird während des Algorithmus aufrecht erhalten. (lineare Zeit)
+
+(3a) Im $i$-ten Schritt des Algorithmus wird ein zufällig gewählter Punkt $p_i$ zur bisher konstruierten konvexen Hülle $ch(S_{i-1})$ hinzugefügt: Die passende Strecke $\overline{p_lp_r}\in ch(S_{i-1})$ (die von $\overline{p_mp_i}$ geschnitten wird) ist direkt zu $p_i$ gespeichert und wird aus $ch(S_{i-1})$ entfernt, wofür $\overline{p_lp_i}$ sowie $\overline{p_ip_r}$ hinzugefügt werden. Anschließend wird die konvexe Hülle nach links und rechts ''abgelaufen'': liegt für eine so erreichte Strecke $\overline{p_lp_r}$ der Punkt $p_r$ links von $\overline{p_lp_i}$ (beim links herum laufen) bzw. $p_l$ rechts von $\overline{p_rp_i}$ (beim rechts herum laufen) wird der Punkt aus $ch(S_i)$ entfernt. (im schlimmsten Fall können also $O(n)$ Punkte angelaufen und entfernt werden)
+
+(3b) Für alle entfernten Strecken müssen die Listen aktualisiert werden: für jeden Punkt aus der Liste einer aus $ch(S_i)$ entfernten Strecke muss geprüft werden, ob die Strecke von dort nach $p_m$ nun die links/rechts benachbarte Strecke schneidet oder sogar innerhalb von $ch(S_i)$ liegt. (in jedem Schritt des Algorithmus ggf. $O(n)$)
+
+Insgesamt fallen somit Kosten von $O(n^2)$ an - sowohl die Kosten für (3a) als auch die für (3b) lassen sich aber günstiger abschätzen:
+
+Da jede Strecke nur einmal hinzugefügt und somit nur einmal entfernt werden kann benötigt (3a) nur lineare Zeit über den ganzen Algorithmus.
+
+Für (3b) kann eine Abschätzung mit der aus der Vorlesung bekannten Backward-Analyse vorgenommen werden:\\
+Beim Rückwärtslaufen wird ein Punkt $p$ aus $ch(S_i)$ entfernt um $ch(S_{i-1})$ zu erhalten. Die Kante $e$ aus $S_i$ die von $\overline{p_mp}$ geschnitten wird, wird genau dann gelöscht, wenn ein Eckpunkt im Rückwärtsschritt gelöscht wird. Für jeden Punkt geschieht das mit einer Wahrscheinlichkeit von $O\left(\frac{1}{i}\right)$. Insgesamt müssen erwartet $O\left(\frac{n}{i}\right)$ Zeiger aktualisiert werden, womit auch für (3b) insgesamt nur linearer Aufwand erwartet wird.
+
+Die Gesamtlaufzeit lässt sich für zufällige Punkte somit auf $O(n\cdot\log n)$ abschätzen.
 
 \subtask{b} Voronoi-Diagramm
 Gegeben ist die Punktmenge $P=\{p_1, \dots, p_n\} \in \mathbb{R}^2$. Der folgende randomisierte inkrementelle Algorithmus konstuiert das Voronoi-Diagramm $VD(P)$.
