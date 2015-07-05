@@ -110,45 +110,36 @@ Beim Rückwärtslaufen wird ein Punkt $p$ aus $ch(S_i)$ entfernt um $ch(S_{i-1})
 
 Die Gesamtlaufzeit lässt sich für zufällige Punkte somit auf $O(n\cdot\log n)$ abschätzen.
 
-\subtask{b} Voronoi-Diagramm
+\subtask{b}
 Gegeben ist die Punktmenge $P=\{p_1, \dots, p_n\} \in \mathbb{R}^2$. Der folgende randomisierte inkrementelle Algorithmus konstuiert das Voronoi-Diagramm $VD(P)$.
 
-Im $i-$ten Schritt ist $VD(p_1, \dots, p_i)$ gegeben, der Punkt $p_{i+1}$ möchte eingefügt werden:
+Im $i-$ten Schritt ist $VD(p_1, \dots, p_i)$ gegeben, der Punkt $p_{i+1}$ soll eingefügt werden:
 
-(1) Bestimme die Voronio Region für den Punkt~$p_{i+1}$, also $VR(p_{i+1})$ (das geht in $O(n)$). Die Region heiß~$r$ und der zugehörige Punkt~$p_r$.\\
+(1) Bestimme die Voronoi Region $r$ in der $p_{i+1}$ liegt und das zugehörige Zentrum $p_r$(in $O(n)$).
 
+(2) Konstruiere eine zu $\overline{p_{i+1}, p_r}$ orthogonale Gerade $g$ durch $p_r$.
 
-(2) Konstruiere orthogonale Gerade zu $\overline{p_{i+1}, p_r}$ \\
+(3) Bestimme die 1-4 Schnittpunkte $S$ von $g$ mit allen Voronoi Kanten der Region $r$.
 
-(3) Bestimme die Schnittpunkte der Gerade mit allen Voronio Kanten der Region~$r$. Da gibt es 0, 1 oder 2 Stück. Vielleicht kann man die in eine Liste packen.\\
+Solange $S$ nicht leer ist:
 
-Solange die Liste der Schnittpunkte nicht leer ist:\\
+(4) Wähle und entferne $s\in S$. $s$ ist neue Voronoi Ecke.
 
+(5) durch $s$ getroffene Voronoi Kante $e$ wird bestimmt und zu $s$ verkürzt.
 
-(4) $s$ wird neue Voronoi Ecke\\
-
-(5) durch $s$ getroffene Voronoi Kante wird bestimmt. der eine Punkt davon wird weggeschmissen, die Kante verkürzt\\
-(6) rausfinden welche Voronio Region zu der Kante noch gehört, den Punkt davon bestimmen\\
-(7) Orthogonale Gerade zwischen diesem Punkt und $p_i+1$ aufstellen und Schnittpunkte mit der Region bestimmen, Schnittpunkt zur Liste hinzufügen und bei (4) weitermachen. Voronio Kante zwischen dem neu gefunden Schnittpunkt und altem einfügen.
-
-Irgendwie kann man die nicht sofort wegschmeißen und kürzen, einfach hinterher machen.
+(6) Orthogonale Gerade zwischen $p_{i+1}$ und dem Zentrum der anderen Region an $e$ aufstellen und die Schnittpunkte mit den Kanten der Region zu $S$ hinzufügen. Voronoi Kante zwischen dem neu gefundenen Schnittpunkten und $s$ einfügen.
 
 Laufzeit:\\
 (1) $O(n)$\\
 (2) $O(1)$\\
-(3) wie viele Kanten gibts denn?\\
-insgesamt $O(n)$\\
-
-(Todo so formulieren, dass man es versteht.)
+(3) Auf keinen Fall schlimmer als $O(n)$\\
+insgesamt $O(n)$
 
 \begin{figure}[htpb]
 \begin{center}
 \includegraphics[width=7cm]{vd.png}
 \end{center}
-\caption{TODO}
+\caption{Eine neue Voronoi Region}
 \end{figure}
-
-
 \end{task}
-
 \end{document}
