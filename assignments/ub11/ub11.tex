@@ -85,10 +85,24 @@ belowcaptionskip=15pt}
 
 \begin{task}{Konfliktecken}
 \item[]
-Beschreiben Sie in Einzelheiten die Initialisierung der Konfliktstruktur beim randomisierten inkrementellen Algorithmus zur Berechnung des Schnitts von Halbräumen in $\mathbb{R}^3$.
+Gegeben seien eine Menge $H_n$ von $n$ Halbebenen (bzw. Punkten im Dualen) deren Schnitt $S(H_n)$ berechnet werden soll. Zur Initialisierung wählt man 4 beliebige Halbenenen und berechnet paarweise alle Schnittgeraden zwischen diesen Ebenen sowie alle Schnittpunkte zwischen diesen Schnittgeraden. Diese Schnittpunkte sind nun die Ecken des initialen Polyeders, der den Halbraum $H_4$ beschreibt.
+
+Der Halbraum $H_4$ muss an dieser Stelle nicht beschränkt sein, was bei der Erstellung des Konfliktgraphen problematisch sein kann. Da sich nach Annahme keine 4 Halbräume in einem Punkt schneiden, seien nun nur Ecken mit Grad 3 valide. Solange es nicht valide Ecken gibt, wird wie folgt verfahren:
+
+(1) Wähle nicht valide Ecke $v$ vom Grad 2 und fälle das Lot auf die Gerade durch die adjazenten Ecken.
+
+(2) Konstruiere eine Ebene $e$ deren Normalenvektor dieses Lot ist und verschiebe sie näherungsweise in's Unendliche. Wähle die Richtung der Verschiebung so, dass sie sich von $v$ entfernt.
+
+(3) Erweitere $S(H_4)$ um $e$ (brute-force).
+
+So entstehen zusätzliche Ebenen die den Polyeder beschränken, wobei aber garantiert ist, dass $S(H_n)$ vollständig auf einer Seite jeder dieser Ebenen liegt.
+
+Im schlimmsten Fall wird dadurch ein Viereck mit Seiten im Unendlichen konstruiert - also höchstens 6 zusätzliche Ebenen eingefügt. Das benötigt konstante Zeit.
+
+Gibt es nur noch valide Ecken kann wie gewohnt der Konfliktgraph konstruiert werden, indem für jede Ebene $h\in H_n$ geprüft wird, welche Ecke von $S(H_4)$ durch $h$ abgetrennt wird und die entsprechenden Zeiger angelegt werden.
 \end{task}
 
-
+\newpage
 \begin{task}{randomisiert inkrementelle Kontruktionen}
 \subtask{a}
 Eingabe ist eine Punktmenge $S_n\subset\mathbb{R}^2$ aus $n$ Punkten, von denen der Einfachheit halber keine 3 kolinear sind. Die konvexe Hülle $ch(S_n)$ sei im Uhrzeigersinn gegeben als zyklische, doppelt verkettete Liste von Strecken und kann folgenderweise berechnet werden:
@@ -110,6 +124,7 @@ Beim Rückwärtslaufen wird ein Punkt $p$ aus $ch(S_i)$ entfernt um $ch(S_{i-1})
 
 Die Gesamtlaufzeit lässt sich für zufällige Punkte somit auf $O(n\cdot\log n)$ abschätzen.
 
+\newpage
 \subtask{b}
 Gegeben ist die Punktmenge $P=\{p_1, \dots, p_n\} \in \mathbb{R}^2$. Der folgende randomisierte inkrementelle Algorithmus konstuiert das Voronoi-Diagramm $VD(P)$.
 
