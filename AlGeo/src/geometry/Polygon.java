@@ -113,6 +113,20 @@ public class Polygon implements Drawable {
         }
     }
 
+    public Point point(int i) {
+        if(i < 0)
+            i += points.length;
+
+        return points[i % points.length];
+    }
+
+    public LineSegment edge(int i) {
+        if(i < 0)
+            i += points.length;
+
+        return new LineSegment(points[i], points[i == points.length - 1 ? 0 : i + 1]);
+    }
+
     private boolean contains(Point point, BHDNode node) {
         if(node.left == null && node.right == null)
             return false;

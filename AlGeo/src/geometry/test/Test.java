@@ -9,6 +9,7 @@ import geometry.Polygon;
 import geometry.Voronoi;
 import geometry.algorithms.ConvexHull;
 import geometry.algorithms.FortunesSweep;
+import geometry.algorithms.RotationalSweep;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -25,13 +26,34 @@ import kdtrees.KDTree;
 
 public class Test {
     public static void main(String[] args) {
-        ub7(args);
+        ub12();
+        // ub7(args);
         // ub6();
         // ub5();
         // ub3();
         // ub2();
         // ub1();
         // fortunesSweep();
+    }
+
+    public static void ub12() {
+        Frame frame = Frame.create("", 21, 14);
+        Point point = new Point(10.5, 7);
+        Polygon[] polygons = new Polygon[] {
+                ConvexHull.grahamScan(null, randomPoints(1, 5, 1, 13, 16)),
+                ConvexHull.grahamScan(null, randomPoints(6, 10, 2, 6, 8)),
+                ConvexHull.grahamScan(null, randomPoints(6, 10, 9, 13, 8)),
+                ConvexHull.grahamScan(null, randomPoints(16, 20, 1, 13, 16)),
+                ConvexHull.grahamScan(null, randomPoints(11, 15, 1, 5, 8)),
+                ConvexHull.grahamScan(null, randomPoints(11, 15, 8, 12, 8))
+        };
+
+        frame.draw(point, Color.RED);
+
+        for(Polygon p : polygons)
+            frame.draw(p, Color.BLACK);
+
+        RotationalSweep.visiblePoints(frame, point, polygons);
     }
 
     public static void ub7(String[] args) {
