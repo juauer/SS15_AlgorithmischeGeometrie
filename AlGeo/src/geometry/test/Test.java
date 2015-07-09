@@ -48,7 +48,7 @@ public class Test {
                 ConvexHull.grahamScan(null, randomPoints(11, 15, 8, 12, 8))
         };
 
-        frame.draw(point, Color.RED);
+        frame.draw(point, Color.BLUE);
 
         for(Polygon p : polygons)
             frame.draw(p, Color.BLACK);

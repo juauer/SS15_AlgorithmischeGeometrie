@@ -57,17 +57,23 @@ public class RotationalSweep {
 
             @Override
             public int compare(LineSegment l1, LineSegment l2) {
-                if(l1.p1.equals(l2.p1) && l1.p2.equals(l2.p2))
+                if(l1.p1 == l2.p1 && l1.p2 == l2.p2)
                     return 0;
 
                 double dist1 = Math.abs(beam.intersectionWith(new Line(l1.p1, l1.p2)).toPosition().substract(location.toPosition()).length());
                 double dist2 = Math.abs(beam.intersectionWith(new Line(l2.p1, l2.p2)).toPosition().substract(location.toPosition()).length());
 
                 if(Math.abs(dist1 - dist2) < C.E) {
-                    Point p1 = l1.p1.equals(l2.p1) || l1.p1.equals(l2.p2) ? l1.p2 : l1.p1;
-                    Point p2 = l2.p1.equals(l1.p1) || l2.p1.equals(l1.p2) ? l2.p2 : l2.p1;
-                    return Math.abs(p1.toPosition().substract(location.toPosition()).length())
-                    < Math.abs(p2.toPosition().substract(location.toPosition()).length()) ? -1 : 1;
+                    LineSegment left = l1.p2 == l2.p1 ? l1 : l2;
+                    LineSegment right = l1.p2 == l2.p1 ? l2 : l1;
+
+                    if(left.p2 == right.p1)
+                        if(left == l1)
+                            return Math.abs(left.p1.toPosition().substract(location.toPosition()).length())
+                            < Math.abs(right.p2.toPosition().substract(location.toPosition()).length()) ? -1 : 1;
+                        else
+                            return Math.abs(left.p1.toPosition().substract(location.toPosition()).length())
+                            < Math.abs(right.p2.toPosition().substract(location.toPosition()).length()) ? 1 : -1;
                 }
 
                 return dist1 < dist2 ? -1 : 1;
@@ -121,8 +127,10 @@ public class RotationalSweep {
                 for(LineSegment l : tree.keySet())
                     scene.add(l, Color.CYAN);
 
-                if(intersection != null)
+                if(intersection != null) {
+                    scene.add(p.point(), Color.RED);
                     scene.add(candidateForBlocking, Color.RED);
+                }
 
                 scene.add(beam, Color.YELLOW);
 
