@@ -22,6 +22,10 @@ public class Point implements Drawable, Comparable<Point> {
         this(new Mat(x, y).transpose());
     }
 
+    public static Point fromPosition(Vector position) {
+        return new Point(Mat.transpose(position.m));
+    }
+
     public double getX() {
         return m.get(0, 0);
     }

@@ -10,6 +10,7 @@ import geometry.Voronoi;
 import geometry.algorithms.ConvexHull;
 import geometry.algorithms.FortunesSweep;
 import geometry.algorithms.RotationalSweep;
+import geometry.algorithms.VisibilityGraph;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -37,7 +38,7 @@ public class Test {
     }
 
     public static void ub12() {
-        Frame frame = Frame.create("", 21, 14);
+        Frame frame1 = Frame.create("Rotational Sweep", 21, 14);
         Point point = new Point(10.5, 7);
         Polygon[] polygons = new Polygon[] {
                 ConvexHull.grahamScan(null, randomPoints(1, 5, 1, 13, 16)),
@@ -49,9 +50,18 @@ public class Test {
         };
 
         for(Polygon p : polygons)
-            frame.draw(p, Color.BLACK);
+            frame1.draw(p, Color.BLACK);
 
-        RotationalSweep.visiblePoints(frame, point, polygons);
+        RotationalSweep.visiblePoints(frame1, point, polygons);
+
+        /* ================================================= */
+
+        Frame frame2 = Frame.create("Visibility Graph", 21, 14);
+
+        for(Polygon p : polygons)
+            frame2.draw(p, Color.BLACK);
+
+        VisibilityGraph.create(frame2, polygons);
     }
 
     public static void ub7(String[] args) {
