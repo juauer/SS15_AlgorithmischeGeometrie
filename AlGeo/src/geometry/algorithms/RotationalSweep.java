@@ -10,25 +10,25 @@ import geometry.test.Frame;
 import geometry.test.Scene;
 
 import java.awt.Color;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.TreeMap;
 
 public class RotationalSweep {
     protected Beam beam;
 
-    private List<Point> _visiblePoints(Frame frame, Point location, Polygon... obstacles) {
-        LinkedList<Point> result = new LinkedList<Point>();
-
+    private double[] _visiblePoints(Frame frame, Point location, Polygon... obstacles) {
         class PP implements Comparable<PP> {
             Polygon polygon;
-            int     index;
+            int     index_poly;
+            int     index_global;
 
-            PP(Polygon polygon, int index) {
+            PP(Polygon polygon, int index_poly, int index_global) {
                 this.polygon = polygon;
-                this.index = index;
+                this.index_poly = index_poly;
+                this.index_global = index_global;
             }
 
             @Override
@@ -47,7 +47,7 @@ public class RotationalSweep {
             }
 
             Point point() {
-                return polygon.points[index];
+                return polygon.points[index_poly];
             }
         }
 
@@ -80,9 +80,11 @@ public class RotationalSweep {
             }
         });
 
+        int index = 0;
+
         for(Polygon polygon : obstacles)
             for(int i = 0; i < polygon.points.length; ++i) {
-                points.add(new PP(polygon, i));
+                points.add(new PP(polygon, i, index++));
                 LineSegment l = polygon.edge(i);
 
                 if(beam.intersectionWith(l) != null)
@@ -90,13 +92,15 @@ public class RotationalSweep {
             }
 
         Collections.sort(points);
+        double[] result = new double[points.size()];
+        Arrays.fill(result, Double.MAX_VALUE);
 
         for(PP p : points) {
             beam = new Beam(location, p.point());
-            LineSegment edge1 = p.polygon.edge(p.index - 1);
-            LineSegment edge2 = p.polygon.edge(p.index);
-            boolean e1LeftOfBeam = p.polygon.point(p.index - 1).distanceTo(beam) > 0;
-            boolean e2LeftOfBeam = p.polygon.point(p.index + 1).distanceTo(beam) > 0;
+            LineSegment edge1 = p.polygon.edge(p.index_poly - 1);
+            LineSegment edge2 = p.polygon.edge(p.index_poly);
+            boolean e1LeftOfBeam = p.polygon.point(p.index_poly - 1).distanceTo(beam) >= 0;
+            boolean e2LeftOfBeam = p.polygon.point(p.index_poly + 1).distanceTo(beam) >= 0;
 
             if(e1LeftOfBeam)
                 tree.remove(edge1);
@@ -113,7 +117,7 @@ public class RotationalSweep {
                 intersection = null;
 
             if(intersection == null)
-                result.add(p.point());
+                result[p.index_global] = Math.abs(location.toPosition().substract(p.point().toPosition()).length());
 
             if(!e1LeftOfBeam)
                 tree.put(edge1, null);
@@ -123,6 +127,7 @@ public class RotationalSweep {
 
             if(frame != null) {
                 Scene scene = new Scene(500);
+                scene.add(location, Color.BLUE);
 
                 for(LineSegment l : tree.keySet())
                     scene.add(l, Color.CYAN);
@@ -134,8 +139,18 @@ public class RotationalSweep {
 
                 scene.add(beam, Color.YELLOW);
 
-                for(Point pp : result)
-                    scene.add(pp, Color.GREEN);
+                for(int i = 0; i < result.length; ++i)
+                    if(result[i] < Double.MAX_VALUE) {
+                        int j = i;
+                        int polygon = 0;
+
+                        while(j >= obstacles[polygon].points.length) {
+                            j -= obstacles[polygon].points.length;
+                            ++polygon;
+                        }
+
+                        scene.add(obstacles[polygon].point(j), Color.GREEN);
+                    }
 
                 frame.addScene(scene);
             }
@@ -144,7 +159,7 @@ public class RotationalSweep {
         return result;
     }
 
-    public static List<Point> visiblePoints(Frame frame, Point location, Polygon... obstacles) {
+    public static double[] visiblePoints(Frame frame, Point location, Polygon... obstacles) {
         return new RotationalSweep()._visiblePoints(frame, location, obstacles);
     }
 }
