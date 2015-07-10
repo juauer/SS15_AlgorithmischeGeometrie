@@ -14,10 +14,10 @@ public class Beam extends Line implements Drawable {
 
     @Override
     public boolean isInsideBoundingBox(Point point) {
-        if(point.getX() < (p1.getX() < p2.getX() ? p1.getX() : -Double.MAX_VALUE)
-                || point.getX() > (p1.getX() < p2.getX() ? Double.MAX_VALUE : p1.getX())
-                || point.getY() < (p1.getY() < p2.getY() ? p1.getY() : -Double.MAX_VALUE)
-                || point.getY() > (p1.getY() < p2.getY() ? Double.MAX_VALUE : p1.getY()))
+        if(p1.getX() < p2.getX() && point.getX() < p1.getX() - C.E
+                || p1.getX() > p2.getX() && point.getX() > p1.getX() + C.E
+                || p1.getY() < p2.getY() && point.getY() < p1.getY() - C.E
+                || p1.getY() > p2.getY() && point.getY() > p1.getY() + C.E)
             return false;
 
         return true;

@@ -41,7 +41,7 @@ public class VisibilityGraph {
                 ++i;
 
                 if(frame != null) {
-                    Scene s = new Scene(1000);
+                    Scene s = new Scene(500);
                     Color c = Color.RED;
 
                     for(int k = 0; k < i; ++k) {

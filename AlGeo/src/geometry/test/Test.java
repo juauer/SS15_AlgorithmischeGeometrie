@@ -19,7 +19,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
-import java.util.Locale;
 import java.util.Random;
 
 import kdtrees.KDKey;
@@ -38,16 +37,19 @@ public class Test {
     }
 
     public static void ub12() {
-        Frame frame1 = Frame.create("Rotational Sweep", 21, 14);
-        Point point = new Point(10.5, 7);
         Polygon[] polygons = new Polygon[] {
                 ConvexHull.grahamScan(null, randomPoints(1, 5, 1, 13, 16)),
-                ConvexHull.grahamScan(null, randomPoints(6, 10, 2, 6, 8)),
+                ConvexHull.grahamScan(null, randomPoints(6, 10, 3, 7, 8)),
                 ConvexHull.grahamScan(null, randomPoints(6, 10, 9, 13, 8)),
                 ConvexHull.grahamScan(null, randomPoints(16, 20, 1, 13, 16)),
                 ConvexHull.grahamScan(null, randomPoints(11, 15, 1, 5, 8)),
                 ConvexHull.grahamScan(null, randomPoints(11, 15, 8, 12, 8))
         };
+
+        /* ================================================= */
+
+        Frame frame1 = Frame.create("Rotational Sweep", 21, 14);
+        Point point = new Point(10.5, 7);
 
         for(Polygon p : polygons)
             frame1.draw(p, Color.BLACK);
@@ -322,14 +324,10 @@ public class Test {
     public static Point[] randomPoints(double minX, double maxX, double minY, double maxY, int total) {
         Random rand = new Random();
         Point[] randomPoints = new Point[total];
-        System.out.print("randomPoints = new Point[] {");
 
-        for(int i = 0; i < total; i++) {
+        for(int i = 0; i < total; i++)
             randomPoints[i] = new Point(minX + rand.nextDouble() * (maxX - minX), minY + rand.nextDouble() * (maxY - minY));
-            System.out.printf(Locale.US, "%snew Point(%f, %f)", (i == 0 ? "" : ", "), randomPoints[i].getX(), randomPoints[i].getY());
-        }
 
-        System.out.println("};");
         return randomPoints;
     }
 

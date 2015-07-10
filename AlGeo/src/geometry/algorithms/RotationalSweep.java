@@ -60,8 +60,8 @@ public class RotationalSweep {
                 if(l1.p1 == l2.p1 && l1.p2 == l2.p2)
                     return 0;
 
-                double dist1 = Math.abs(beam.intersectionWith(new Line(l1.p1, l1.p2)).toPosition().substract(location.toPosition()).length());
-                double dist2 = Math.abs(beam.intersectionWith(new Line(l2.p1, l2.p2)).toPosition().substract(location.toPosition()).length());
+                double dist1 = Math.abs(beam.intersectionWith(l1).toPosition().substract(location.toPosition()).length());
+                double dist2 = Math.abs(beam.intersectionWith(l2).toPosition().substract(location.toPosition()).length());
 
                 if(Math.abs(dist1 - dist2) < C.E) {
                     LineSegment left = l1.p2 == l2.p1 ? l1 : l2;
