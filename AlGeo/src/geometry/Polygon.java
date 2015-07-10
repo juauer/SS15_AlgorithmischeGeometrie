@@ -124,7 +124,7 @@ public class Polygon implements Drawable {
         if(i < 0)
             i += points.length;
 
-        return new LineSegment(points[i], points[i == points.length - 1 ? 0 : i + 1]);
+        return lines[i % lines.length];
     }
 
     private boolean contains(Point point, BHDNode node) {

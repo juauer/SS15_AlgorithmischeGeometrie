@@ -64,16 +64,11 @@ public class RotationalSweep {
                 double dist2 = Math.abs(beam.intersectionWith(l2).toPosition().substract(location.toPosition()).length());
 
                 if(Math.abs(dist1 - dist2) < C.E) {
-                    LineSegment left = l1.p2 == l2.p1 ? l1 : l2;
-                    LineSegment right = l1.p2 == l2.p1 ? l2 : l1;
+                    if(l1.p2 == l2.p1)
+                        return -1;
 
-                    if(left.p2 == right.p1)
-                        if(left == l1)
-                            return Math.abs(left.p1.toPosition().substract(location.toPosition()).length())
-                            < Math.abs(right.p2.toPosition().substract(location.toPosition()).length()) ? -1 : 1;
-                        else
-                            return Math.abs(left.p1.toPosition().substract(location.toPosition()).length())
-                            < Math.abs(right.p2.toPosition().substract(location.toPosition()).length()) ? 1 : -1;
+                    if(l2.p2 == l1.p1)
+                        return 1;
                 }
 
                 return dist1 < dist2 ? -1 : 1;
@@ -101,12 +96,16 @@ public class RotationalSweep {
             LineSegment edge2 = p.polygon.edge(p.index_poly);
             boolean e1LeftOfBeam = p.polygon.point(p.index_poly - 1).distanceTo(beam) >= 0;
             boolean e2LeftOfBeam = p.polygon.point(p.index_poly + 1).distanceTo(beam) >= 0;
+            boolean unableToRemove = false;
 
             if(e1LeftOfBeam)
-                tree.remove(edge1);
+                unableToRemove = tree.remove(edge1) == null;
 
             if(e2LeftOfBeam)
                 tree.remove(edge2);
+
+            if(e1LeftOfBeam && unableToRemove)
+                tree.remove(edge1);
 
             LineSegment candidateForBlocking = tree.isEmpty() ? null : tree.firstKey();
             Point intersection = candidateForBlocking == null ? null : beam.intersectionWith(candidateForBlocking);
