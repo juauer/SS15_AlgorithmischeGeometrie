@@ -18,6 +18,8 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -63,7 +65,26 @@ public class Test {
         for(Polygon p : polygons)
             frame2.draw(p, Color.BLACK);
 
-        VisibilityGraph.create(frame2, polygons);
+        VisibilityGraph graph = VisibilityGraph.create(frame2, polygons);
+
+        /* ================================================= */
+
+        Frame frame3 = Frame.create("Shortest Path", 21, 14);
+        ArrayList<Point> points = new ArrayList<Point>();
+
+        for(Polygon poly : polygons) {
+            frame3.draw(poly, Color.BLACK);
+
+            for(Point p : poly.points)
+                points.add(p);
+        }
+
+        Collections.sort(points);
+        LinkedList<Point> path = graph.shortestPath(points.get(0), points.get(points.size() - 1));
+        System.out.println("Path Length: " + graph.shortestPathLength(points.get(0), points.get(points.size() - 1)));
+
+        for(int i = 0; i < path.size() - 1; ++i)
+            frame3.draw(new LineSegment(path.get(i), path.get(i + 1)), Color.MAGENTA);
     }
 
     public static void ub7(String[] args) {
