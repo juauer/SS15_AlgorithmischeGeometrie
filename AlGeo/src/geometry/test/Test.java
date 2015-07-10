@@ -21,6 +21,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.Locale;
 import java.util.Random;
 
 import kdtrees.KDKey;
@@ -80,11 +81,19 @@ public class Test {
         }
 
         Collections.sort(points);
-        LinkedList<Point> path = graph.shortestPath(points.get(0), points.get(points.size() - 1));
-        System.out.println("Path Length: " + graph.shortestPathLength(points.get(0), points.get(points.size() - 1)));
 
-        for(int i = 0; i < path.size() - 1; ++i)
-            frame3.draw(new LineSegment(path.get(i), path.get(i + 1)), Color.MAGENTA);
+        for(Point p : polygons[3].points) {
+            Scene s = new Scene(1000);
+            LinkedList<Point> path = graph.shortestPath(points.get(0), p);
+            path.addFirst(points.get(0));
+
+            for(int j = 0; j < path.size() - 1; ++j)
+                s.add(new LineSegment(path.get(j), path.get(j + 1)), Color.MAGENTA);
+
+            s.add(new StringD(String.format(Locale.US, "length: %.2f",
+                    graph.shortestPathLength(points.get(0), p)), new Point(0, -1)), Color.BLUE);
+            frame3.addScene(s);
+        }
     }
 
     public static void ub7(String[] args) {

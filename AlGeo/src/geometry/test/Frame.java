@@ -28,6 +28,7 @@ public class Frame extends JFrame implements Runnable {
     protected static final Stroke STROKE             = new BasicStroke(2);
     protected static int          captured           = 0;
     private static boolean        displayedHelpOnce  = false;
+    private static Point          location           = null;
     public final Dimensions       dimensions;
     protected final BufferedImage image_base;
     protected final BufferedImage image_animated;
@@ -55,7 +56,13 @@ public class Frame extends JFrame implements Runnable {
 
         setLayout(new BorderLayout());
         setSize(dimensions.width + 200, dimensions.height + 200);
-        setLocationRelativeTo(null);
+
+        if(location == null)
+            setLocationRelativeTo(null);
+        else
+            setLocation((int) location.getX() + 50, (int) location.getY() + 50);
+
+        location = getLocation();
         setVisible(true);
         addMouseMotionListener(new MouseMotionAdapter() {
 
