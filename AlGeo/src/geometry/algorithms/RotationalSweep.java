@@ -17,9 +17,24 @@ import java.util.LinkedList;
 import java.util.TreeMap;
 
 public class RotationalSweep {
+    // the rotating beam is an instance field to provide accesse from inner
+    // anonymous classes
     protected Beam beam;
 
+    /**
+     * Find all vertices of given polygons that are visible from a given point.
+     * Result is an array containing the distance from the point to all visible
+     * vertices.
+     */
     private double[] _visiblePoints(Frame frame, Point location, Polygon... obstacles) {
+        // A wrapper-class for points that provides access to the vertex of a
+        // polygon by either:
+        //
+        // 1) knowing the polygon and the index of the point inside the polygon
+        // ('PP' means 'Point-Pointer' ;) )
+        //
+        // 2) or knowing the index of the point in the list of all points
+        // (needed for mapping purposes)
         class PP implements Comparable<PP> {
             Polygon polygon;
             int     index_poly;
@@ -31,6 +46,8 @@ public class RotationalSweep {
                 this.index_global = index_global;
             }
 
+            // the natural order of points here is determined by the angle
+            // between 'location' and a point
             @Override
             public int compareTo(PP p) {
                 Line axis = new Line(location, new Point(location.getX() + 1, location.getY()));
@@ -51,8 +68,16 @@ public class RotationalSweep {
             }
         }
 
+        // a simple list containing all points (decoupled from the original
+        // polygons)
         LinkedList<PP> points = new LinkedList<PP>();
+
+        // initialize the beam (it points straight to the right)
         beam = new Beam(location, new Point(location.getX() + 1, location.getY()));
+
+        // a red-black tree storing linesegments. The order of two linesegments
+        // is given by the distance to the corresponding intersections with the
+        // beam
         TreeMap<LineSegment, Object> tree = new TreeMap<LineSegment, Object>(new Comparator<LineSegment>() {
 
             @Override
@@ -63,6 +88,10 @@ public class RotationalSweep {
                 double dist1 = Math.abs(beam.intersectionWith(l1).toPosition().substract(location.toPosition()).length());
                 double dist2 = Math.abs(beam.intersectionWith(l2).toPosition().substract(location.toPosition()).length());
 
+                // if the intersections are very close, it is highly likely the
+                // two lines have a common point. In this case the two
+                // linesegments are ordered by the index they have in their
+                // polygon
                 if(Math.abs(dist1 - dist2) < C.E) {
                     if(l1.p2 == l2.p1)
                         return -1;
@@ -77,6 +106,9 @@ public class RotationalSweep {
 
         int index = 0;
 
+        // fill the point-list with all vertices of the polygons. Check for each
+        // edge e of the polygons if e intersects with the initial beam - if so,
+        // insert e into the tree
         for(Polygon polygon : obstacles)
             for(int i = 0; i < polygon.points.length; ++i) {
                 points.add(new PP(polygon, i, index++));
@@ -86,27 +118,42 @@ public class RotationalSweep {
                     tree.put(l, null);
             }
 
+        // sort the points (by angle to 'location' - see comparator above)
         Collections.sort(points);
         double[] result = new double[points.size()];
         Arrays.fill(result, Double.MAX_VALUE);
 
+        // run the actual algorithm
         for(PP p : points) {
+            // rotate the beam to the next point
             beam = new Beam(location, p.point());
             LineSegment edge1 = p.polygon.edge(p.index_poly - 1);
             LineSegment edge2 = p.polygon.edge(p.index_poly);
+
+            // check for the two vertices at p wether they lie left or right of
+            // the beam
             boolean e1LeftOfBeam = p.polygon.point(p.index_poly - 1).distanceTo(beam) >= 0;
             boolean e2LeftOfBeam = p.polygon.point(p.index_poly + 1).distanceTo(beam) >= 0;
             boolean unableToRemove = false;
 
+            // remove those edges from the tree which lie left of the beam
             if(e1LeftOfBeam)
                 unableToRemove = tree.remove(edge1) == null;
 
             if(e2LeftOfBeam)
                 tree.remove(edge2);
 
+            // who looked at the comparator closely knows, there might be a
+            // singularity issue if the beam hits a vertex and both edges have
+            // to be removed from the tree. In this case it may be edge1 can not
+            // be found in the tree - after removing edge2 the singularity is
+            // gone and edge1 can be removed as well
             if(e1LeftOfBeam && unableToRemove)
                 tree.remove(edge1);
 
+            // IF (the beam does not intersect the very first edge in the tree
+            // OR if the intersection of beam and edge is farther away then p)
+            // THEN p is visible
             LineSegment candidateForBlocking = tree.isEmpty() ? null : tree.firstKey();
             Point intersection = candidateForBlocking == null ? null : beam.intersectionWith(candidateForBlocking);
 
@@ -118,12 +165,14 @@ public class RotationalSweep {
             if(intersection == null)
                 result[p.index_global] = Math.abs(location.toPosition().substract(p.point().toPosition()).length());
 
+            // insert those edges to the tree which lie right of the beam
             if(!e1LeftOfBeam)
                 tree.put(edge1, null);
 
             if(!e2LeftOfBeam)
                 tree.put(edge2, null);
 
+            // draw debug
             if(frame != null) {
                 Scene scene = new Scene(500);
                 scene.add(location, Color.BLUE);

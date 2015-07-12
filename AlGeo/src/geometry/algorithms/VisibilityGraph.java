@@ -12,11 +12,22 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class VisibilityGraph {
+    // all pairs shortest paths. At dimension 3 there are two values: [0] stores
+    // the weight of the path, [1] stores the index of the next vertex on the
+    // path
     double[][][]     paths = null;
+
+    // the visibility graph. For values equal to Double.MAX_VALUE two vertices
+    // do not see each other
     double[][]       graph;
+
+    // all vertices of the polygons as list. The indices are corresponding to
+    // those used for the arrays above
     ArrayList<Point> points;
 
     private VisibilityGraph(Polygon... obstacles) {
+        // nothing special here. Put all points into a list, and allocate memory
+        // for the arrays
         int n = 0;
 
         for(Polygon poly : obstacles)
@@ -34,14 +45,22 @@ public class VisibilityGraph {
         VisibilityGraph graph = new VisibilityGraph(obstacles);
         int i = 0;
 
+        // for each point, run the rotational sweep
         for(Polygon poly : obstacles)
             for(int j = 0; j < poly.points.length; ++j) {
+                // the beams origin for the rotational sweep must not be within
+                // any polygon. Pull it a little outside ...
                 Point p = Point.fromPosition(poly.point(j).toPosition().add(
                         new Line(poly.point(j - 1), poly.point(j + 1)).n0.multiply(0.1)));
+
+                // output of the rotational sweep is one line of the result
                 graph.graph[i] = RotationalSweep.visiblePoints(null, p, obstacles);
+
+                // the weight of edge i->i is 0
                 graph.graph[i][i] = 0.0d;
                 ++i;
 
+                // draw debug
                 if(frame != null) {
                     Scene s = new Scene(500);
                     Color c = Color.RED;
@@ -63,7 +82,10 @@ public class VisibilityGraph {
         return graph;
     }
 
-    private void floydWarshal() {
+    /**
+     * It's the very popular algorithm of Floyd and Warshall ...
+     */
+    private void floydWarshall() {
         double[][] adjacencyMatrix = new double[graph.length][];
 
         for(int i = 0; i < graph.length; ++i) {
@@ -83,12 +105,20 @@ public class VisibilityGraph {
                     paths[i][j][1] = i;
             }
 
+        // above: initialization
+        // =======================
+        // below: actual algorithm
+
         for(int k = 0; k < graph.length; k++)
             for(int i = 0; i < graph.length; i++)
                 for(int j = 0; j < graph.length; j++)
                     if(paths[i][k][0] != Double.MAX_VALUE && paths[k][j][0] != Double.MAX_VALUE) {
                         double newDist = paths[i][k][0] + paths[k][j][0];
 
+                        // the only 'special' thing on this implementation is
+                        // that the weight and the next vertex on the path are
+                        // stored in the same array (as explained at top of this
+                        // file)
                         if(newDist < paths[i][j][0]) {
                             paths[i][j][0] = newDist;
                             paths[i][j][1] = paths[k][j][1];
@@ -96,9 +126,12 @@ public class VisibilityGraph {
                     }
     }
 
+    /**
+     * List the vertices on the shortest path from 'from' to 'to'
+     */
     public LinkedList<Point> shortestPath(Point from, Point to) {
         if(paths == null)
-            floydWarshal();
+            floydWarshall();
 
         LinkedList<Point> result = new LinkedList<Point>();
         int f = points.indexOf(from);
@@ -112,9 +145,12 @@ public class VisibilityGraph {
         return result;
     }
 
+    /**
+     * Get the length of the shortest path from 'from' to 'to'
+     */
     public double shortestPathLength(Point from, Point to) {
         if(paths == null)
-            floydWarshal();
+            floydWarshall();
 
         return paths[points.indexOf(to)][points.indexOf(from)][0];
     }
