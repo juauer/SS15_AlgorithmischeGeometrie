@@ -83,18 +83,6 @@ belowcaptionskip=15pt}
 \end{center}
 \hrule
 
-\begin{task}{Random Sampling bei eindimensionalen Daten}
-\subtask{a}
-
-\subtask{b}
-
-\end{task}
-
-\begin{task}{Random Sampling für ebene Unterteilungen}
-\item[]
-
-\end{task}
-
 \begin{task}{Sichtbarkeit und kürzeste Wege}
 \item[]
 Eine Anmerkung vorab: Rundungsfehler sind hier (insbesondere für die Konsistenz des Suchbaums) kritisch. Ohne einen signifikanten Mehraufwand zu betreiben, konnten wir nicht alle auf Rundungsfehlern zurückzuführende Sonderfälle berücksichtigen. Wenn Du das Teil ausführst  ist deshalb damit zu rechnen das ggf. zufällige Punkte erzeugt werden, bei denen es nicht funktioniert. Das passiert ungefähr in $1/20$ Fällen (also ''selten'') vor allem dann, wenn Punkte aus unterschiedlichen Polygonen in guter Näherung kollinear sind. Einfach noch mal versuchen :)
@@ -132,6 +120,7 @@ Abbildung \ref{fig:12.2.b.1} zeigt zwei aufeinanderfolgende Schritte im Algorith
 \label{fig:12.2.a.1}
 \end{figure}
 
+\newpage
 \subtask{b}
 Der Rest ist leicht: Der Sichtbarkeitsgraph entsteht aus der Anwendung des Sweep für jede Ecke aller Polygone. Bei insgesamt $n$ Ecken benötigt das folglich $O(n^2\cdot\log n)$ Zeit und $O(n^2)$ Platz für das Speichern des Graphen.
 
@@ -164,6 +153,7 @@ Abbildung \ref{fig:12.2.b.1} zeigt zwei aufeinanderfolgende Schritte im Algorith
 \label{fig:12.2.b.1}
 \end{figure}
 
+\newpage
 \subtask{c}
 Warum einen berechnen, wenn man alle berechnen kann? Da der Anwendungsfall nicht näher spezifiziert ist (und ich sowieso noch eine alte Implementierung griffbereit habe ;) ) machen wir keinen Dijkstra (wie ggf. vom Autor der Aufgabe angedacht) sondern einen Floyd-Warshall um \emph{all-pairs-shortest-paths} zu berechnen. Im schlimmsten Fall (der Sichtbarkeitsgraph ist vollständig) benötigt man hierfür $O(n^3)$ Zeit und erneut $O(n^2)$ Platz. Abbildung \ref{fig:12.2.c.1} zeigt exemplarisch zwei dieser Wege.
 
